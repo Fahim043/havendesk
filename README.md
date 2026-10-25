@@ -83,4 +83,18 @@ The `docs/` folder contains a pre-rendered interactive preview of all 12 screens
 
 ---
 
-<p align="center">Crafted by <strong>AI-Possible</strong> · MIT License</p>
+## 📜 License & Commercial Use Policy
+
+**Copyright © 2026 Fahim Afridi (AI-Possible). All Rights Reserved.**
+
+This project is released under the **[HavenDesk Non-Commercial & Proprietary Source-Available License](LICENSE)**:
+
+- ✅ **Allowed (Free):** Personal study, academic research, and local evaluation/testing.
+- 🚫 **Strictly Prohibited Without Payment:** Using, deploying, hosting (SaaS), modifying, or reselling this software for any hotel, resort, guesthouse, or commercial business operation without a paid **Commercial License**.
+
+💼 **Want to use HavenDesk commercially or deploy it for your property?**  
+Please contact **[Fahim Afridi (@Fahim043)](https://github.com/Fahim043)** to purchase a commercial or white-label license.
+
+---
+
+<p align="center">Crafted by <strong>AI-Possible</strong> · <a href="LICENSE">Proprietary / Non-Commercial License</a></p>

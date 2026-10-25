@@ -1,0 +1,34 @@
+HAVENDESK NON-COMMERCIAL & PROPRIETARY SOURCE-AVAILABLE LICENSE
+Version 1.0 — Copyright (c) 2026 Fahim Afridi (AI-Possible). All Rights Reserved.
+
+1. DEFINITIONS
+"Software" refers to the HavenDesk source code, user interface designs, templates, database schemas, documentation, logos, and all associated files in this repository.
+"Licensor" refers to Fahim Afridi / AI-Possible (GitHub: @Fahim043).
+"Commercial Use" means any use of the Software, in whole or in part, with or without modification, for:
+  (a) Operating any hotel, resort, guesthouse, property management business, or commercial hospitality establishment;
+  (b) Providing paid or unpaid hosting, Software-as-a-Service (SaaS), consulting, implementation, or managed services to third parties;
+  (c) Selling, licensing, sublicensing, leasing, or redistributing the Software or any derivative work for direct or indirect financial gain or business advantage; or
+  (d) Internal business operations of any for-profit entity.
+
+2. GRANT OF NON-COMMERCIAL EVALUATION LICENSE
+Subject to the terms and conditions of this License, Licensor hereby grants you a revocable, non-exclusive, non-transferable, royalty-free license solely for:
+  (a) Personal, educational, and academic study; and
+  (b) Local evaluation and portfolio review of the Software's capabilities.
+
+3. STRICT PROHIBITION ON COMMERCIAL USE WITHOUT PAID LICENSE
+YOU MAY NOT USE THE SOFTWARE FOR ANY COMMERCIAL USE WITHOUT FIRST OBTAINING A PAID COMMERCIAL LICENSE IN WRITING FROM THE LICENSOR.
+Any unauthorized Commercial Use constitutes willful copyright infringement and breach of contract, entitling the Licensor to immediate injunctive relief, statutory damages, recovery of all commercial revenues or licensing fees, and legal costs.
+
+4. RESTRICTIONS
+Without a valid Commercial License Agreement signed by the Licensor, you may NOT:
+  (a) Deploy the Software in production for any hotel, property, or business;
+  (b) Remove, alter, or obscure any copyright, trademark ("HavenDesk", "AI-Possible"), or attribution notices in the Software or UI;
+  (c) Re-publish, mirror, or redistribute the Software under an open-source or permissive license (such as MIT, Apache, or GPL).
+
+5. COMMERCIAL LICENSING INQUIRIES
+To purchase a Commercial License for hotel deployment, white-label customization, or enterprise use, please contact:
+  - Author: Fahim Afridi (AI-Possible)
+  - GitHub: https://github.com/Fahim043
+
+6. DISCLAIMER OF WARRANTY & LIMITATION OF LIABILITY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE.
