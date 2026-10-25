@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+{% block title %}Customers · HavenDesk{% endblock %}
+{% block content %}
+
+<div style="margin-bottom: 32px;">
+  <h2>👥 Customer Management</h2>
+  <p style="color: var(--text-secondary); margin: 8px 0 0 0;">Manage guest profiles and booking history</p>
+</div>
+
+<div class="card" style="margin-bottom: 32px; padding: 16px 20px;">
+  <form method="get" action="/customers" style="display: flex; gap: 12px; align-items: center;">
+    <div style="flex: 1; position: relative;">
+      <i class="fa-solid fa-search"
+        style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.9rem;"></i>
+      <input name="q" placeholder="Search by name, email, or phone..." value="{{ q }}" class="input"
+        style="width: 100%; margin: 0; padding: 14px 16px 14px 44px; font-size: 1rem; height: 48px; background: var(--panel-hover); border: 1px solid var(--glass-border); color: var(--text);">
+    </div>
+    <button type="submit" class="btn" style="padding: 12px 24px; height: 48px; width: auto; flex-shrink: 0;">Go</button>
+    {% if q %}<a href="/customers" class="btn secondary"
+      style="padding: 12px 16px; height: 48px; text-decoration: none; white-space: nowrap; display: flex; align-items: center;">Clear</a>{%
+    endif %}
+  </form>
+</div>
+
+{% if request.query_params.get('error') %}
+<div style="padding: 14px 16px; background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; border-radius: 8px; color: #ef4444; margin-bottom: 24px; display: flex; align-items: center; gap: 10px;">
+  <span style="font-size: 1.2rem;">⚠️</span>
+  <div>
+    <strong>Error</strong><br>
+    <span style="font-size: 0.9rem;">{{ request.query_params.get('error') }}</span>
+  </div>
+</div>
+{% endif %}
+
+<div class="card" style="margin-bottom: 32px;">
+  <details>
+    <summary><strong>+ Add New Customer</strong></summary>
+    <form action="/customers/add" method="post"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px;">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Full Name *</label>
+        <input name="name" placeholder="Full name" required class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+      <label>Email <span style="font-size:0.8rem;color:var(--text-secondary)">(email or phone required)</span></label>
+        <input name="email" id="add_email" placeholder="Email address" class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Phone <span style="font-size:0.8rem;color:var(--text-secondary)">(email or phone required)</span></label>
+        <input name="phone" id="add_phone" placeholder="Phone number" class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>ID Proof</label>
+        <input name="id_proof" placeholder="Passport / ID Number" class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Customer Type</label>
+        <input name="customer_type" list="addCustomerTypeList" placeholder="Select or type custom..." class="input"
+          autocomplete="off">
+        <datalist id="addCustomerTypeList"></datalist>
+      </div>
+      <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 0;">
+        <label>Address</label>
+        <input name="address" placeholder="Full address" class="input">
+      </div>
+      <button type="submit" class="btn" style="grid-column: 1 / -1; margin-bottom: 0;">Add Customer</button>
+      <p id="add_contact_error" style="display:none; color:#ef4444; font-size:0.9rem; grid-column:1/-1; margin:0;">⚠️ Please provide at least an email or phone number.</p>
+    </form>
+  </details>
+</div>
+
+{% if detail and customers and customers|length == 1 %}
+{% set c = customers[0] %}
+
+<div class="card" style="margin-bottom: 32px;">
+  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
+    <div>
+      <h3 style="margin: 0 0 8px 0;">{{ c.name }}</h3>
+      <p style="color: var(--text-secondary); margin: 0;">Customer ID: <code
+          style="background: var(--panel-hover); padding: 4px 8px; border-radius: 6px;">{{ c._id }}</code></p>
+    </div>
+    <span
+      style="background: rgba(251, 191, 36, 0.15); color: var(--gold); padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 0.85rem;">{{
+      c.customer_type or 'Regular' }}
+      Guest</span>
+  </div>
+
+  <div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border-subtle);">
+    <div>
+      <div
+        style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+        Email</div>
+      <div style="color: var(--text);">{{ c.email or '—' }}</div>
+    </div>
+    <div>
+      <div
+        style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+        Phone</div>
+      <div style="color: var(--text);">{{ c.phone or '—' }}</div>
+    </div>
+    <div>
+      <div
+        style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+        ID Proof</div>
+      <div style="color: var(--text);">{{ c.id_proof or '—' }}</div>
+    </div>
+    <div>
+      <div
+        style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+        Member Since</div>
+      <div style="color: var(--text);">{{ c.created_at[:10] if c.created_at else '—' }}</div>
+    </div>
+  </div>
+
+  <div>
+    <div
+      style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+      Address</div>
+    <div style="color: var(--text);">{{ c.address or 'No address provided' }}</div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom: 32px;">
+  <details>
+    <summary><strong>✏️ Edit Customer Information</strong></summary>
+    <form action="/customers/update" method="post"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px;">
+      <input type="hidden" name="customer_id" value="{{ c._id }}">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Full Name</label>
+        <input name="name" placeholder="Full name" value="{{ c.name }}" class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Email</label>
+        <input name="email" placeholder="Email" value="{{ c.email }}" class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Phone</label>
+        <input name="phone" placeholder="Phone" value="{{ c.phone }}" class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>ID Proof</label>
+        <input name="id_proof" placeholder="ID / Passport" value="{{ c.id_proof }}" class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Customer Type</label>
+        <input name="customer_type" list="editCustomerTypeList" value="{{ c.customer_type or '' }}"
+          placeholder="Select or type custom..." class="input" autocomplete="off">
+        <datalist id="editCustomerTypeList"></datalist>
+      </div>
+      <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 0;">
+        <label>Address</label>
+        <input name="address" placeholder="Address" value="{{ c.address }}" class="input">
+      </div>
+      <button type="submit" class="btn" style="grid-column: 1 / -1; margin-bottom: 0;">Save Changes</button>
+    </form>
+  </details>
+</div>
+
+<div class="card">
+  <h4 style="margin-top: 0;">📋 Booking History</h4>
+  {% if bookings and bookings|length > 0 %}
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>Room</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th>Status</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td><code
+              style="background: var(--panel-hover); padding: 4px 8px; border-radius: 6px; font-size: 0.85rem;">{{ b._id }}</code>
+          </td>
+          <td><strong>{{ b.room_number }}</strong></td>
+          <td>{{ b.check_in[:10] if b.check_in else '—' }}</td>
+          <td>{{ b.expected_check_out[:10] if b.expected_check_out else '—' }}</td>
+          <td>
+            {% if b.status == 'checked_in' %}
+            <span class="status active">Active</span>
+            {% elif b.status == 'checked_out' %}
+            <span class="status completed">Completed</span>
+            {% else %}
+            <span class="status pending">{{ b.status }}</span>
+            {% endif %}
+          </td>
+          <td><strong style="color: var(--accent);">${{ b.total_amount or '—' }}</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Removed |ceil filter and used integer division -->
+  {% set items_per_page = 10 %}
+  {% set current_page = request.query_params.get('page', 1)|int %}
+  {% set total_pages = ((bookings|length - 1) // items_per_page) + 1 if bookings|length > 0 else 1 %}
+  {% set start_idx = (current_page - 1) * items_per_page %}
+  {% set end_idx = start_idx + items_per_page %}
+
+  {% if total_pages > 1 %}
+  <div class="pagination">
+    {% if current_page > 1 %}
+    <a href="/customers/{{ c._id }}?page=1">« First</a>
+    <a href="/customers/{{ c._id }}?page={{ current_page - 1 }}">‹ Prev</a>
+    {% endif %}
+
+    {% for p in range(1, total_pages + 1) %}
+    {% if p == current_page %}
+    <button class="active" disabled>{{ p }}</button>
+    {% else %}
+    <a href="/customers/{{ c._id }}?page={{ p }}">{{ p }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if current_page < total_pages %} <a href="/customers/{{ c._id }}?page={{ current_page + 1 }}">Next ›</a>
+      <a href="/customers/{{ c._id }}?page={{ total_pages }}">Last »</a>
+      {% endif %}
+  </div>
+  {% endif %}
+  {% else %}
+  <p style="text-align: center; color: var(--text-secondary); padding: 32px;">No booking history yet</p>
+  {% endif %}
+</div>
+
+{% else %}
+
+<!-- Customer list with improved card layout -->
+<div class="grid cols-3" style="margin-bottom: 32px;">
+  {% if customers and customers|length > 0 %}
+  {% set items_per_page = 9 %}
+  {% set current_page = request.query_params.get('page', 1)|int %}
+  <!-- Removed |ceil filter and used integer division -->
+  {% set total_pages = ((customers|length - 1) // items_per_page) + 1 if customers|length > 0 else 1 %}
+  {% set start_idx = (current_page - 1) * items_per_page %}
+  {% set end_idx = start_idx + items_per_page %}
+
+  {% for c in customers[start_idx:end_idx] %}
+  <a href="/customers/{{ c._id }}" style="text-decoration: none;">
+    <div class="card" style="cursor: pointer; height: 100%;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+        <div
+          style="width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">
+          {{ c.name[0]|upper }}</div>
+        <div>
+          <h5 style="margin: 0; color: var(--text);">{{ c.name }}</h5>
+          <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 0.85rem;">{{ c.email or 'No email' }}
+          </p>
+        </div>
+      </div>
+      <div
+        style="border-top: 1px solid var(--border-subtle); padding-top: 12px; color: var(--text-secondary); font-size: 0.85rem;">
+        <div>📞 {{ c.phone or 'No phone' }}</div>
+        <div>📍 {{ c.address[:30] + '...' if c.address and c.address|length > 30 else c.address or 'No address' }}</div>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+
+  <!-- Added pagination for customer list -->
+  {% if total_pages > 1 %}
+  <div style="grid-column: 1 / -1;">
+    <div class="pagination">
+      {% if current_page > 1 %}
+      <a href="/customers?page=1">« First</a>
+      <a href="/customers?page={{ current_page - 1 }}">‹ Prev</a>
+      {% endif %}
+
+      {% for p in range(1, total_pages + 1) %}
+      {% if p == current_page %}
+      <button class="active" disabled>{{ p }}</button>
+      {% else %}
+      <a href="/customers?page={{ p }}">{{ p }}</a>
+      {% endif %}
+      {% endfor %}
+
+      {% if current_page < total_pages %} <a href="/customers?page={{ current_page + 1 }}">Next ›</a>
+        <a href="/customers?page={{ total_pages }}">Last »</a>
+        {% endif %}
+    </div>
+  </div>
+  {% endif %}
+  {% else %}
+  <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+    <div style="font-size: 3rem; margin-bottom: 16px;">👥</div>
+    <p style="font-size: 1.1rem; margin: 0;">No customers found</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endif %}
+
+<script>
+  async function loadCustomerTypes() {
+    try {
+      const res = await fetch('/customers/types');
+      const data = await res.json();
+      const types = data.types || [];
+
+      document.querySelectorAll('[id$="CustomerTypeList"]').forEach(dl => {
+        dl.innerHTML = '';
+        types.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          dl.appendChild(opt);
+        });
+      });
+    } catch (e) { console.error('Failed to load customer types', e); }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    loadCustomerTypes();
+    // Validate add-customer form: require at least email or phone
+    const addForm = document.querySelector('form[action="/customers/add"]');
+    if (addForm) {
+      addForm.addEventListener('submit', function(e) {
+        const email = (document.getElementById('add_email').value || '').trim();
+        const phone = (document.getElementById('add_phone').value || '').trim();
+        const err = document.getElementById('add_contact_error');
+        if (!email && !phone) {
+          e.preventDefault();
+          if (err) err.style.display = 'block';
+          return false;
+        }
+        if (err) err.style.display = 'none';
+      });
+    }
+  });
+</script>
+
+{% endblock %}

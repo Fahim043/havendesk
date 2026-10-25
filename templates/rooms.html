@@ -1,0 +1,503 @@
+{% extends "base.html" %}
+{% block title %}Rooms · HavenDesk{% endblock %}
+{% block content %}
+
+<div style="margin-bottom: 32px;">
+  <h2>🛏️ Room Management</h2>
+  <p style="color: var(--text-secondary); margin: 8px 0 0 0;">Manage all hotel rooms with real-time status updates</p>
+</div>
+
+<!-- Enhanced search and filter section -->
+<div class="card" style="margin-bottom: 32px;">
+  <details open>
+    <summary><strong>🔍 Filter & Search Rooms</strong></summary>
+    <form method="get" action="/rooms"
+      style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 160px; gap: 12px; margin-top: 16px; align-items: end;">
+      <div>
+        <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Search
+          Room</label>
+        <input type="text" name="search" placeholder="Room number..." class="input" style="width: 100%; margin: 0;"
+          value="{{ request.query_params.get('search', '') }}">
+      </div>
+      <div>
+        <label
+          style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Type</label>
+        <select name="filter_type" id="filterRoomType" class="input" style="width: 100%; margin: 0; cursor: pointer;">
+          <option value="">All Types</option>
+          <!-- Dynamically populated -->
+        </select>
+      </div>
+      <div>
+        <label
+          style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Status</label>
+        <select name="filter_status" class="input" style="width: 100%; margin: 0; cursor: pointer;">
+          <option value="">All Status</option>
+          <option value="Available" {% if request.query_params.get('filter_status')=='Available' %}selected{% endif %}>
+            Available</option>
+          <option value="Occupied" {% if request.query_params.get('filter_status')=='Occupied' %}selected{% endif %}>
+            Occupied</option>
+          <option value="UnderMaintenance" {% if request.query_params.get('filter_status')=='UnderMaintenance'
+            %}selected{% endif %}>Maintenance</option>
+        </select>
+      </div>
+      <div>
+        <label
+          style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Housekeeping</label>
+        <select name="filter_housekeeping" class="input" style="width: 100%; margin: 0; cursor: pointer;">
+          <option value="">All</option>
+          <option value="Clean" {% if request.query_params.get('filter_housekeeping')=='Clean' %}selected{% endif %}>
+            Clean</option>
+          <option value="Dirty" {% if request.query_params.get('filter_housekeeping')=='Dirty' %}selected{% endif %}>
+            Dirty</option>
+          <option value="InUse" {% if request.query_params.get('filter_housekeeping')=='InUse' %}selected{% endif %}>In
+            Use</option>
+        </select>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button type="submit" class="btn" style="flex: 1; padding: 10px 12px;">Apply</button>
+        <a href="/rooms" class="btn secondary"
+          style="padding: 10px 12px; text-decoration: none; text-align: center;">↺</a>
+      </div>
+    </form>
+  </details>
+</div>
+
+<!-- Add New Room Form -->
+<div class="card" style="margin-bottom: 32px;">
+  <details>
+    <summary><strong>+ Add New Room</strong></summary>
+    <form id="addRoomForm"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px;">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Room Number *</label>
+        <input type="text" name="room_number" placeholder="e.g., 101" required class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Room Type *</label>
+        <input type="text" name="room_type" list="addRoomTypeList" required class="input"
+          placeholder="Select or type custom..." autocomplete="off">
+        <datalist id="addRoomTypeList">
+          <!-- Dynamically populated -->
+        </datalist>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Price per Night *</label>
+        <input type="number" name="price_per_night" placeholder="e.g., 150.00" step="0.01" required class="input">
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <button type="submit" class="btn" style="width: 100%;">Add Room</button>
+      </div>
+    </form>
+  </details>
+</div>
+
+<!-- Rooms Table with Status Management -->
+<div class="card" style="margin-bottom: 32px;">
+  <h4 style="margin-top: 0;">📊 All Rooms ({{ filtered_rooms|length if filtered_rooms else 0 }} total)</h4>
+  {% if filtered_rooms and filtered_rooms|length > 0 %}
+  {% set items_per_page = 10 %}
+  {% set current_page = request.query_params.get('page', 1)|int %}
+  {% set total_pages = ((filtered_rooms|length - 1) // items_per_page) + 1 if filtered_rooms|length > 0 else 1 %}
+  {% set start_idx = (current_page - 1) * items_per_page %}
+  {% set end_idx = start_idx + items_per_page %}
+
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 80px;"><a
+              href="/rooms?sort_by=room_number&order={{ 'asc' if request.query_params.get('order') == 'desc' else 'desc' }}"
+              style="color:var(--text-secondary);">Room # ↕</a></th>
+          <th style="width: 120px;"><a
+              href="/rooms?sort_by=room_type&order={{ 'asc' if request.query_params.get('order') == 'desc' else 'desc' }}"
+              style="color:var(--text-secondary);">Type ↕</a></th>
+          <th style="width: 100px;"><a
+              href="/rooms?sort_by=price_per_night&order={{ 'asc' if request.query_params.get('order') == 'desc' else 'desc' }}"
+              style="color:var(--text-secondary);">Price ↕</a></th>
+          <th style="width: 110px;"><a
+              href="/rooms?sort_by=status&order={{ 'asc' if request.query_params.get('order') == 'desc' else 'desc' }}"
+              style="color:var(--text-secondary);">Status ↕</a></th>
+          <th style="width: 110px;">Housekeeping</th>
+          <th style="width: 80px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in filtered_rooms[start_idx:end_idx] %}
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">{{ r.room_number }}</strong></td>
+          <td style="font-size: 0.9rem;">{{ r.room_type }}</td>
+          <td><strong style="color: var(--text);">{{ currency }}{{ r.price_per_night }}</strong></td>
+          <td>
+            {% if r.status == 'Available' %}
+            <span class="status active">✓ Available</span>
+            {% elif r.status == 'Occupied' %}
+            <span class="status pending">🔒 Occupied</span>
+            {% elif r.status == 'UnderMaintenance' %}
+            <span class="status cancelled">⚙️ Maintenance</span>
+            {% elif r.status == 'OutOfService' %}
+            <span class="status cancelled" style="background: rgba(239,68,68,0.15); color: #ef4444;">🚫 Out of
+              Service</span>
+            {% else %}
+            <span class="status">{{ r.status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if r.housekeeping_status == 'Clean' %}
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            {% elif r.housekeeping_status == 'Dirty' %}
+            <span
+              style="display: inline-block; background: rgba(239, 68, 68, 0.15); color: var(--danger); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">⚠️
+              Dirty</span>
+            {% elif r.housekeeping_status == 'InUse' %}
+            <span
+              style="display: inline-block; background: rgba(245, 158, 11, 0.15); color: var(--warning); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">In
+              Use</span>
+            {% else %}
+            <span
+              style="display: inline-block; background: rgba(139, 92, 246, 0.15); color: var(--purple); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">{{
+              r.housekeeping_status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('{{ r.room_number }}', '{{ r.room_type }}', {{ r.price_per_night }}, '{{ r.status }}', '{{ r.housekeeping_status }}')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination for rooms table -->
+  {% if total_pages > 1 %}
+  <div class="pagination">
+    {% if current_page > 1 %}
+    <a href="/rooms?page=1">« First</a>
+    <a href="/rooms?page={{ current_page - 1 }}">‹ Prev</a>
+    {% endif %}
+
+    {% for p in range(1, total_pages + 1) %}
+    {% if p == current_page %}
+    <button class="active" disabled>{{ p }}</button>
+    {% else %}
+    <a href="/rooms?page={{ p }}">{{ p }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if current_page < total_pages %} <a href="/rooms?page={{ current_page + 1 }}">Next ›</a>
+      <a href="/rooms?page={{ total_pages }}">Last »</a>
+      {% endif %}
+  </div>
+  {% endif %}
+  {% else %}
+  <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+    <p style="margin: 0;">No rooms found. Try adjusting your filters or create your first room!</p>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Housekeeping Status Management -->
+<div class="card">
+  <h4 style="margin-top: 0;">🧹 Update Housekeeping Status</h4>
+  <form action="/rooms/housekeeping" method="post" onsubmit="return updateHousekeeping(event)"
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+    <div class="form-group" style="margin-bottom: 0;">
+      <label>Room Number *</label>
+      <input type="text" name="room_number" placeholder="e.g., 101" required class="input">
+    </div>
+    <div class="form-group" style="margin-bottom: 0;">
+      <label>Status *</label>
+      <select name="housekeeping_status" required class="input" style="cursor: pointer;">
+        <option value="">— Select Status —</option>
+        <option value="Clean">✓ Clean</option>
+        <option value="Dirty">⚠️ Dirty</option>
+        <option value="InUse">In Use</option>
+        <option value="OutOfService">Out of Service</option>
+      </select>
+    </div>
+    <div style="display: flex; align-items: flex-end;">
+      <button type="submit" class="btn" style="width: 100%;">Update Status</button>
+    </div>
+  </form>
+</div>
+
+<!-- Edit Room Modal -->
+<div id="editRoomModal"
+  style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9998; justify-content: center; align-items: center;">
+  <div
+    style="background: var(--card-bg, #1e1e2e); border: 1px solid var(--border); border-radius: 16px; padding: 32px; width: 90%; max-width: 520px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative;">
+    <button onclick="closeEditModal()"
+      style="position: absolute; top: 12px; right: 16px; background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 4px;">✕</button>
+    <h3 style="margin-top: 0; margin-bottom: 24px;">✏️ Edit Room Details</h3>
+    <form id="editRoomForm" style="display: grid; gap: 16px;">
+      <input type="hidden" name="original_room_number" id="editOriginalRoomNumber">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Room Number *</label>
+        <input type="text" name="room_number" id="editRoomNumber" required class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Room Type *</label>
+        <input type="text" name="room_type" id="editRoomType" list="editRoomTypeList" required class="input"
+          placeholder="Select or type custom..." autocomplete="off">
+        <datalist id="editRoomTypeList">
+          <!-- Dynamically populated -->
+        </datalist>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Price per Night *</label>
+        <input type="number" name="price_per_night" id="editPricePerNight" step="0.01" required class="input">
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>Status *</label>
+          <select name="status" id="editStatus" required class="input" style="cursor: pointer;">
+            <option value="Available">✓ Available</option>
+            <option value="Occupied">🔒 Occupied</option>
+            <option value="UnderMaintenance">⚙️ Maintenance</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>Housekeeping *</label>
+          <select name="housekeeping_status" id="editHousekeeping" required class="input" style="cursor: pointer;">
+            <option value="Clean">✓ Clean</option>
+            <option value="Dirty">⚠️ Dirty</option>
+            <option value="InUse">In Use</option>
+            <option value="OutOfService">Out of Service</option>
+          </select>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 8px;">
+        <button type="submit" class="btn" style="flex: 1;">Save Changes</button>
+        <button type="button" class="btn secondary" onclick="closeEditModal()" style="flex: 0.5;">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // ─── Load Room Types Dynamically ───
+  async function loadRoomTypes() {
+    try {
+      const res = await fetch('/rooms/types');
+      const data = await res.json();
+      const types = data.types || [];
+
+      // Populate Add form datalist
+      const addList = document.getElementById('addRoomTypeList');
+      if (addList) {
+        addList.innerHTML = '';
+        types.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          addList.appendChild(opt);
+        });
+      }
+
+      // Populate Edit modal datalist
+      const editList = document.getElementById('editRoomTypeList');
+      if (editList) {
+        editList.innerHTML = '';
+        types.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          editList.appendChild(opt);
+        });
+      }
+
+      // Populate filter dropdown
+      const filterSel = document.getElementById('filterRoomType');
+      if (filterSel) {
+        const currentFilter = '{{ request.query_params.get("filter_type", "") }}';
+        // Keep "All Types" option
+        filterSel.innerHTML = '<option value="">All Types</option>';
+        types.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          opt.textContent = t;
+          if (t === currentFilter) opt.selected = true;
+          filterSel.appendChild(opt);
+        });
+      }
+    } catch (e) { console.error('Failed to load room types', e); }
+  }
+  document.addEventListener('DOMContentLoaded', loadRoomTypes);
+
+  // ─── Add Room (AJAX) ───
+  document.getElementById('addRoomForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch('/rooms/add', { method: 'POST', body: formData })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showToast('Room added successfully!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Failed to add room', 'error');
+        }
+      })
+      .catch(() => showToast('Error adding room', 'error'));
+  });
+
+  // ─── Edit Modal ───
+  function openEditModal(roomNumber, roomType, price, status, housekeeping) {
+    document.getElementById('editOriginalRoomNumber').value = roomNumber;
+    document.getElementById('editRoomNumber').value = roomNumber;
+    document.getElementById('editRoomType').value = roomType;
+    document.getElementById('editPricePerNight').value = price;
+    document.getElementById('editStatus').value = status;
+    document.getElementById('editHousekeeping').value = housekeeping;
+    document.getElementById('editRoomModal').style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editRoomModal').style.display = 'none';
+  }
+
+  // Close modal on background click
+  document.getElementById('editRoomModal').addEventListener('click', function (e) {
+    if (e.target === this) closeEditModal();
+  });
+
+  // Close modal on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeEditModal();
+  });
+
+  // ─── Edit Room Submit (AJAX) ───
+  document.getElementById('editRoomForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    fetch('/rooms/update', { method: 'POST', body: formData })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showToast('Room updated successfully!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Failed to update room', 'error');
+        }
+      })
+      .catch(() => showToast('Error updating room', 'error'));
+  });
+
+  // ─── Housekeeping AJAX ───
+  function updateHousekeeping(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const roomNumber = formData.get('room_number');
+    const status = formData.get('housekeeping_status');
+
+    fetch('/rooms/housekeeping', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const tableRows = document.querySelectorAll('tbody tr');
+          tableRows.forEach(row => {
+            const roomNumCell = row.querySelector('td:first-child strong');
+            if (roomNumCell && roomNumCell.textContent === roomNumber) {
+              // Update housekeeping badge (column index 4)
+              const hkCell = row.children[4];
+              let badgeHTML = '';
+              if (status === 'Clean') {
+                badgeHTML = '<span style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓ Clean</span>';
+              } else if (status === 'Dirty') {
+                badgeHTML = '<span style="display: inline-block; background: rgba(239, 68, 68, 0.15); color: var(--danger); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">⚠️ Dirty</span>';
+              } else if (status === 'InUse') {
+                badgeHTML = '<span style="display: inline-block; background: rgba(245, 158, 11, 0.15); color: var(--warning); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">In Use</span>';
+              } else {
+                badgeHTML = '<span style="display: inline-block; background: rgba(139, 92, 246, 0.15); color: var(--purple); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">' + status + '</span>';
+              }
+              hkCell.innerHTML = badgeHTML;
+
+              // Update room status badge (column index 3) based on backend response
+              const roomStatus = data.status;
+              const statusCell = row.children[3];
+              let statusHTML = '';
+              if (roomStatus === 'Available') {
+                statusHTML = '<span class="status active">✓ Available</span>';
+              } else if (roomStatus === 'Occupied') {
+                statusHTML = '<span class="status pending">🔒 Occupied</span>';
+              } else if (roomStatus === 'OutOfService') {
+                statusHTML = '<span class="status cancelled" style="background: rgba(239,68,68,0.15); color: #ef4444;">🚫 Out of Service</span>';
+              } else if (roomStatus === 'UnderMaintenance') {
+                statusHTML = '<span class="status cancelled">⚙️ Maintenance</span>';
+              } else {
+                statusHTML = '<span class="status">' + roomStatus + '</span>';
+              }
+              statusCell.innerHTML = statusHTML;
+            }
+          });
+          showToast('Housekeeping status updated successfully!', 'success');
+          form.reset();
+        } else {
+          showToast('Failed to update status', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showToast('Error updating status', 'error');
+      });
+    return false;
+  }
+
+  // ─── Toast Notification ───
+  function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+  `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.animation = 'fadeOut 0.3s ease-out';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+</script>
+
+<style>
+  @keyframes slideIn {
+    from {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+</style>
+
+{% endblock %}

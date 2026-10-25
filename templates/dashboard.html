@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · HavenDesk{% endblock %}
+{% block content %}
+
+<h2 style="margin-bottom: 24px;">Command Center</h2>
+
+<!-- AI Insights Widget -->
+<div class="card"
+  style="margin-bottom: 32px; background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(244, 63, 94, 0.1) 100%); border: 1px solid var(--primary-light);">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <h3 style="margin:0; color:var(--text); display:flex; align-items:center; gap:12px;">
+      <i class="fa-solid fa-robot" style="color:var(--primary-light);"></i> AI Insights & Financial Health
+    </h3>
+    <span class="badge success" id="fin-health-badge">Healthy</span>
+  </div>
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+    <!-- Operational Insights -->
+    <div id="ai-insights-container" style="display:flex; gap:16px; overflow-x:auto; padding-bottom:8px;">
+      <div style="color:var(--text-secondary);">Analyzing hotel data...</div>
+    </div>
+
+    <!-- Financial Bleed Analysis -->
+    <div style="border-left: 1px solid var(--glass-border); padding-left: 24px;">
+      <h5 style="margin:0 0 12px 0;">💰 Profit Optimization</h5>
+      <div id="financial-ai-content" style="font-size: 0.9rem; color: var(--text-secondary);">
+        Loading analysis...
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid cols-4">
+  <div class="card stat">
+    <div>
+      <div class="label">Total Rooms</div>
+      <div class="value">{{ stats.total_rooms }}</div>
+    </div>
+    <div style="font-size: 2.5rem; color: rgba(255,255,255,0.2);">🛏️</div>
+  </div>
+  <div class="card stat">
+    <div>
+      <div class="label">Occupied</div>
+      <div class="value">{{ stats.occupied_rooms }}</div>
+    </div>
+    <div style="font-size: 2.5rem; color: rgba(255,255,255,0.2);">🔒</div>
+  </div>
+  <div class="card stat">
+    <div>
+      <div class="label">Available</div>
+      <div class="value">{{ stats.available_rooms }}</div>
+    </div>
+    <div style="font-size: 2.5rem; color: rgba(255,255,255,0.2);">✅</div>
+  </div>
+  <div class="card stat">
+    <div>
+      <div class="label">Active Bookings</div>
+      <div class="value">{{ stats.active_bookings }}</div>
+    </div>
+    <div style="font-size: 2.5rem; color: rgba(255,255,255,0.2);">📅</div>
+  </div>
+</div>
+
+<div class="grid cols-2" style="margin-top: 32px;">
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+      <h4 style="margin:0;">Occupancy Prediction (AI)</h4>
+      <div style="font-size:0.8rem; color:var(--success);"><i class="fa-solid fa-bolt"></i> Dynamic Pricing Active</div>
+    </div>
+    <div style="position: relative; height: 300px; width: 100%;">
+      <canvas id="occChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+      <h4 style="margin:0;">Revenue Forecast</h4>
+      <a href="/financials" class="btn secondary" style="padding: 4px 10px; font-size: 0.8rem;">Details &rarr;</a>
+    </div>
+    <div style="position: relative; height: 300px; width: 100%;">
+      <canvas id="revChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- AI Assistant Floating Widget -->
+<div id="ai-assistant" style="position: fixed; bottom: 30px; right: 30px; z-index: 1000;">
+  <div id="ai-chat-bubble"
+    style="display:none; width: 300px; background: var(--bg-secondary); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-lg);">
+    <h5 style="margin:0 0 8px 0; color: var(--primary-light); display:flex; align-items:center; gap:8px;">
+      <i class="fa-solid fa-sparkles"></i> AI Assistant
+    </h5>
+    <div id="ai-message" style="font-size: 0.9rem; color: var(--text);">
+      Loading AI insights...
+    </div>
+  </div>
+  <button onclick="toggleAI()"
+    style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary); border: none; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 0 20px var(--primary-glow); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    <i class="fa-solid fa-robot"></i>
+  </button>
+</div>
+
+<script>
+  function toggleAI() {
+    const bubble = document.getElementById('ai-chat-bubble');
+    if (bubble.style.display === 'none') {
+      bubble.style.display = 'block';
+      bubble.style.animation = 'fadeInUp 0.3s ease-out';
+    } else {
+      bubble.style.display = 'none';
+    }
+  }
+</script>
+
+<script>
+  async function loadAI() {
+    try {
+      // Fetch Insights
+      const res = await fetch('/ai/insights');
+      const data = await res.json();
+      const container = document.getElementById('ai-insights-container');
+
+      if (data.insights && data.insights.length > 0) {
+        container.innerHTML = data.insights.map(i => `
+                <div style="min-width: 280px; padding: 16px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-size: 0.8rem; text-transform:uppercase; color: var(--primary-light); margin-bottom:8px;">
+                        ${i.type} (${(i.confidence * 100).toFixed(0)}%)
+                    </div>
+                    <div style="font-size: 0.95rem; line-height: 1.4;">${i.text}</div>
+                </div>
+            `).join('');
+      } else {
+        container.innerHTML = '<div style="color:var(--text-secondary);">No critical insights at this moment.</div>';
+      }
+
+      // Fetch Financial Health
+      const finRes = await fetch('/ai/financial-health');
+      const finData = await finRes.json();
+
+      const finContainer = document.getElementById('financial-ai-content');
+      if (finData.alerts && finData.alerts.length > 0) {
+        document.getElementById('fin-health-badge').className = 'badge danger';
+        document.getElementById('fin-health-badge').textContent = 'Action Needed';
+        finContainer.innerHTML = `
+            <ul style="padding-left:16px; margin:0; color:var(--danger);">
+                ${finData.alerts.map(a => `<li>${a}</li>`).join('')}
+            </ul>
+            <div style="margin-top:8px; color:var(--success); font-size:0.85rem;">
+                <i class="fa-solid fa-lightbulb"></i> ${finData.suggestions[0]}
+            </div>
+          `;
+      } else {
+        finContainer.innerHTML = `
+            <div style="color:var(--success);"><i class="fa-solid fa-check-circle"></i> No major bleeds detected.</div>
+            <div style="margin-top:8px; font-size:0.85rem;">${finData.suggestions[0] || 'Keep up the good work!'}</div>
+          `;
+      }
+
+      // Fetch Forecast
+      const predRes = await fetch('/ai/predict/revenue');
+      const predData = await predRes.json();
+
+      // Fetch occupancy forecast for chart
+      const occRes = await fetch('/ai/predict/occupancy-forecast');
+      const occData = await occRes.json();
+
+      initCharts(predData, occData);
+
+      // Update AI assistant bubble with dynamic insight
+      if (occData.forecast && occData.forecast.length > 0) {
+        const trendText = occData.trend === 'increasing' ? 'rise' : occData.trend === 'decreasing' ? 'decline' : 'remain stable';
+        const avgOcc = Math.round(occData.forecast.reduce((a, b) => a + b.occupancy, 0) / occData.forecast.length);
+        document.getElementById('ai-message').innerHTML = `
+          Hello! Based on historical patterns, <strong>occupancy is projected to ${trendText}</strong> over the next week 
+          (avg ${avgOcc}%). ${avgOcc > 70 ? 'Consider adjusting room rates.' : 'Consider promotional campaigns.'}
+        `;
+      }
+
+    } catch (e) {
+      console.error("AI Load Error", e);
+    }
+  }
+
+  function initCharts(predData, occData) {
+    const primaryColor = '#0d9488';
+    const accentColor = '#f43f5e';
+
+    // Build occupancy chart data from real API
+    const occLabels = occData.forecast ? occData.forecast.map(f => new Date(f.date).toLocaleDateString('en-US', { weekday: 'short' })) : [];
+    const occValues = occData.forecast ? occData.forecast.map(f => f.occupancy) : [];
+
+    // Occupancy Chart
+    new Chart(document.getElementById('occChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: occLabels,
+        datasets: [{
+          label: 'AI Forecast (' + Math.round((occData.confidence || 0) * 100) + '% confident)',
+          data: occValues,
+          borderColor: accentColor,
+          backgroundColor: 'rgba(244, 63, 94, 0.1)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: document.documentElement.getAttribute('data-theme') === 'light' ? '#132329' : '#fff' } } },
+        scales: {
+          y: { ticks: { color: '#94a3b8' }, grid: { color: document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' } },
+          x: { ticks: { color: '#94a3b8' }, grid: { color: document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+
+    // Revenue Chart
+    new Chart(document.getElementById('revChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: predData.labels || [],
+        datasets: [{
+          label: 'Forecast ({{ currency }})',
+          data: predData.data || [],
+          backgroundColor: primaryColor,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: document.documentElement.getAttribute('data-theme') === 'light' ? '#132329' : '#fff' } } },
+        scales: {
+          y: { ticks: { color: '#94a3b8' }, grid: { color: document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' } },
+          x: { ticks: { color: '#94a3b8' }, grid: { color: document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+  }
+
+  loadAI();
+</script>
+
+{% endblock %}

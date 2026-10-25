@@ -1,0 +1,1114 @@
+
+<!doctype html>
+<html lang="en">
+<script>
+  // Apply saved theme IMMEDIATELY to prevent flash of wrong theme
+  (function () {
+    var t = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<head>
+<script>
+(function(){
+  const MOCK = {"/ai/insights": {"insights": [{"type": "financial", "text": "Strong weekly revenue (\u09f343,700). Performance is 12% above projected targets.", "confidence": 0.9}]}, "/analytics/data?range=7days": {"total_rooms": 9, "occupied": 4, "available": 3, "revenue": 89800.0, "start_date": "2026-10-18", "end_date": "2026-10-25", "rooms_by_type": [{"name": "Deluxe Single", "value": 2}, {"name": "Emerald Double", "value": 2}, {"name": "Family Quad", "value": 2}, {"name": "Haven Executive Suite", "value": 2}, {"name": "Royal Penthouse", "value": 1}], "top_customers": [{"name": "Samira Karim", "total": 52500.0}, {"name": "Aarav Chowdhury", "total": 35000.0}, {"name": "Rafiq Ahmed", "total": 25500.0}, {"name": "Nusrat Jahan", "total": 18100.0}, {"name": "Farhana Rahman", "total": 7000.0}], "labels": ["2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"], "revenue_trend": [7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "daily_occupancy": [11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 44.4], "daily_revenue": [7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "payment_methods": [{"method": "Card", "count": 3, "total": 56500.0}, {"method": "bKash", "count": 2, "total": 15000.0}, {"method": "Cash", "count": 2, "total": 12200.0}]}, "/analytics/data?range=30days": {"total_rooms": 9, "occupied": 4, "available": 3, "revenue": 117800.0, "start_date": "2026-09-25", "end_date": "2026-10-25", "rooms_by_type": [{"name": "Deluxe Single", "value": 2}, {"name": "Emerald Double", "value": 2}, {"name": "Family Quad", "value": 2}, {"name": "Haven Executive Suite", "value": 2}, {"name": "Royal Penthouse", "value": 1}], "top_customers": [{"name": "Samira Karim", "total": 52500.0}, {"name": "Aarav Chowdhury", "total": 35000.0}, {"name": "Rafiq Ahmed", "total": 25500.0}, {"name": "Nusrat Jahan", "total": 18100.0}, {"name": "Farhana Rahman", "total": 7000.0}], "labels": ["2026-09-25", "2026-09-26", "2026-09-27", "2026-09-28", "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09", "2026-10-10", "2026-10-11", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"], "revenue_trend": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "daily_occupancy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.1, 11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 44.4], "daily_revenue": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "payment_methods": [{"method": "Card", "count": 3, "total": 56500.0}, {"method": "bKash", "count": 2, "total": 15000.0}, {"method": "Cash", "count": 2, "total": 12200.0}]}, "/analytics/comparison": {"ytd": {"current_year": 2026, "previous_year": 2025, "current": {"bookings": 6, "revenue": 117800.0, "period": "Jan 1 - Oct 25, 2026"}, "previous": {"bookings": 0, "revenue": 0, "period": "Jan 1 - Oct 25, 2025"}, "revenue_growth": 0, "bookings_growth": 0, "group": {"current": {"bookings": 0, "revenue": 0.0}, "previous": {"bookings": 0, "revenue": 0.0}}, "individual": {"current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0.0}}}, "mom": {"current_month": "October 2026", "previous_month": "Sep 2026", "current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0}, "revenue_growth": 0, "group": {"current": {"bookings": 0, "revenue": 0.0}, "previous": {"bookings": 0, "revenue": 0.0}}, "individual": {"current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0.0}}}}, "/analytics/advanced": {"booking_velocity": [{"date": "2026-10-11", "count": 1}, {"date": "2026-10-18", "count": 1}, {"date": "2026-10-25", "count": 4}, {"date": "2026-10-27", "count": 1}], "avg_length_of_stay": 2.5, "revpar": 530.74, "revenue_by_room_type": [{"type": "Deluxe Single", "revenue": 14000.0}, {"type": "Emerald Double", "revenue": 23300.0}, {"type": "Haven Executive Suite", "revenue": 28000.0}, {"type": "Royal Penthouse", "revenue": 52500.0}]}, "/analytics/booking-types": {"group_total": 0, "individual_total": 7, "monthly_labels": ["May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026"], "monthly_group": [0, 0, 0, 0, 0, 0], "monthly_individual": [0, 0, 0, 0, 0, 7], "monthly_revenue_group": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "monthly_revenue_individual": [0.0, 0.0, 0.0, 0.0, 0.0, 143300.0]}, "/campaigns/filter-options": {"services": ["Airport Limousine Pickup", "Complimentary Breakfast Buffet", "Express Laundry Service", "Spa & Wellness Package"], "room_types": ["Deluxe Single", "Emerald Double", "Family Quad", "Haven Executive Suite", "Royal Penthouse"], "customer_types": ["Regular", "VIP", "Corporate", "Group", "Walk-in", "Online"], "payment_methods": ["Cash", "Card", "bKash", "Nagad", "Bank Transfer"], "currency": "\u09f3"}, "/bookings/available-rooms": [{"room_number": "101", "room_type": "Deluxe Single", "price_per_night": 3500.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "102", "room_type": "Deluxe Single", "price_per_night": 3500.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "103", "room_type": "Emerald Double", "price_per_night": 5200.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "201", "room_type": "Emerald Double", "price_per_night": 5200.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "202", "room_type": "Haven Executive Suite", "price_per_night": 8500.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "203", "room_type": "Haven Executive Suite", "price_per_night": 8500.0, "status": "Reserved", "has_conflict": false, "conflict_message": ""}, {"room_number": "301", "room_type": "Royal Penthouse", "price_per_night": 12500.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "302", "room_type": "Family Quad", "price_per_night": 7000.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "303", "room_type": "Family Quad", "price_per_night": 7000.0, "status": "Maintenance", "has_conflict": false, "conflict_message": ""}], "/campaigns/audience": {"customers": [{"id": 4, "name": "Samira Karim", "email": "samira.k@example.com", "phone": "01644556677", "customer_type": "VIP", "stays": 1, "nights": 4, "total_spent": 52500.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Samira Karim", "first_name": "Samira", "email": "samira.k@example.com", "phone": "01644556677", "customer_type": "VIP", "total_spent": "\u09f352,500", "avg_spend": "\u09f352,500", "total_stays": "1", "total_nights": "4", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Royal Penthouse", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 1, "name": "Aarav Chowdhury", "email": "aarav.c@example.com", "phone": "01711223344", "customer_type": "VIP", "stays": 2, "nights": 5, "total_spent": 35000.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Aarav Chowdhury", "first_name": "Aarav", "email": "aarav.c@example.com", "phone": "01711223344", "customer_type": "VIP", "total_spent": "\u09f335,000", "avg_spend": "\u09f317,500", "total_stays": "2", "total_nights": "5", "first_visit": "11 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Deluxe Single", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 2, "name": "Nusrat Jahan", "email": "nusrat.j@example.com", "phone": "01822334455", "customer_type": "Regular", "stays": 1, "nights": 3, "total_spent": 18100.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Nusrat Jahan", "first_name": "Nusrat", "email": "nusrat.j@example.com", "phone": "01822334455", "customer_type": "Regular", "total_spent": "\u09f318,100", "avg_spend": "\u09f318,100", "total_stays": "1", "total_nights": "3", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Emerald Double", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 6, "name": "Farhana Rahman", "email": "farhana.r@example.com", "phone": "01566778899", "customer_type": "Corporate", "stays": 1, "nights": 2, "total_spent": 7000.0, "last_visit": "18 Oct 2026", "days_since_last": 7, "opted_out": false, "merge": {"name": "Farhana Rahman", "first_name": "Farhana", "email": "farhana.r@example.com", "phone": "01566778899", "customer_type": "Corporate", "total_spent": "\u09f37,000", "avg_spend": "\u09f37,000", "total_stays": "1", "total_nights": "2", "first_visit": "18 Oct 2026", "last_visit": "18 Oct 2026", "days_since_last_visit": "7", "favorite_room_type": "Deluxe Single", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 3, "name": "Tariqul Islam", "email": "tariq.islam@example.com", "phone": "01933445566", "customer_type": "Corporate", "stays": 1, "nights": 1, "total_spent": 5200.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Tariqul Islam", "first_name": "Tariqul", "email": "tariq.islam@example.com", "phone": "01933445566", "customer_type": "Corporate", "total_spent": "\u09f35,200", "avg_spend": "\u09f35,200", "total_stays": "1", "total_nights": "1", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Emerald Double", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 5, "name": "Rafiq Ahmed", "email": "rafiq.a@example.com", "phone": "01755667788", "customer_type": "Regular", "stays": 0, "nights": 0, "total_spent": 0.0, "last_visit": "", "days_since_last": null, "opted_out": false, "merge": {"name": "Rafiq Ahmed", "first_name": "Rafiq", "email": "rafiq.a@example.com", "phone": "01755667788", "customer_type": "Regular", "total_spent": "\u09f30", "avg_spend": "\u09f30", "total_stays": "0", "total_nights": "0", "first_visit": "", "last_visit": "", "days_since_last_visit": "", "favorite_room_type": "", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}], "summary": {"matched": 6, "opted_out_excluded": 0, "with_email": 6, "with_phone": 6}}};
+
+  const origFetch = window.fetch.bind(window);
+  window.fetch = async function(url, opts) {
+    const key = typeof url === "string" ? url : (url.url || "");
+    if (MOCK[key]) {
+      return new Response(JSON.stringify(MOCK[key]), {status: 200, headers: {"Content-Type": "application/json"}});
+    }
+    const baseKey = key.split("?")[0];
+    if (MOCK[baseKey]) {
+      return new Response(JSON.stringify(MOCK[baseKey]), {status: 200, headers: {"Content-Type": "application/json"}});
+    }
+    return origFetch(url, opts);
+  };
+})();
+</script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analytics · HavenDesk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/theme.css?v=7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+      <img src="static/img/havendesk-logo.svg" alt="Logo" style="height: 32px; width: auto;"> HavenDesk
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+      <a href="rooms.html" class="">
+        <i class="fa-solid fa-bed"></i> Rooms
+      </a>
+      <a href="bookings.html" class="">
+        <i class="fa-solid fa-calendar-check"></i> Bookings
+      </a>
+      <a href="customers.html" class="">
+        <i class="fa-solid fa-users"></i> Customers
+      </a>
+      <a href="inventory.html" class="">
+        <i class="fa-solid fa-boxes-stacked"></i> Inventory
+      </a>
+      <a href="services.html" class="">
+        <i class="fa-solid fa-bell-concierge"></i> Services
+      </a>
+      <a href="financials.html" class="">
+        <i class="fa-solid fa-coins"></i> Financials
+      </a>
+      <a href="analytics.html" class="active">
+        <i class="fa-solid fa-chart-pie"></i> Analytics
+      </a>
+      <a href="daily-report.html" class="">
+        <i class="fa-solid fa-file-invoice"></i> Daily Report
+      </a>
+      <a href="campaigns.html" class="">
+        <i class="fa-solid fa-bullhorn"></i> Campaigns
+      </a>
+      <div style="flex-grow:1"></div>
+      <a href="settings.html" class="">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+      <a href="/auth/logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+    <footer>
+      &copy; 2026 AI-Possible<br>v1.2.0 AI Edition
+    </footer>
+  </aside>
+
+  <div class="content">
+    
+<div style="background:linear-gradient(90deg,rgba(13,148,136,0.22),rgba(5,150,105,0.12));border-bottom:1px solid rgba(45,212,191,0.3);padding:8px 24px;font-size:0.82rem;color:#2dd4bf;display:flex;justify-content:space-between;align-items:center;">
+  <span>✨ <b>HavenDesk Interactive UI Preview</b> (Static GitHub Pages Demo · Powered by AI-Possible)</span>
+  <a href="https://github.com/Fahim043/havendesk" style="color:#fff;font-weight:600;text-decoration:underline;">View Source on GitHub →</a>
+</div>
+<header class="topbar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" id="menuBtn" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div style="font-weight:600; color:var(--text-secondary);">
+        Sunday, 25 October 2026
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="badge success">AI Active</span>
+        <button id="themeToggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode"
+          style="width:36px; height:36px; border-radius:50%; border:1px solid var(--glass-border); background:var(--glass-panel); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; transition:all 0.3s ease; padding:0;">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <div
+          style="width:32px; height:32px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">
+          G
+        </div>
+      </div>
+    </header>
+
+    <div class="main-scroll">
+      <div class="container">
+        
+
+<div
+  style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
+  <h2 style="margin: 0;">📊 Advanced Analytics</h2>
+
+  <!-- Compact Filter Bar -->
+  <div
+    style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: rgba(30, 41, 59, 0.5); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--glass-border);">
+    <!-- Preset Range -->
+    <select id="dateFilter" class="input"
+      style="width: auto; min-width: 120px; margin: 0; padding: 8px 12px; font-size: 0.85rem;">
+      <option value="7days">Last 7 Days</option>
+      <option value="30days">Last 30 Days</option>
+      <option value="90days">Last 90 Days</option>
+      <option value="12months">Last 12 Months</option>
+      <option value="24months">Last 24 Months</option>
+    </select>
+
+    <span style="color: var(--text-secondary); font-size: 0.85rem;">or</span>
+
+    <!-- Month/Year Combo -->
+    <div style="display: flex; gap: 4px; align-items: center;">
+      <select id="specificMonthSelect" class="input"
+        style="width: auto; min-width: 90px; margin: 0; padding: 8px 10px; font-size: 0.85rem;">
+        <option value="">Month</option>
+        <option value="01">Jan</option>
+        <option value="02">Feb</option>
+        <option value="03">Mar</option>
+        <option value="04">Apr</option>
+        <option value="05">May</option>
+        <option value="06">Jun</option>
+        <option value="07">Jul</option>
+        <option value="08">Aug</option>
+        <option value="09">Sep</option>
+        <option value="10">Oct</option>
+        <option value="11">Nov</option>
+        <option value="12">Dec</option>
+      </select>
+      <select id="specificYearSelect" class="input"
+        style="width: auto; min-width: 70px; margin: 0; padding: 8px 10px; font-size: 0.85rem;">
+        <option value="">Year</option>
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+      </select>
+      <button id="applyMonthYear" class="btn" style="padding: 8px 12px; font-size: 0.85rem;">Go</button>
+    </div>
+
+    <span style="color: var(--glass-border);">│</span>
+
+    <!-- Full Year -->
+    <input type="number" id="yearFilter" class="input" placeholder="Year" min="2020" max="2099"
+      style="width: 70px; margin: 0; padding: 8px 10px; font-size: 0.85rem;">
+
+    <!-- Clear & Active Badge -->
+    <button class="btn secondary" onclick="clearFilters()" style="padding: 8px 12px; font-size: 0.85rem;">✕</button>
+    <span id="activeFilterBadge" class="badge success" style="display: none; font-size: 0.75rem;"></span>
+  </div>
+</div>
+
+
+<!-- Analytics Stats Grid -->
+<div class="grid cols-4" style="margin-bottom: 32px;">
+  <div class="card stat">
+    <div>
+      <div class="label">Total Rooms</div>
+      <div class="value" id="totalRooms">0</div>
+    </div>
+  </div>
+  <div class="card stat">
+    <div>
+      <div class="label">Occupancy</div>
+      <div class="value" id="occupancy" style="font-size: 1.5rem;">0 / 0</div>
+    </div>
+  </div>
+  <div class="card stat">
+    <div>
+      <div class="label">Revenue</div>
+      <div class="value" id="revenue">৳0</div>
+    </div>
+  </div>
+  <div class="card stat">
+    <div>
+      <div class="label">ADR</div>
+      <div class="value" id="adr" style="font-size: 1.5rem;">৳0</div>
+    </div>
+  </div>
+</div>
+
+<!-- Performance Overview Section -->
+<h3 style="margin: 32px 0 24px 0; border-bottom: 2px solid var(--border-subtle); padding-bottom: 8px;">📈 Performance Overview</h3>
+<div class="grid cols-2" style="gap: 24px; margin-bottom: 32px;">
+  <!-- Left Column: YoY and MoM Cards -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <!-- Year-to-Date Comparison -->
+    <div style="padding: 20px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.05)); border-radius: 12px; border-left: 4px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+      <h5 style="margin: 0 0 16px 0; color: var(--text-secondary);">📅 Year-to-Date (YTD)</h5>
+      <div id="ytdComparison" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary);" id="ytdCurrentLabel">Jan 1 - Today, 2026</div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: var(--success);" id="ytdCurrentRevenue">৳0</div>
+          <div style="font-size: 0.9rem; color: var(--text-secondary);"><span id="ytdCurrentBookings">0</span> bookings</div>
+        </div>
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary);" id="ytdPrevLabel">Jan 1 - Today, 2025</div>
+          <div style="font-size: 1.5rem; font-weight: 600; color: var(--text);" id="ytdPrevRevenue">৳0</div>
+          <div style="font-size: 0.9rem; color: var(--text-secondary);"><span id="ytdPrevBookings">0</span> bookings</div>
+        </div>
+      </div>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+        <span style="font-size: 0.9rem;">YoY Growth:</span>
+        <span id="ytdGrowth" class="badge" style="margin-left: 8px;">0%</span>
+      </div>
+    </div>
+
+    <!-- Month-over-Month Comparison -->
+    <div style="padding: 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(212, 175, 55, 0.05)); border-radius: 12px; border-left: 4px solid var(--success); box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+      <h5 style="margin: 0 0 16px 0; color: var(--text-secondary);">📆 Month-over-Month (MoM)</h5>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary);" id="momCurrentLabel">February 2026</div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: var(--success);" id="momCurrentRevenue">৳0</div>
+          <div style="font-size: 0.9rem; color: var(--text-secondary);"><span id="momCurrentBookings">0</span> bookings</div>
+        </div>
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary);" id="momPrevLabel">January 2026</div>
+          <div style="font-size: 1.5rem; font-weight: 600; color: var(--text);" id="momPrevRevenue">৳0</div>
+          <div style="font-size: 0.9rem; color: var(--text-secondary);"><span id="momPrevBookings">0</span> bookings</div>
+        </div>
+      </div>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+        <span style="font-size: 0.9rem;">MoM Growth:</span>
+        <span id="momGrowth" class="badge" style="margin-left: 8px;">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Daily Stats Trend -->
+  <div class="card" style="margin: 0; display: flex; flex-direction: column;">
+    <h4 style="margin-top: 0; margin-bottom: 16px;">📈 Daily Stats Trend</h4>
+    <div style="position: relative; flex: 1; min-height: 300px;">
+      <canvas id="dailyStatsChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Booking Types & Guest Behavior -->
+<h3 style="margin: 48px 0 24px 0; border-bottom: 2px solid var(--border-subtle); padding-bottom: 8px;">👥 Booking Types & Guest Behavior</h3>
+<div class="grid cols-2" style="margin-bottom: 32px; gap: 24px;">
+  <!-- Group vs Individual Doughnut -->
+  <div class="card">
+    <h4 style="margin-top: 0; text-align: center;">🏨 Group vs Individual Bookings</h4>
+    <div style="position: relative; height: 280px;">
+      <canvas id="bookingTypeChart"></canvas>
+    </div>
+    <div id="bookingTypeLegend" style="margin-top: 12px;"></div>
+  </div>
+
+  <!-- Payment Methods Preference -->
+  <div class="card">
+    <h4 style="margin-top: 0; text-align: center;">💳 Payment Method Preferences</h4>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; height: 100%;">
+      <div style="position: relative; height: 220px; width: 100%;">
+        <canvas id="paymentMethodChart"></canvas>
+      </div>
+      <div id="paymentMethodLegend" style="width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Group vs Individual Deep Dive Section -->
+<h3 style="margin: 48px 0 24px 0; border-bottom: 2px solid var(--border-subtle); padding-bottom: 8px;">📊 Group vs Individual Deep Dive</h3>
+<div class="card" style="margin-bottom: 32px;">
+  <h4 style="margin-top: 0; margin-bottom: 24px; text-align: center; color: var(--text-secondary);">YTD & MTD Revenue Comparison</h4>
+  <div class="grid cols-2" style="gap: 24px;">
+    <div style="position: relative; height: 320px; padding: 16px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+      <canvas id="groupIndivYtdChart"></canvas>
+    </div>
+    <div style="position: relative; height: 320px; padding: 16px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+      <canvas id="groupIndivMtdChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="grid cols-2" style="margin-bottom: 32px; gap: 24px;">
+  <div class="card">
+    <h4 style="margin-top: 0; text-align: center;">📅 Monthly Booking Split (Last 6 Months)</h4>
+    <div style="position: relative; height: 320px;">
+      <canvas id="monthlyBookingTypeChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <h4 style="margin-top: 0; text-align: center;">💰 Monthly Revenue Split (Last 6 Months)</h4>
+    <div style="position: relative; height: 320px;">
+      <canvas id="monthlyRevenueTypeChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Rooms & Revenue Distribution -->
+<h3 style="margin: 48px 0 24px 0; border-bottom: 2px solid var(--border-subtle); padding-bottom: 8px;">🏠 Rooms & Revenue Distribution</h3>
+<div class="grid cols-3" style="gap: 24px; margin-bottom: 32px;">
+  <div class="card">
+    <h4 style="margin-top: 0; text-align: center;">Occupancy Status</h4>
+    <div style="position: relative; height: 250px;">
+      <canvas id="occupancyChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <h4 style="margin-top: 0; text-align: center;">Room Type Popularity</h4>
+    <div style="position: relative; height: 250px;">
+      <canvas id="roomTypeChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <h4 style="margin-top: 0; text-align: center;">Revenue by Room Type</h4>
+    <div style="position: relative; height: 250px;">
+      <canvas id="revenueByTypeChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom: 32px;">
+  <h4 style="margin-top: 0;">🌟 Top 5 Customers by Spend</h4>
+  <div style="position: relative; height: 350px;">
+    <canvas id="revenueChart"></canvas>
+  </div>
+</div>
+
+<!-- Advanced Analytics Section -->
+<h3 style="margin: 48px 0 24px 0; border-bottom: 2px solid var(--border-subtle); padding-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+  🤖 AI-Powered Insights & Forecasting
+  <span class="badge success" style="font-size: 0.75rem;">New</span>
+</h3>
+
+<!-- Advanced Metrics Cards -->
+<div class="grid cols-4" style="margin-bottom: 32px;">
+  <div class="card stat">
+    <div>
+      <div class="label">RevPAR (30d)</div>
+      <div class="value" id="revpar" style="font-size: 1.8rem;">৳0</div>
+    </div>
+  </div>
+  <div class="card stat">
+    <div>
+      <div class="label">Avg Stay Length</div>
+      <div class="value" id="avgStay" style="font-size: 1.8rem;">0</div>
+    </div>
+  </div>
+  <div class="card stat">
+    <div>
+      <div class="label">Bookings (30d)</div>
+      <div class="value" id="bookingCount" style="font-size: 1.8rem;">0</div>
+    </div>
+  </div>
+  <div class="card stat" style="background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(168,85,247,0.1)); border: 1px solid rgba(20,184,166,0.3);">
+    <div>
+      <div class="label">Occupancy Forecast Trend</div>
+      <div class="value" id="forecastTrend" style="font-size: 1.8rem; text-align: center;">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- AI Forecast & Booking Velocity Charts -->
+<div class="grid cols-2" style="margin-bottom: 32px; gap: 24px;">
+  <div class="card" style="border-top: 4px solid var(--primary);">
+    <h4 style="margin-top: 0; display: flex; justify-content: space-between; align-items: center;">
+      <span>🔮 AI Occupancy Forecast (Next 7 Days)</span>
+      <span id="forecastConfidence" class="badge success" style="font-size: 0.7rem;"></span>
+    </h4>
+    <div style="position: relative; height: 300px;">
+      <canvas id="forecastChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <h4 style="margin-top: 0;">⏱️ Booking Velocity (Last 30 Days)</h4>
+    <div style="position: relative; height: 300px;">
+      <canvas id="velocityChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Group vs Individual Booking Comparison -->
+
+
+<!-- Deep Dive Modal -->
+<div id="detailsModal"
+  style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); z-index:2000; align-items:center; justify-content:center;">
+  <div
+    style="background: rgba(30, 41, 59, 0.9); border: 1px solid var(--primary); border-radius: 16px; width: 600px; max-height:80vh; display:flex; flex-direction:column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+    <div
+      style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="margin:0; color:white;">📅 <span id="modalDate">Details</span></h3>
+      <button onclick="document.getElementById('detailsModal').style.display='none'"
+        style="background:none; border:none; color:var(--text-secondary); font-size:1.5rem; cursor:pointer;">&times;</button>
+    </div>
+    <div style="padding: 20px; overflow-y:auto; flex:1;">
+      <table style="width:100%; font-size: 0.9rem;">
+        <thead>
+          <tr style="text-align:left; color:var(--text-secondary);">
+            <th>ID</th>
+            <th>Room</th>
+            <th>Guest</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="modalBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Global Currency Symbol
+  const currency = '৳';
+
+  // Filter elements
+  const dateFilterEl = document.getElementById('dateFilter');
+  const specificMonthEl = document.getElementById('specificMonthSelect');
+  const specificYearEl = document.getElementById('specificYearSelect');
+  const applyMonthYearBtn = document.getElementById('applyMonthYear');
+  const yearFilterEl = document.getElementById('yearFilter');
+  const activeFilterBadge = document.getElementById('activeFilterBadge');
+
+  // Preset range filter
+  dateFilterEl.addEventListener('change', () => {
+    specificMonthEl.value = '';
+    specificYearEl.value = '';
+    yearFilterEl.value = '';
+    updateActiveFilter('range', dateFilterEl.options[dateFilterEl.selectedIndex].text);
+    initAnalytics(dateFilterEl.value);
+  });
+
+  // Apply specific month + year
+  applyMonthYearBtn.addEventListener('click', () => {
+    const month = specificMonthEl.value;
+    const year = specificYearEl.value;
+
+    if (month && year) {
+      const startDate = `${year}-${month}-01`;
+      // Calculate last day of month
+      const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
+      const endDate = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
+
+      dateFilterEl.value = '';
+      yearFilterEl.value = '';
+      updateActiveFilter('month', `${getMonthName(parseInt(month))} ${year}`);
+      initAnalyticsCustom(startDate, endDate);
+    } else if (month && !year) {
+      alert('Please select a year');
+    } else if (!month && year) {
+      alert('Please select a month');
+    }
+  });
+
+  // Full year filter
+  yearFilterEl.addEventListener('change', () => {
+    if (yearFilterEl.value && yearFilterEl.value >= 2020 && yearFilterEl.value <= 2099) {
+      const year = yearFilterEl.value;
+      const startDate = `${year}-01-01`;
+      const endDate = `${year}-12-31`;
+
+      dateFilterEl.value = '';
+      specificMonthEl.value = '';
+      specificYearEl.value = '';
+      updateActiveFilter('year', `Full Year ${year}`);
+      initAnalyticsCustom(startDate, endDate);
+    }
+  });
+
+  function clearFilters() {
+    dateFilterEl.value = '7days';
+    specificMonthEl.value = '';
+    specificYearEl.value = '';
+    yearFilterEl.value = '';
+    activeFilterBadge.style.display = 'none';
+    initAnalytics('7days');
+  }
+
+
+  function updateActiveFilter(type, label) {
+    activeFilterBadge.textContent = label;
+    activeFilterBadge.style.display = 'inline-block';
+  }
+
+  function getMonthName(monthNum) {
+    const months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[monthNum] || '';
+  }
+
+  async function initAnalyticsCustom(startDate, endDate) {
+    try {
+      const response = await fetch(`/analytics/data?range=custom&start_date=${startDate}&end_date=${endDate}`);
+      const data = await response.json();
+      renderCharts(data);
+    } catch (error) {
+      console.error("Failed to fetch custom analytics:", error);
+    }
+  }
+
+  let occupancyChart, revenueChart, bookingChart, roomTypeChart, dailyChart, paymentMethodChart;
+
+
+  async function openDeepDive(date) {
+    const modal = document.getElementById('detailsModal');
+    const modalDate = document.getElementById('modalDate');
+    const tbody = document.getElementById('modalBody');
+
+    modalDate.textContent = date;
+    modal.style.display = 'flex';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-secondary);">Loading...</td></tr>';
+
+    try {
+      const res = await fetch(`/analytics/details?date=${date}`);
+      const data = await res.json();
+
+      if (data.bookings && data.bookings.length > 0) {
+        tbody.innerHTML = '';
+        data.bookings.forEach(b => {
+          tbody.innerHTML += `
+            <tr>
+              <td>#${b.id}</td>
+              <td>${b.room}</td>
+              <td>${b.customer || 'Unknown'}</td>
+              <td>$${b.amount}</td>
+              <td><span class="badge ${b.status === 'Checked-out' ? 'success' : 'warning'}">${b.status}</span></td>
+            </tr>
+          `;
+        });
+      } else {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-secondary);">No bookings found for this specific date.</td></tr>';
+      }
+    } catch (e) {
+      console.error(e);
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--danger);">Error loading details.</td></tr>';
+    }
+  }
+
+  async function initAnalytics(range = '7days') {
+    try {
+      const response = await fetch(`/analytics/data?range=${range}`);
+      const data = await response.json();
+      renderCharts(data);
+    } catch (error) {
+      console.error("Failed to fetch analytics:", error);
+      document.getElementById('dailyStatsChart').parentElement.innerHTML = `<div style="color:red; padding:20px; text-align:center;">Error loading chart: ${error.message}</div>`;
+    }
+  }
+
+  function renderCharts(data) {
+    // Update stat cards
+    document.getElementById('totalRooms').textContent = data.total_rooms;
+    document.getElementById('occupancy').textContent = data.occupied + ' / ' + data.total_rooms;
+    document.getElementById('revenue').textContent = currency + data.revenue.toLocaleString();
+    const adr = data.revenue / (data.occupied || 1);
+    document.getElementById('adr').textContent = currency + Math.round(adr).toLocaleString();
+
+    // --- Occupancy Doughnut ---
+    const ctxOcc = document.getElementById('occupancyChart').getContext('2d');
+    if (occupancyChart) occupancyChart.destroy();
+    occupancyChart = new Chart(ctxOcc, {
+      type: 'doughnut',
+      data: {
+        labels: ['Occupied', 'Available'],
+        datasets: [{
+          data: [data.occupied, data.available],
+          backgroundColor: ['#0ea5e9', '#e2e8f0'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        onClick: (e) => openDeepDive(new Date().toISOString().split('T')[0])
+      }
+    });
+
+    // --- Room Type Pie ---
+    const ctxRoom = document.getElementById('roomTypeChart').getContext('2d');
+    if (roomTypeChart) roomTypeChart.destroy();
+    roomTypeChart = new Chart(ctxRoom, {
+      type: 'pie',
+      data: {
+        labels: data.rooms_by_type.map(x => x.name),
+        datasets: [{
+          data: data.rooms_by_type.map(x => x.value),
+          backgroundColor: ['#8b5cf6', '#f97316', '#10b981', '#fbbf24', '#0ea5e9'],
+          borderWidth: 0
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // --- Daily Stats Line Chart ---
+    const ctx = document.getElementById('dailyStatsChart').getContext('2d');
+    if (dailyChart) dailyChart.destroy();
+    dailyChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [
+          {
+            label: 'Occupancy %',
+            data: data.daily_occupancy,
+            borderColor: '#0d9488',
+            yAxisID: 'y'
+          },
+          {
+            label: 'Revenue (' + currency + ')',
+            data: data.daily_revenue,
+            borderColor: '#10b981',
+            yAxisID: 'y1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        onClick: (e, activeEls) => {
+          if (activeEls.length > 0) {
+            const index = activeEls[0].index;
+            const date = data.labels[index];
+            openDeepDive(date);
+          }
+        },
+        scales: {
+          y: { type: 'linear', display: true, position: 'left' },
+          y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false } }
+        }
+      }
+    });
+
+    // --- Revenue Bar (Top Customers) ---
+    const ctxRev = document.getElementById('revenueChart').getContext('2d');
+    if (revenueChart) revenueChart.destroy();
+    revenueChart = new Chart(ctxRev, {
+      type: 'bar',
+      data: {
+        labels: data.top_customers.map(x => x.name),
+        datasets: [{
+          label: 'Total Spent',
+          data: data.top_customers.map(x => x.total),
+          backgroundColor: '#f97316',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // --- Payment Method Doughnut ---
+    const pmData = data.payment_methods || [];
+    const pmCtx = document.getElementById('paymentMethodChart');
+    if (pmCtx) {
+      const ctx2d = pmCtx.getContext('2d');
+      if (paymentMethodChart) paymentMethodChart.destroy();
+      const pmColors = { 'Cash': '#10b981', 'Card': '#0d9488', 'Online': '#0ea5e9', 'Crypto': '#f59e0b' };
+      const defaultColors = ['#8b5cf6', '#ec4899', '#f97316', '#14b8a6'];
+      const labels = pmData.map(p => p.method);
+      const counts = pmData.map(p => p.count);
+      const colors = labels.map((l, i) => pmColors[l] || defaultColors[i % defaultColors.length]);
+
+      if (pmData.length > 0) {
+        paymentMethodChart = new Chart(ctx2d, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{ data: counts, backgroundColor: colors, borderWidth: 0 }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: { legend: { display: false } }
+          }
+        });
+
+        const legendEl = document.getElementById('paymentMethodLegend');
+        if (legendEl) {
+          const curSym = '৳';
+          legendEl.innerHTML = pmData.map((p, i) => `
+            <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="width:14px; height:14px; border-radius:4px; background:${colors[i]}; flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <div style="font-weight:600; color:var(--text);">${p.method}</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary);">${p.count} transaction${p.count !== 1 ? 's' : ''} · ${curSym}${p.total.toLocaleString()}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+      } else {
+        pmCtx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-secondary);">No payment data yet</div>';
+      }
+    }
+  }
+
+
+  // Fetch and display YTD/MoM comparison data
+  async function loadComparison() {
+    try {
+      const res = await fetch('/analytics/comparison');
+      if (!res.ok) return;
+      const data = await res.json();
+
+      // YTD
+      document.getElementById('ytdCurrentLabel').textContent = data.ytd.current.period;
+      document.getElementById('ytdCurrentRevenue').textContent = currency + data.ytd.current.revenue.toLocaleString();
+      document.getElementById('ytdCurrentBookings').textContent = data.ytd.current.bookings;
+      document.getElementById('ytdPrevLabel').textContent = data.ytd.previous.period;
+      document.getElementById('ytdPrevRevenue').textContent = currency + data.ytd.previous.revenue.toLocaleString();
+      document.getElementById('ytdPrevBookings').textContent = data.ytd.previous.bookings;
+
+      const ytdGrowth = document.getElementById('ytdGrowth');
+      const ytdGrowthVal = data.ytd.revenue_growth;
+      ytdGrowth.textContent = (ytdGrowthVal >= 0 ? '+' : '') + ytdGrowthVal + '%';
+      ytdGrowth.className = 'badge ' + (ytdGrowthVal >= 0 ? 'success' : 'warning');
+
+      // MoM
+      document.getElementById('momCurrentLabel').textContent = data.mom.current_month;
+      document.getElementById('momCurrentRevenue').textContent = currency + data.mom.current.revenue.toLocaleString();
+      document.getElementById('momCurrentBookings').textContent = data.mom.current.bookings;
+      document.getElementById('momPrevLabel').textContent = data.mom.previous_month;
+      document.getElementById('momPrevRevenue').textContent = currency + data.mom.previous.revenue.toLocaleString();
+      document.getElementById('momPrevBookings').textContent = data.mom.previous.bookings;
+
+      const momGrowth = document.getElementById('momGrowth');
+      const momGrowthVal = data.mom.revenue_growth;
+      momGrowth.textContent = (momGrowthVal >= 0 ? '+' : '') + momGrowthVal + '%';
+      momGrowth.className = 'badge ' + (momGrowthVal >= 0 ? 'success' : 'warning');
+    } catch (e) {
+      console.error('Comparison load error:', e);
+    }
+  }
+
+  async function loadAdvancedAnalytics() {
+    try {
+      // Fetch advanced metrics
+      const advRes = await fetch('/analytics/advanced');
+      if (!advRes.ok) {
+        console.error('Failed to fetch advanced analytics:', advRes.status);
+        return;
+      }
+      const advData = await advRes.json();
+
+      // Update advanced metrics with null checks
+      document.getElementById('revpar').textContent = advData.revpar !== undefined ? currency + advData.revpar.toFixed(2) : currency + '0.00';
+      document.getElementById('avgStay').textContent = advData.avg_length_of_stay !== undefined ? advData.avg_length_of_stay + ' nights' : '0 nights';
+
+      const velocityData = advData.booking_velocity || [];
+      const totalBookings = velocityData.reduce((sum, d) => sum + (d.count || 0), 0);
+      document.getElementById('bookingCount').textContent = totalBookings;
+
+      // Fetch AI forecast (wrapped in try-catch so failure doesn't kill other charts)
+      try {
+        const forecastRes = await fetch('/ai/predict/occupancy-forecast');
+        if (forecastRes.ok) {
+          const forecastData = await forecastRes.json();
+
+          // Update forecast trend
+          const trendIcon = forecastData.trend === 'increasing' ? '↑' : forecastData.trend === 'decreasing' ? '↓' : '→';
+          const trendColor = forecastData.trend === 'increasing' ? 'var(--success)' : forecastData.trend === 'decreasing' ? 'var(--danger)' : 'var(--text-secondary)';
+          document.getElementById('forecastTrend').innerHTML = `<span style="color: ${trendColor};">${trendIcon}</span>`;
+          const confidence = forecastData.confidence || 0;
+          document.getElementById('forecastConfidence').textContent = Math.round(confidence * 100) + '% confident';
+
+          // AI Forecast Chart
+          if (forecastData.forecast && forecastData.forecast.length > 0) {
+            const forecastCtx = document.getElementById('forecastChart').getContext('2d');
+            new Chart(forecastCtx, {
+              type: 'line',
+              data: {
+                labels: forecastData.forecast.map(f => new Date(f.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+                datasets: [{
+                  label: 'Predicted Occupancy %',
+                  data: forecastData.forecast.map(f => f.occupancy),
+                  borderColor: '#0d9488',
+                  backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                  fill: true,
+                  tension: 0.4
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  y: { min: 0, max: 100, ticks: { callback: val => val + '%' } }
+                }
+              }
+            });
+          }
+        } else {
+          console.error('Failed to fetch forecast:', forecastRes.status);
+        }
+      } catch(forecastErr) {
+        console.error('Forecast chart error:', forecastErr);
+      }
+
+      // Booking Velocity Chart
+      if (velocityData.length > 0) {
+        const velocityCtx = document.getElementById('velocityChart').getContext('2d');
+        new Chart(velocityCtx, {
+          type: 'bar',
+          data: {
+            labels: velocityData.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+            datasets: [{
+              label: 'Bookings',
+              data: velocityData.map(d => d.count),
+              backgroundColor: '#10b981',
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+          }
+        });
+      }
+
+      // Revenue by Room Type Chart
+      const revenueByType = advData.revenue_by_room_type || [];
+      if (revenueByType.length > 0) {
+        const typeCtx = document.getElementById('revenueByTypeChart').getContext('2d');
+        new Chart(typeCtx, {
+          type: 'pie',
+          data: {
+            labels: revenueByType.map(r => r.type),
+            datasets: [{
+              data: revenueByType.map(r => r.revenue),
+              backgroundColor: ['#8b5cf6', '#f97316', '#10b981', '#fbbf24', '#0ea5e9', '#ec4899']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'right' },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ctx.label + ': ' + currency + ctx.parsed.toLocaleString()
+                }
+              }
+            }
+          }
+        });
+      } else {
+        const typeCtx = document.getElementById('revenueByTypeChart');
+        if (typeCtx) {
+          typeCtx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-secondary);">No revenue data yet</div>';
+        }
+      }
+
+    } catch (error) {
+      console.error('Error loading advanced analytics:', error);
+      // Set default values on error
+      document.getElementById('revpar').textContent = '৳0.00';
+      document.getElementById('avgStay').textContent = '0 nights';
+      document.getElementById('bookingCount').textContent = '0';
+    }
+  }
+
+  // Group vs Individual booking chart
+  let bookingTypeChart, monthlyTypeChart;
+  async function loadBookingTypes() {
+    try {
+      const res = await fetch('/analytics/booking-types');
+      if (!res.ok) return;
+      const d = await res.json();
+
+      // --- Doughnut: overall ---
+      const btCtx = document.getElementById('bookingTypeChart');
+      if (btCtx) {
+        if (bookingTypeChart) bookingTypeChart.destroy();
+        bookingTypeChart = new Chart(btCtx.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Group', 'Individual'],
+            datasets: [{ data: [d.group_total, d.individual_total], backgroundColor: ['#8b5cf6','#10b981'], borderWidth: 0 }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, cutout: '60%',
+            plugins: { legend: { display: false } }
+          }
+        });
+        const legendEl = document.getElementById('bookingTypeLegend');
+        if (legendEl) {
+          legendEl.innerHTML = `
+            <div style="display:flex;gap:24px;justify-content:center;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:12px;height:12px;border-radius:3px;background:#8b5cf6;"></div>
+                <span style="font-size:0.9rem;">Group: <strong>${d.group_total}</strong></span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:12px;height:12px;border-radius:3px;background:#10b981;"></div>
+                <span style="font-size:0.9rem;">Individual: <strong>${d.individual_total}</strong></span>
+              </div>
+            </div>`;
+        }
+      }
+
+      // --- Bar: monthly split ---
+      const mbCtx = document.getElementById('monthlyBookingTypeChart');
+      if (mbCtx && d.monthly_labels) {
+        if (monthlyTypeChart) monthlyTypeChart.destroy();
+        monthlyTypeChart = new Chart(mbCtx.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: d.monthly_labels,
+            datasets: [
+              { label: 'Group', data: d.monthly_group, backgroundColor: '#8b5cf6', borderRadius: 4 },
+              { label: 'Individual', data: d.monthly_individual, backgroundColor: '#10b981', borderRadius: 4 }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { color: document.documentElement.getAttribute('data-theme') === 'light' ? '#475569' : 'rgba(255,255,255,0.7)', font: { size: 11 } } } },
+            scales: { x: { stacked: false }, y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+          }
+        });
+      }
+    } catch(e) { console.error('Booking types error:', e); }
+  }
+
+  // Group vs Individual YTD/MTD comparison charts
+  async function loadGroupIndivComparison() {
+    try {
+      const res = await fetch('/analytics/comparison');
+      if (!res.ok) return;
+      const d = await res.json();
+
+      // YTD comparison bar chart
+      const ytdCtx = document.getElementById('groupIndivYtdChart');
+      if (ytdCtx && d.ytd.group) {
+        new Chart(ytdCtx.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['Group ' + d.ytd.current_year, 'Individual ' + d.ytd.current_year, 'Group ' + d.ytd.previous_year, 'Individual ' + d.ytd.previous_year],
+            datasets: [{
+              label: 'YTD Revenue',
+              data: [
+                d.ytd.group.current.revenue, d.ytd.individual.current.revenue,
+                d.ytd.group.previous.revenue, d.ytd.individual.previous.revenue
+              ],
+              backgroundColor: ['#8b5cf6', '#10b981', '#c4b5fd', '#6ee7b7'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              title: { display: true, text: 'Year-to-Date Revenue', color: document.documentElement.getAttribute('data-theme') === 'light' ? '#475569' : 'rgba(255,255,255,0.8)', font: { size: 13 } },
+              legend: { display: false },
+              tooltip: { callbacks: { label: ctx => currency + ctx.parsed.y.toLocaleString() } }
+            },
+            scales: { y: { beginAtZero: true, ticks: { callback: v => currency + v.toLocaleString() } } }
+          }
+        });
+      }
+
+      // MTD comparison bar chart
+      const mtdCtx = document.getElementById('groupIndivMtdChart');
+      if (mtdCtx && d.mom.group) {
+        new Chart(mtdCtx.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['Group (This Month)', 'Individual (This Month)', 'Group (Last Month)', 'Individual (Last Month)'],
+            datasets: [{
+              label: 'Monthly Revenue',
+              data: [
+                d.mom.group.current.revenue, d.mom.individual.current.revenue,
+                d.mom.group.previous.revenue, d.mom.individual.previous.revenue
+              ],
+              backgroundColor: ['#8b5cf6', '#10b981', '#c4b5fd', '#6ee7b7'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              title: { display: true, text: 'Month-to-Date Revenue', color: document.documentElement.getAttribute('data-theme') === 'light' ? '#475569' : 'rgba(255,255,255,0.8)', font: { size: 13 } },
+              legend: { display: false },
+              tooltip: { callbacks: { label: ctx => currency + ctx.parsed.y.toLocaleString() } }
+            },
+            scales: { y: { beginAtZero: true, ticks: { callback: v => currency + v.toLocaleString() } } }
+          }
+        });
+      }
+    } catch(e) { console.error('Group/Indiv comparison error:', e); }
+  }
+
+  // Monthly Revenue Split chart
+  async function loadMonthlyRevenueSplit() {
+    try {
+      const res = await fetch('/analytics/booking-types');
+      if (!res.ok) return;
+      const d = await res.json();
+      const ctx = document.getElementById('monthlyRevenueTypeChart');
+      if (!ctx || !d.monthly_labels) return;
+      new Chart(ctx.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: d.monthly_labels,
+          datasets: [
+            { label: 'Group Revenue', data: d.monthly_revenue_group, backgroundColor: 'rgba(139,92,246,0.85)', borderRadius: 4 },
+            { label: 'Individual Revenue', data: d.monthly_revenue_individual, backgroundColor: 'rgba(16,185,129,0.85)', borderRadius: 4 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: document.documentElement.getAttribute('data-theme') === 'light' ? '#475569' : 'rgba(255,255,255,0.7)', font: { size: 11 } } },
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + currency + ctx.parsed.y.toLocaleString() } }
+          },
+          scales: {
+            x: { stacked: false },
+            y: { beginAtZero: true, ticks: { callback: v => currency + v.toLocaleString() } }
+          }
+        }
+      });
+    } catch(e) { console.error('Monthly revenue split error:', e); }
+  }
+
+  // Initialize all
+  initAnalytics('7days');
+  loadComparison();
+  loadAdvancedAnalytics();
+  loadBookingTypes();
+  loadGroupIndivComparison();
+  loadMonthlyRevenueSplit();
+</script>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Theme Toggle ----
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+    }
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      }
+    }
+    // Set correct icon on load
+    document.addEventListener('DOMContentLoaded', function () {
+      updateThemeIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+    });
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    // Close sidebar when clicking a nav link on mobile
+    document.querySelectorAll('.sidebar .nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

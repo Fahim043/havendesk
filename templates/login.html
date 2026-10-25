@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<script>
+  (function () {
+    var t = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login · HavenDesk</title>
+  <link rel="stylesheet" href="/static/css/theme.css?v=5">
+</head>
+
+<body style="display:flex; align-items:center; justify-content:center; min-height:100vh;">
+  <div class="card" style="width:min(420px,92vw)">
+    <div class="brand" style="display: flex; align-items: center; gap: 12px; justify-content: center;">
+      <img src="/static/img/havendesk-logo.svg" alt="Logo" style="height: 48px; width: auto;"> HavenDesk Admin
+    </div>
+    <p style="color:#cfd3dc;margin:8px 0 16px">Sign in to continue</p>
+    {% if error %}<div style="color:var(--danger); margin: 6px 0 12px">{{ error }}</div>{% endif %}
+    <form action="/auth/login" method="post" style="display:grid; gap:10px">
+      <input class="input" name="username" placeholder="Username" required>
+      <input class="input" name="password" type="password" placeholder="Password" required>
+      <button class="btn" type="submit">Login</button>
+    </form>
+  </div>
+</body>
+
+</html>

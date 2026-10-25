@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Group Bookings · HavenDesk{% endblock %}
+{% block content %}
+
+<style>
+  .group-table { width: 100%; border-collapse: collapse; }
+  .group-table th {
+    padding: 12px 16px; text-align: left; font-size: 0.82rem;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-secondary); border-bottom: 2px solid var(--border);
+  }
+  .group-table td {
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .group-table tr:hover { background: rgba(255,255,255,.02); }
+  .group-id-badge {
+    display: inline-block; padding: 4px 12px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff; font-weight: 700; font-size: 0.9rem;
+  }
+  .active-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.8rem; font-weight: 600;
+  }
+  .active-badge.has-active { background: rgba(59,130,246,.15); color: #3b82f6; }
+  .active-badge.all-done { background: rgba(16,185,129,.15); color: #10b981; }
+</style>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+  <div>
+    <h2 style="margin: 0;">🏨 Group Bookings</h2>
+    <p style="margin: 4px 0 0 0; color: var(--text-secondary);">All multi-room booking groups</p>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <a href="/bookings" class="btn secondary" style="font-size: 0.9rem;">← All Bookings</a>
+    <a href="/bookings/create" class="btn" style="font-size: 0.9rem;">+ New Booking</a>
+  </div>
+</div>
+
+{% if groups|length == 0 %}
+<div style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+  <div style="font-size: 3rem; margin-bottom: 12px;">📭</div>
+  <p>No group bookings yet. Create one from the booking page by adding multiple rooms.</p>
+</div>
+{% else %}
+<div style="background: var(--glass-panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;">
+  <table class="group-table">
+    <thead>
+      <tr>
+        <th>Group</th>
+        <th>Guest</th>
+        <th>Label</th>
+        <th>Rooms</th>
+        <th>Active</th>
+        <th>Total</th>
+        <th>Created</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in groups %}
+      <tr>
+        <td><span class="group-id-badge">#{{ g.id }}</span></td>
+        <td><strong>{{ g.customer_name or 'Guest' }}</strong></td>
+        <td>{{ g.label or '—' }}</td>
+        <td>{{ g.room_count }} room{{ 's' if g.room_count != 1 }}</td>
+        <td>
+          {% if g.active_count > 0 %}
+          <span class="active-badge has-active">{{ g.active_count }} active</span>
+          {% else %}
+          <span class="active-badge all-done">Completed</span>
+          {% endif %}
+        </td>
+        <td style="font-weight: 600; color: var(--gold);">{{ currency }}{{ '%.2f'|format(g.total_amount or 0) }}</td>
+        <td style="color: var(--text-secondary); font-size: 0.88rem;">{{ g.created_at[:10] if g.created_at else '—' }}</td>
+        <td>
+          <a href="/bookings/group/{{ g.id }}" class="btn" style="font-size: 0.82rem; padding: 6px 16px;">
+            View Group →
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% endblock %}

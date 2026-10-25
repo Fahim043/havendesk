@@ -1,0 +1,12 @@
+pymongo[srv]
+pymongo
+bcrypt
+jinja2
+fastapi 
+uvicorn
+python-dotenv
+python-multipart
+certifi
+sqlalchemy
+itsdangerous
+weasyprint

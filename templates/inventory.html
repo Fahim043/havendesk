@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+    <h2>Inventory Management</h2>
+    <button class="btn" style="width:auto;" onclick="document.getElementById('addForm').toggleAttribute('open')">
+        <i class="fa-solid fa-plus"></i> Add Item
+    </button>
+</div>
+
+{% if low_stock_count > 0 %}
+<div class="card" style="margin-bottom:24px; border-left: 4px solid var(--danger);">
+    <h4 style="color:var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Low Stock Alert</h4>
+    <p>{{ low_stock_count }} items are running low. Please restock immediately.</p>
+</div>
+{% endif %}
+
+<details id="addForm" style="margin-bottom:24px;">
+    <summary class="btn secondary" style="list-style:none; display:inline-flex; align-items:center; gap:8px;">
+        <span>New Item Details</span>
+    </summary>
+    <div class="card" style="margin-top:12px;">
+        <form action="/inventory/add" method="post" class="grid cols-3" style="align-items:end;">
+            <div>
+                <label style="display:block; margin-bottom:8px;">Item Name *</label>
+                <input type="text" name="item_name" class="input" required placeholder="e.g. Shampoo">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Quantity *</label>
+                <input type="number" name="current_stock" class="input" required min="1" value="1" id="add_stock" oninput="calcAddFromQtyPrice()">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Unit *</label>
+                <select name="unit" class="input" required>
+                    <option value="pcs">Pieces</option>
+                    <option value="kits">Kits</option>
+                    <option value="kg">Kg</option>
+                    <option value="liters">Liters</option>
+                    <option value="packs">Packs</option>
+                </select>
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Unit Price *</label>
+                <input type="number" step="0.01" name="unit_price" class="input" required min="0.01" id="add_unit_price" oninput="calcAddFromQtyPrice()" placeholder="0.00">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Expense Total</label>
+                <input type="number" step="0.01" id="add_total_display" class="input" style="color: var(--gold); font-weight: 700;" value="0" oninput="calcAddFromTotal()">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Low Stock Limit</label>
+                <input type="number" name="low_stock_threshold" class="input" value="10">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Supplier (optional)</label>
+                <input type="text" name="supplier" class="input" placeholder="Vendor Name">
+            </div>
+            <button type="submit" class="btn">Save Item</button>
+        </form>
+        <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:8px;">* If unit price & stock are provided, the total will be auto-registered as an expense.</div>
+    </div>
+</details>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th><a href="?sort_by=name&sort_order={{ 'asc' if sort_by == 'name' and sort_order == 'desc' else 'desc' }}"
+                        style="color: inherit; text-decoration: none;">Item {{ '▼' if sort_by == 'name' and sort_order
+                        == 'desc' else ('▲' if sort_by == 'name' and sort_order == 'asc' else '') }}</a></th>
+                <th><a href="?sort_by=current_stock&sort_order={{ 'asc' if sort_by == 'current_stock' and sort_order == 'desc' else 'desc' }}"
+                        style="color: inherit; text-decoration: none;">Stock {{ '▼' if sort_by == 'current_stock' and
+                        sort_order == 'desc' else ('▲' if sort_by == 'current_stock' and sort_order == 'asc' else '')
+                        }}</a></th>
+                <th><a href="?sort_by=unit&sort_order={{ 'asc' if sort_by == 'unit' and sort_order == 'desc' else 'desc' }}"
+                        style="color: inherit; text-decoration: none;">Unit {{ '▼' if sort_by == 'unit' and sort_order
+                        == 'desc' else ('▲' if sort_by == 'unit' and sort_order == 'asc' else '') }}</a></th>
+                <th><a href="?sort_by=last_updated&sort_order={{ 'asc' if sort_by == 'last_updated' and sort_order == 'desc' else 'desc' }}"
+                        style="color: inherit; text-decoration: none;">Updated {{ '▼' if sort_by == 'last_updated' and
+                        sort_order == 'desc' else ('▲' if sort_by == 'last_updated' and sort_order == 'asc' else '')
+                        }}</a></th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td style="font-weight:600;">{{ item.name }}</td>
+                <td>
+                    {% if item.current_stock <= item.par_level * 0.3 %} <span class="badge danger">{{ item.current_stock
+                        }}</span> (Low)
+                        {% else %}
+                        <span class="badge success">{{ item.current_stock }}</span>
+                        {% endif %}
+                </td>
+                <td>{{ item.unit }}</td>
+                <td style="color:var(--text-secondary); font-size:0.85rem;">{{ item.last_updated[:10] }}</td>
+                <td>
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        <button class="btn secondary edit-btn" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            data-stock="{{ item.current_stock }}" data-unit="{{ item.unit }}"
+                            data-par="{{ item.par_level }}" data-supplier="{{ item.supplier or '' }}"
+                            data-price="{{ item.unit_price or 0 }}"
+                            style="padding:4px 8px; width:auto; font-size:0.8rem;">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <form action="/inventory/update" method="post" style="display:inline-flex; gap:4px; margin:0;">
+                            <input type="hidden" name="id" value="{{ item.id }}">
+                            <button type="submit" name="change" value="1" class="btn secondary"
+                                style="padding:4px 8px; width:auto;">+</button>
+                            <button type="submit" name="change" value="-1" class="btn secondary"
+                                style="padding:4px 8px; width:auto;">-</button>
+                        </form>
+                        <form action="/inventory/delete" method="post"
+                            onsubmit="return confirm('Delete {{ item.name }}?');" style="margin:0;">
+                            <input type="hidden" name="id" value="{{ item.id }}">
+                            <button type="submit" class="btn secondary"
+                                style="padding:4px 8px; width:auto; color:var(--danger); border-color:var(--danger);">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align:center;">No inventory items found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<dialog id="editModal"
+    style="background:#1a1a1a; color:#ffffff; border:1px solid #333; border-radius:12px; padding:24px; max-width:550px; width:90%; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+    <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid #333; padding-bottom:12px;">
+        <h3 style="margin:0;">Edit Item Details</h3>
+        <button onclick="document.getElementById('editModal').close()" class="btn secondary"
+            style="width:auto; border:none; background:transparent; font-size:1.2rem;">✕</button>
+    </div>
+    <form action="/inventory/update" method="post" class="grid cols-1" style="gap:20px;">
+        <input type="hidden" name="id" id="edit_id">
+
+        <!-- Main Details -->
+        <div>
+            <label style="display:block; margin-bottom:8px; color:#aaa; font-size:0.9rem;">Item Name</label>
+            <input type="text" name="item_name" id="edit_name" class="input" style="background:#222; border-color:#444;"
+                required>
+        </div>
+
+        <!-- Stock Adjustments -->
+        <div style="background:#222; padding:16px; border-radius:8px; border:1px solid #333;">
+            <label style="display:block; margin-bottom:12px; font-weight:600; color:#ddd;">Stock Management</label>
+            <div class="grid cols-3" style="gap:12px;">
+                <div>
+                    <label style="display:block; margin-bottom:6px; font-size:0.8rem; color:#aaa;">Current
+                        (Correction)</label>
+                    <input type="number" name="current_stock" id="edit_stock" class="input"
+                        style="background:#111; border-color:#444;">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:6px; font-size:0.8rem; color:var(--success);">+ Add
+                        Stock</label>
+                    <input type="number" name="add_quantity" class="input" placeholder="0"
+                        style="background:#111; border-color:#2a4a35;">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:6px; font-size:0.8rem; color:var(--danger);">- Deduct
+                        Stock</label>
+                    <input type="number" name="deduct_quantity" class="input" placeholder="0"
+                        style="background:#111; border-color:#4a2a2a;">
+                </div>
+            </div>
+            <div style="font-size:0.8rem; color:#666; margin-top:8px;">
+                * Use "Add" or "Deduct" to adjust count. Use "Current" only to overwrite total.
+            </div>
+        </div>
+
+        <div class="grid cols-2" style="gap:16px;">
+            <div>
+                <label style="display:block; margin-bottom:8px; color:#aaa; font-size:0.9rem;">Unit</label>
+                <select name="unit" id="edit_unit" class="input" style="background:#222; border-color:#444;">
+                    <option value="pcs">Pieces</option>
+                    <option value="kits">Kits</option>
+                    <option value="kg">Kg</option>
+                    <option value="liters">Liters</option>
+                    <option value="packs">Packs</option>
+                </select>
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px; color:#aaa; font-size:0.9rem;">Low Stock Alert</label>
+                <input type="number" name="low_stock_threshold" id="edit_par" class="input"
+                    style="background:#222; border-color:#444;">
+            </div>
+        </div>
+        <div>
+            <label style="display:block; margin-bottom:8px; color:#aaa; font-size:0.9rem;">Supplier (optional)</label>
+            <input type="text" name="supplier" id="edit_supplier" class="input"
+                style="background:#222; border-color:#444;">
+        </div>
+        <div class="grid cols-2" style="gap:16px;">
+            <div>
+                <label style="display:block; margin-bottom:8px; color:#aaa; font-size:0.9rem;">Unit Price</label>
+                <input type="number" step="0.01" name="unit_price" id="edit_unit_price" class="input"
+                    style="background:#222; border-color:#444;" oninput="calcEditExpense()">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px; color:#aaa; font-size:0.9rem;">Add Expense Total</label>
+                <input type="text" id="edit_expense_total" class="input" readonly
+                    style="background:#111; border-color:#444; color: var(--gold); font-weight: 700;" value="—">
+            </div>
+        </div>
+
+        <!-- Stock Adjustment Section -->
+        <div style="background:rgba(239,68,68,0.06); padding:16px; border-radius:8px; border:1px solid rgba(239,68,68,0.2); margin-top:4px;">
+            <label style="display:block; margin-bottom:12px; font-weight:600; color:#ef4444; font-size:0.9rem;">⚠️ Stock Adjustment (Removal/Correction)</label>
+            <div class="grid cols-2" style="gap:12px;">
+                <div>
+                    <label style="display:block; margin-bottom:6px; font-size:0.8rem; color:#ef4444;">Remove Qty</label>
+                    <input type="number" name="stock_adjustment" id="edit_adj_qty" class="input" min="0" placeholder="0"
+                        style="background:#111; border-color:#4a2a2a;" oninput="calcAdjValue()">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:6px; font-size:0.8rem; color:#aaa;">Reason</label>
+                    <input type="text" name="adjustment_reason" class="input" placeholder="e.g. Damaged, Expired"
+                        style="background:#111; border-color:#444;">
+                </div>
+            </div>
+            <div id="adj_value_display" style="font-size:0.8rem; color:#ef4444; margin-top:8px; display:none;"></div>
+            <div style="font-size:0.75rem; color:#666; margin-top:6px;">* Records as a negative expense in finance to correct previous entries.</div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
+            <button type="button" onclick="document.getElementById('editModal').close()"
+                class="btn secondary">Cancel</button>
+            <button type="submit" class="btn primary">Update Item</button>
+        </div>
+    </form>
+</dialog>
+
+<script>
+    // Bidirectional calc for ADD form
+    function calcAddFromQtyPrice() {
+        const qty = parseFloat(document.getElementById('add_stock').value) || 0;
+        const price = parseFloat(document.getElementById('add_unit_price').value) || 0;
+        document.getElementById('add_total_display').value = (qty * price).toFixed(2);
+    }
+    function calcAddFromTotal() {
+        const qty = parseFloat(document.getElementById('add_stock').value) || 0;
+        const total = parseFloat(document.getElementById('add_total_display').value) || 0;
+        if (qty > 0) {
+            document.getElementById('add_unit_price').value = (total / qty).toFixed(2);
+        }
+    }
+
+    // Edit modal: calc expense total for Add Stock
+    function calcEditExpense() {
+        const addQty = parseFloat(document.querySelector('input[name="add_quantity"]')?.value) || 0;
+        const price = parseFloat(document.getElementById('edit_unit_price').value) || 0;
+        const el = document.getElementById('edit_expense_total');
+        if (addQty > 0 && price > 0) {
+            el.value = '{{ currency }}' + (addQty * price).toFixed(2);
+        } else {
+            el.value = '—';
+        }
+    }
+
+    // Stock adjustment value display
+    function calcAdjValue() {
+        const adjQty = parseFloat(document.getElementById('edit_adj_qty').value) || 0;
+        const price = parseFloat(document.getElementById('edit_unit_price').value) || 0;
+        const display = document.getElementById('adj_value_display');
+        if (adjQty > 0 && price > 0) {
+            display.textContent = `Expense reduction: -{{ currency }}${(adjQty * price).toFixed(2)} will be recorded`;
+            display.style.display = 'block';
+        } else {
+            display.style.display = 'none';
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const d = btn.dataset;
+                document.getElementById('edit_id').value = d.id;
+                document.getElementById('edit_name').value = d.name;
+                document.getElementById('edit_stock').value = d.stock;
+                document.getElementById('edit_unit').value = d.unit;
+                document.getElementById('edit_par').value = d.par;
+                document.getElementById('edit_supplier').value = d.supplier;
+                document.getElementById('edit_unit_price').value = d.price;
+                // Reset adjustment fields
+                document.getElementById('edit_adj_qty').value = '';
+                document.getElementById('adj_value_display').style.display = 'none';
+                document.getElementById('edit_expense_total').value = '—';
+                // Wire up add_quantity change to calculate expense
+                const addQtyInput = document.querySelector('input[name="add_quantity"]');
+                if (addQtyInput) {
+                    addQtyInput.oninput = calcEditExpense;
+                }
+                document.getElementById('editModal').showModal();
+            });
+        });
+    });
+</script>
+
+<script>
+    // Load inventory insights on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        loadInventoryInsights();
+    });
+
+    async function loadInventoryInsights() {
+        try {
+            const response = await fetch('/inventory/insights');
+            if (!response.ok) {
+                console.error('Failed to load insights:', response.status);
+                showInsightError();
+                return;
+            }
+
+            const data = await response.json();
+
+            // Display Low Stock Items
+            const lowStockDiv = document.getElementById('lowStockItems');
+            if (data.low_stock && data.low_stock.length > 0) {
+                lowStockDiv.innerHTML = data.low_stock.slice(0, 5).map(item =>
+                    `<div style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <strong>${item.name}</strong><br>
+          <span style="color: var(--text-secondary); font-size: 0.85rem;">
+            Stock: ${item.current_stock} ${item.unit} (${item.stock_percentage}% of par)
+          </span>
+        </div>`
+                ).join('');
+            } else {
+                lowStockDiv.innerHTML = '<p style="color: var(--text-secondary);">All items well stocked ✓</p>';
+            }
+
+            // Display Dead Stock Items
+            const deadStockDiv = document.getElementById('deadStockItems');
+            if (data.dead_stock && data.dead_stock.length > 0) {
+                deadStockDiv.innerHTML = data.dead_stock.slice(0, 5).map(item =>
+                    `<div style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <strong>${item.name}</strong><br>
+          <span style="color: var(--text-secondary); font-size: 0.85rem;">
+            Stock: ${item.current_stock} ${item.unit}, Used: ${item.usage_count}x (30d)
+          </span>
+        </div>`
+                ).join('');
+            } else {
+                deadStockDiv.innerHTML = '<p style="color: var(--text-secondary);">No dead stock identified ✓</p>';
+            }
+
+            // Display High Demand Items
+            const highDemandDiv = document.getElementById('highDemandItems');
+            if (data.high_demand && data.high_demand.length > 0) {
+                highDemandDiv.innerHTML = data.high_demand.slice(0, 5).map(item =>
+                    `<div style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <strong>${item.name}</strong><br>
+          <span style="color: var(--text-secondary); font-size: 0.85rem;">
+            Stock: ${item.current_stock} ${item.unit}, Used: ${item.usage_count}x (30d)
+          </span>
+        </div>`
+                ).join('');
+            } else {
+                highDemandDiv.innerHTML = '<p style="color: var(--text-secondary);">No high demand items</p>';
+            }
+
+        } catch (error) {
+            console.error('Error loading insights:', error);
+            showInsightError();
+        }
+    }
+
+    function showInsightError() {
+        document.getElementById('lowStockItems').innerHTML = '<p style="color: var(--danger);">Failed to load</p>';
+        document.getElementById('deadStockItems').innerHTML = '<p style="color: var(--danger);">Failed to load</p>';
+        document.getElementById('highDemandItems').innerHTML = '<p style="color: var(--danger);">Failed to load</p>';
+    }
+</script>
+
+{% endblock %}

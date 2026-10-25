@@ -1,0 +1,915 @@
+{% extends "base.html" %}
+{% block title %}Campaigns{% endblock %}
+{% block content %}
+
+<style>
+  :root { --cp-border: rgba(148, 163, 184, 0.28); --cp-soft: rgba(20, 184, 166, 0.08); }
+  .cp-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .cp-tab { padding: 10px 18px; border-radius: 10px; border: 1px solid var(--cp-border); background: transparent;
+            color: var(--text-secondary); font-weight: 600; cursor: pointer; font-size: 0.92rem; }
+  .cp-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .cp-section { display: none; }
+  .cp-section.active { display: block; }
+  .cp-step { display: flex; align-items: center; gap: 10px; margin: 0 0 14px 0; }
+  .cp-step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff;
+                 display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .cp-step h4 { margin: 0; }
+  .cp-muted { color: var(--text-secondary); font-size: 0.85rem; }
+  .cp-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+             border: 1px solid var(--cp-border); background: transparent; color: var(--text); cursor: pointer;
+             font-size: 0.82rem; margin: 0 6px 6px 0; transition: all .15s; }
+  .cp-chip:hover { border-color: var(--primary); background: var(--cp-soft); }
+  .cp-chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .cp-rule { display: grid; grid-template-columns: 220px 170px 1fr 36px; gap: 10px; align-items: start;
+             padding: 12px; border: 1px solid var(--cp-border); border-radius: 10px; margin-bottom: 10px; background: var(--cp-soft); }
+  .cp-rule .input, .cp-rule select { margin: 0; }
+  .cp-rule-del { width: 36px; height: 38px; border-radius: 8px; border: 1px solid var(--cp-border); background: transparent;
+                 color: var(--danger); cursor: pointer; font-size: 1rem; }
+  .cp-multi { display: flex; flex-wrap: wrap; max-height: 130px; overflow-y: auto; }
+  .cp-row2 { display: flex; gap: 8px; align-items: center; }
+  .cp-row2 .input { flex: 1; }
+  .cp-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .cp-stat { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--cp-border); font-size: 0.85rem; }
+  .cp-stat b { font-size: 1.05rem; color: var(--text); }
+  .cp-table-wrap { max-height: 420px; overflow: auto; border: 1px solid var(--cp-border); border-radius: 10px; }
+  .cp-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  .cp-table th { position: sticky; top: 0; background: var(--bg-secondary); z-index: 2; text-align: left;
+                 padding: 10px; border-bottom: 1px solid var(--cp-border); color: var(--text-secondary); font-weight: 600; }
+  .cp-table td { padding: 9px 10px; border-bottom: 1px solid var(--cp-border); color: var(--text); }
+  .cp-table tr.off td { opacity: 0.4; }
+  .cp-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; }
+  .cp-tag.ok { background: rgba(16,185,129,.15); color: var(--success); }
+  .cp-tag.no { background: rgba(239,68,68,.12); color: var(--danger); }
+  .cp-tag.add { background: rgba(245,158,11,.15); color: var(--warning); }
+  .cp-tag.info { background: var(--cp-soft); color: var(--primary-light); }
+  .cp-x { border: none; background: transparent; color: var(--danger); cursor: pointer; font-size: 1rem; }
+  .cp-lookup { position: relative; }
+  .cp-dropdown { position: absolute; left: 0; right: 0; top: 100%; margin-top: 4px; z-index: 50; background: var(--bg-secondary);
+                 border: 1px solid var(--cp-border); border-radius: 10px; max-height: 240px; overflow-y: auto; box-shadow: var(--shadow-lg); display: none; }
+  .cp-dropdown div { padding: 9px 12px; cursor: pointer; border-bottom: 1px solid var(--cp-border); font-size: 0.86rem; }
+  .cp-dropdown div:hover { background: var(--cp-soft); }
+  .cp-channels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .cp-channel { border: 1px solid var(--cp-border); border-radius: 12px; padding: 12px; cursor: pointer; }
+  .cp-channel.on { border-color: var(--primary); background: var(--cp-soft); box-shadow: 0 0 0 1px var(--primary) inset; }
+  .cp-channel b { display: block; margin-bottom: 4px; color: var(--text); }
+  .cp-compose { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; }
+  .cp-preview { border: 1px solid var(--cp-border); border-radius: 12px; padding: 14px; background: var(--bg-secondary); }
+  .cp-mail { white-space: pre-wrap; font-size: 0.9rem; line-height: 1.6; color: var(--text); }
+  .cp-wa { background: #0b141a; border-radius: 12px; padding: 14px; }
+  .cp-wa-bubble { background: #005c4b; color: #e9edef; padding: 10px 12px; border-radius: 10px 10px 2px 10px;
+                  white-space: pre-wrap; font-size: 0.88rem; line-height: 1.5; max-width: 92%; margin-left: auto; }
+  .cp-warn { padding: 10px 12px; border-radius: 10px; background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.35);
+             color: var(--warning); font-size: 0.85rem; margin-top: 10px; }
+  .cp-okbox { padding: 10px 12px; border-radius: 10px; background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.3);
+              color: var(--success); font-size: 0.85rem; }
+  .cp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .cp-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  textarea.input { min-height: 230px; resize: vertical; font-family: inherit; line-height: 1.55; }
+  .cp-status { padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; text-transform: capitalize; }
+  .cp-status.completed { background: rgba(16,185,129,.15); color: var(--success); }
+  .cp-status.sending { background: rgba(20,184,166,.15); color: var(--primary-light); }
+  .cp-status.in_progress { background: rgba(245,158,11,.15); color: var(--warning); }
+  @media (max-width: 1100px) {
+    .cp-rule { grid-template-columns: 1fr; }
+    .cp-compose, .cp-grid2, .cp-grid3 { grid-template-columns: 1fr; }
+    .cp-channels { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+  <div>
+    <h2 style="margin:0;">📣 Campaigns</h2>
+    <div class="cp-muted">Target the right guests, write one message, send personalised copies by Email or WhatsApp.</div>
+  </div>
+</div>
+
+<div class="cp-tabs">
+  <button class="cp-tab active" data-tab="builder">✨ New Campaign</button>
+  <button class="cp-tab" data-tab="history">🗂️ History ({{ campaigns|length }})</button>
+  <button class="cp-tab" data-tab="settings">⚙️ Sender Settings</button>
+</div>
+
+<!-- ======================= BUILDER ======================= -->
+<div class="cp-section active" id="tab-builder">
+
+  <!-- STEP 1: AUDIENCE -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="cp-step"><span class="cp-step-num">1</span><h4>🎯 Target Audience</h4></div>
+
+    <div class="cp-muted" style="margin-bottom:8px;">Suggested audiences (one click, then fine-tune):</div>
+    <div id="presetBox"></div>
+
+    <div style="display:flex; align-items:center; gap:10px; margin:14px 0 12px; flex-wrap:wrap;">
+      <span class="cp-muted">Include customers who match</span>
+      <select id="matchMode" class="input" style="width:auto; margin:0;">
+        <option value="all">ALL of the rules</option>
+        <option value="any">ANY of the rules</option>
+      </select>
+      <span class="cp-muted">below. No rules = everyone.</span>
+    </div>
+
+    <div id="rulesBox"></div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;">
+      <select id="addRuleSelect" class="input" style="width:auto; margin:0;"></select>
+      <button type="button" class="btn secondary" onclick="addRuleFromSelect()">+ Add Filter</button>
+      <div style="flex:1"></div>
+      <button type="button" class="btn secondary" onclick="clearRules()">Clear</button>
+      <button type="button" class="btn" onclick="findAudience()"><i class="fa-solid fa-magnifying-glass"></i> Find Customers</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: RECIPIENTS -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="cp-step"><span class="cp-step-num">2</span><h4>👥 Review Recipients</h4></div>
+
+    <div class="cp-stats" id="audStats">
+      <div class="cp-stat cp-muted">Run <b>Find Customers</b> above, or add people manually below.</div>
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; align-items:center;">
+      <input type="text" id="tableSearch" class="input" placeholder="Search in this list..." style="max-width:240px; margin:0;" oninput="renderTable()">
+      <label class="cp-muted" style="display:flex; align-items:center; gap:6px; margin:0;">
+        <input type="checkbox" id="onlySelected" onchange="renderTable()"> Show selected only
+      </label>
+      <button type="button" class="btn secondary" style="padding:6px 12px;" onclick="selectAll(true)">Select all</button>
+      <button type="button" class="btn secondary" style="padding:6px 12px;" onclick="selectAll(false)">Deselect all</button>
+      <div style="flex:1"></div>
+      <div class="cp-lookup" style="min-width:300px;">
+        <input type="text" id="addPerson" class="input" placeholder="➕ Add a person (name, phone, NID)..." autocomplete="off" style="margin:0;">
+        <div class="cp-dropdown" id="addPersonResults"></div>
+      </div>
+    </div>
+
+    <div class="cp-table-wrap">
+      <table class="cp-table">
+        <thead>
+          <tr>
+            <th style="width:36px;"><input type="checkbox" id="headCheck" onchange="selectAll(this.checked, true)"></th>
+            <th>Name</th><th>Email</th><th>Phone</th><th>Type</th>
+            <th style="text-align:right;">Stays</th><th style="text-align:right;">Total Spent</th><th>Last Visit</th>
+            <th style="width:40px;"></th>
+          </tr>
+        </thead>
+        <tbody id="audBody">
+          <tr><td colspan="9" style="text-align:center; padding:28px;" class="cp-muted">No recipients yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- STEP 3: MESSAGE -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="cp-step"><span class="cp-step-num">3</span><h4>✉️ Write the Message</h4></div>
+
+    <div class="cp-grid2" style="margin-bottom:14px;">
+      <div class="form-group" style="margin:0;">
+        <label>Campaign Name (for your history)</label>
+        <input type="text" id="cName" class="input" placeholder="e.g. Eid Offer 2026 - Repeat Guests" style="margin:0;">
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label>Start from a template (optional)</label>
+        <select id="starterSelect" class="input" style="margin:0;" onchange="applyStarter(this.value)"></select>
+      </div>
+    </div>
+
+    <label style="display:block; margin-bottom:8px;">Send via</label>
+    <div class="cp-channels" id="channelBox">
+      <div class="cp-channel on" data-ch="email"><b>📧 Email</b><span class="cp-muted">Only guests with an email.</span></div>
+      <div class="cp-channel" data-ch="whatsapp"><b>💬 WhatsApp</b><span class="cp-muted">Only guests with a phone number.</span></div>
+      <div class="cp-channel" data-ch="both"><b>📧 + 💬 Both</b><span class="cp-muted">Email AND WhatsApp wherever available.</span></div>
+      <div class="cp-channel" data-ch="smart"><b>🧠 Smart</b><span class="cp-muted">Email if available, otherwise WhatsApp.</span></div>
+    </div>
+
+    <div class="cp-compose" style="margin-top:18px;">
+      <div>
+        <div class="form-group" id="subjectGroup">
+          <label>Email Subject</label>
+          <input type="text" id="cSubject" class="input" placeholder="e.g. A special thank-you for you, {first_name}" style="margin:0;">
+        </div>
+        <label style="display:block; margin-bottom:6px;">Personalise: click a field to insert it where your cursor is</label>
+        <div id="mergeBox" style="margin-bottom:8px;"></div>
+        <textarea id="cBody" class="input" placeholder="Dear {name},&#10;&#10;Write your message here..."></textarea>
+        <div class="cp-muted" style="margin-top:6px;"><span id="charCount">0</span> characters</div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
+          <label style="margin:0;">Live Preview</label>
+          <select id="previewWho" class="input" style="width:auto; max-width:220px; margin:0;" onchange="renderPreview()"></select>
+        </div>
+        <div class="cp-preview" id="previewEmailBox">
+          <div class="cp-muted" style="font-size:0.78rem;">Subject</div>
+          <div id="pvSubject" style="font-weight:700; margin-bottom:10px; color:var(--text);"></div>
+          <div class="cp-mail" id="pvBody"></div>
+        </div>
+        <div class="cp-wa" id="previewWaBox" style="display:none; margin-top:10px;">
+          <div class="cp-wa-bubble" id="pvWa"></div>
+        </div>
+        <div id="pvWarn"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: SEND -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="cp-step"><span class="cp-step-num">4</span><h4>🚀 Review & Send</h4></div>
+
+    <div id="senderSummary" style="margin-bottom:14px;"></div>
+    <div id="sendPlan" class="cp-stats"></div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:10px 0 18px;">
+      <span class="cp-muted">Send a test first:</span>
+      <select id="testChannel" class="input" style="width:auto; margin:0;">
+        <option value="email">Email</option>
+        <option value="whatsapp">WhatsApp</option>
+      </select>
+      <input type="text" id="testTo" class="input" placeholder="your email or WhatsApp number" style="max-width:260px; margin:0;">
+      <button type="button" class="btn secondary" onclick="sendTest()">Send Test</button>
+    </div>
+
+    <button type="button" class="btn" id="sendBtn" style="padding:12px 28px; font-size:1rem;" onclick="sendCampaign()">
+      <i class="fa-solid fa-paper-plane"></i> Send Campaign
+    </button>
+  </div>
+</div>
+
+<!-- ======================= HISTORY ======================= -->
+<div class="cp-section" id="tab-history">
+  <div class="card">
+    {% if campaigns %}
+    <div class="cp-table-wrap" style="max-height:none;">
+      <table class="cp-table">
+        <thead>
+          <tr><th>Campaign</th><th>Channel</th><th>Created</th><th style="text-align:right;">Recipients</th>
+              <th style="text-align:right;">Sent</th><th style="text-align:right;">Failed</th><th style="text-align:right;">Pending</th>
+              <th>Status</th><th style="text-align:right;">Actions</th></tr>
+        </thead>
+        <tbody>
+          {% for c in campaigns %}
+          <tr>
+            <td><a href="/campaigns/{{ c.id }}" style="color:var(--text); font-weight:600; text-decoration:none;">{{ c.name }}</a></td>
+            <td>{{ {'email':'📧 Email','whatsapp':'💬 WhatsApp','both':'📧+💬 Both','smart':'🧠 Smart'}.get(c.channel, c.channel) }}</td>
+            <td class="cp-muted">{{ c.created_fmt }}</td>
+            <td style="text-align:right;">{{ c.counts.total }}</td>
+            <td style="text-align:right; color:var(--success); font-weight:600;">{{ c.counts.sent }}</td>
+            <td style="text-align:right; color:var(--danger);">{{ c.counts.failed }}</td>
+            <td style="text-align:right; color:var(--warning);">{{ c.counts.pending }}</td>
+            <td><span class="cp-status {{ c.status }}">{{ (c.status or '').replace('_',' ') }}</span></td>
+            <td style="text-align:right; white-space:nowrap;">
+              <a href="/campaigns/{{ c.id }}" class="btn secondary" style="padding:5px 10px; text-decoration:none;">Open</a>
+              <button class="btn secondary" style="padding:5px 10px;" onclick="duplicateCampaign({{ c.id }})">Duplicate</button>
+              <button class="btn secondary" style="padding:5px 10px; color:var(--danger);" onclick="deleteCampaign({{ c.id }})">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:40px;" class="cp-muted">No campaigns sent yet. Create your first one in “New Campaign”.</div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ======================= SENDER SETTINGS ======================= -->
+<div class="cp-section" id="tab-settings">
+  <div class="cp-grid2" style="align-items:start;">
+    <div class="card">
+      <h4 style="margin-top:0;">📧 Email Sender (SMTP)</h4>
+      <div class="cp-muted" style="margin-bottom:14px;">
+        Works with any email provider. Gmail: host <code>smtp.gmail.com</code>, port <code>587</code>, STARTTLS, and an
+        <b>App Password</b> (not your normal password). Hostinger: <code>smtp.hostinger.com</code>, port <code>465</code>, SSL.
+      </div>
+      <div class="cp-grid3">
+        <div class="form-group"><label>SMTP Host</label><input class="input" id="s_smtp_host" placeholder="smtp.gmail.com"></div>
+        <div class="form-group"><label>Port</label><input class="input" id="s_smtp_port" placeholder="587"></div>
+        <div class="form-group"><label>Security</label>
+          <select class="input" id="s_smtp_security">
+            <option value="starttls">STARTTLS (587)</option><option value="ssl">SSL/TLS (465)</option><option value="none">None</option>
+          </select>
+        </div>
+      </div>
+      <div class="cp-grid2">
+        <div class="form-group"><label>Username / Login</label><input class="input" id="s_smtp_username" placeholder="you@gmail.com" autocomplete="off"></div>
+        <div class="form-group"><label>Password / App Password</label>
+          <input class="input" type="password" id="s_smtp_password" placeholder="" autocomplete="new-password">
+          <div class="cp-muted" id="pwHint" style="font-size:0.75rem; margin-top:4px;"></div>
+        </div>
+      </div>
+      <div class="cp-grid2">
+        <div class="form-group"><label>Sender Email (From) *</label><input class="input" id="s_from_email" placeholder="info@yourhotel.com"></div>
+        <div class="form-group"><label>Sender Name</label><input class="input" id="s_from_name" placeholder="HavenDesk"></div>
+      </div>
+      <div class="cp-grid2">
+        <div class="form-group"><label>Reply-To (optional)</label><input class="input" id="s_reply_to" placeholder="reservations@yourhotel.com"></div>
+        <div class="form-group"><label>Delay between emails (seconds)</label><input class="input" id="s_email_delay_seconds" placeholder="1"></div>
+      </div>
+      <div class="cp-row2" style="margin-top:6px;">
+        <input class="input" id="testEmailTo" placeholder="Send a test email to..." style="margin:0;">
+        <button type="button" class="btn secondary" onclick="testEmailSettings()">Test</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4 style="margin-top:0;">💬 WhatsApp Sender</h4>
+      <div class="form-group"><label>Your WhatsApp Business Number</label>
+        <input class="input" id="s_wa_sender_number" placeholder="+8801XXXXXXXXX">
+        <div class="cp-muted" style="font-size:0.75rem; margin-top:4px;">In click-to-send mode, messages go from whichever WhatsApp is logged in on this computer/phone (WhatsApp Web or app), so log in with this number.</div>
+      </div>
+      <div class="cp-grid2">
+        <div class="form-group"><label>Sending Mode</label>
+          <select class="input" id="s_wa_mode" onchange="toggleWaApi()">
+            <option value="manual">Click-to-send (free)</option>
+            <option value="api">Automatic: WhatsApp Cloud API</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Default Country Code</label>
+          <input class="input" id="s_wa_default_country_code" placeholder="880">
+          <div class="cp-muted" style="font-size:0.75rem; margin-top:4px;">Turns 017XXXXXXXX into 88017XXXXXXXX.</div>
+        </div>
+      </div>
+
+      <div id="waApiBox" style="display:none; border-top:1px dashed var(--cp-border); padding-top:12px; margin-top:4px;">
+        <div class="cp-muted" style="margin-bottom:12px;">
+          From Meta Business → WhatsApp → API Setup. Marketing messages to people who haven't messaged you in the last 24h
+          <b>must</b> use an approved <b>Template</b>.
+        </div>
+        <div class="cp-grid2">
+          <div class="form-group"><label>Phone Number ID</label><input class="input" id="s_wa_phone_number_id"></div>
+          <div class="form-group"><label>API Version</label><input class="input" id="s_wa_api_version" placeholder="v19.0"></div>
+        </div>
+        <div class="form-group"><label>Permanent Access Token</label>
+          <input class="input" type="password" id="s_wa_access_token" autocomplete="new-password">
+          <div class="cp-muted" id="tokenHint" style="font-size:0.75rem; margin-top:4px;"></div>
+        </div>
+        <div class="cp-grid3">
+          <div class="form-group"><label>Message Type</label>
+            <select class="input" id="s_wa_message_type"><option value="text">Free text (24h window)</option><option value="template">Approved template</option></select>
+          </div>
+          <div class="form-group"><label>Template Name</label><input class="input" id="s_wa_template_name" placeholder="guest_offer"></div>
+          <div class="form-group"><label>Language</label><input class="input" id="s_wa_template_lang" placeholder="en"></div>
+        </div>
+        <div class="form-group"><label>Template variables ({% raw %}{{1}}, {{2}}{% endraw %}...) filled from these fields, in order</label>
+          <input class="input" id="s_wa_template_params" placeholder="name,last_visit">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:16px; display:flex; gap:12px; align-items:center;">
+    <button type="button" class="btn" onclick="saveSettings()"><i class="fa-solid fa-floppy-disk"></i> Save Sender Settings</button>
+    <span id="settingsMsg" class="cp-muted"></span>
+  </div>
+</div>
+
+<script id="cfgData" type="application/json">{{ cfg_public|tojson }}</script>
+
+{% raw %}
+<script>
+let CFG = JSON.parse(document.getElementById('cfgData').textContent);
+let OPTIONS = { services: [], room_types: [], customer_types: [], payment_methods: [], currency: '' };
+let RULES = [];          // {uid, field, op, value}
+let AUD = new Map();     // id -> profile
+let SELECTED = new Set();
+let MANUAL = new Set();
+let CHANNEL = 'email';
+let lastField = null;
+let ruleSeq = 0;
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ymd = d => d.toISOString().slice(0, 10);
+
+/* ---------- Filter definitions ---------- */
+const NUM_OPS = [['gte','at least (≥)'],['lte','at most (≤)']];
+const FIELDS = {
+  visit_date:      { label: '📅 Visited (check-in) between', type: 'daterange', ops: [['between','visited in'],['not_between','did NOT visit in']] },
+  last_visit_days: { label: '⏳ Days since last visit', type: 'number', ops: NUM_OPS, ph: 'e.g. 90' },
+  total_spent:     { label: '💰 Total lifetime spend', type: 'number', ops: [...NUM_OPS, ['between','between']], ph: 'amount' },
+  avg_spend:       { label: '💵 Average spend per stay', type: 'number', ops: NUM_OPS, ph: 'amount' },
+  stays:           { label: '🔁 Number of stays', type: 'number', ops: [...NUM_OPS, ['eq','exactly']], ph: 'e.g. 2' },
+  nights:          { label: '🌙 Total nights stayed', type: 'number', ops: NUM_OPS, ph: 'e.g. 5' },
+  services:        { label: '🛎️ Services used', type: 'multi', src: 'services', ops: [['any_of','used any of'],['all_of','used all of'],['none_of','never used']] },
+  room_type:       { label: '🛏️ Room type stayed in', type: 'multi', src: 'room_types', ops: [['any_of','stayed in any of'],['none_of','never stayed in']] },
+  customer_type:   { label: '🏷️ Customer type', type: 'multi', src: 'customer_types', ops: [['any_of','is'],['none_of','is not']] },
+  payment_method:  { label: '💳 Payment method used', type: 'multi', src: 'payment_methods', ops: [['any_of','used any of'],['none_of','never used']] },
+  referral:        { label: '🤝 Referral status', type: 'select', ops: [['is','is']], choices: [
+                      ['was_referred','Came through a reference'],['not_referred','Not referred by anyone'],
+                      ['is_referrer','Has referred other guests'],['not_referrer','Never referred anyone']] },
+  referrals_made:  { label: '📣 Number of guests they referred', type: 'number', ops: NUM_OPS, ph: 'e.g. 1' },
+  referred_by:     { label: '🔗 Referred by (name)', type: 'text', ops: [['contains','name contains']], ph: 'reference name' },
+  max_pax:         { label: '👨‍👩‍👧 Largest party size (pax)', type: 'number', ops: NUM_OPS, ph: 'e.g. 3' },
+  customer_since:  { label: '🆕 Became a customer between', type: 'daterange', ops: [['between','between']] },
+  flag:            { label: '📌 Status / contact info', type: 'select', ops: [['is','is']], choices: [
+                      ['in_house','Currently staying (in-house)'],['not_in_house','Not currently staying'],
+                      ['upcoming','Has an upcoming reservation'],['no_upcoming','No upcoming reservation'],
+                      ['group_guest','Booked as part of a group'],['has_stayed','Has stayed at least once'],
+                      ['never_stayed','Never stayed (contact only)'],['has_email','Has an email address'],['has_phone','Has a phone number']] },
+  name_contains:   { label: '🔤 Name contains', type: 'text', ops: [['contains','contains']], ph: 'text' },
+};
+
+/* ---------- Suggested audiences ---------- */
+function monthStart() { const d = new Date(); return ymd(new Date(d.getFullYear(), d.getMonth(), 1)); }
+const PRESETS = [
+  { label: '🔁 Win-back: no visit in 90+ days', starter: 'winback', rules: () => [{ field: 'last_visit_days', op: 'gte', value: 90 }] },
+  { label: '⭐ Repeat guests (2+ stays)', starter: 'loyalty', rules: () => [{ field: 'stays', op: 'gte', value: 2 }] },
+  { label: '💎 Top spenders', starter: 'loyalty', rules: () => [{ field: 'total_spent', op: 'gte', value: 10000 }] },
+  { label: '👑 VIP customers', starter: 'loyalty', rules: () => [{ field: 'customer_type', op: 'any_of', value: ['VIP'] }] },
+  { label: '🤝 Guests who referred others', starter: 'referrer', rules: () => [{ field: 'referral', op: 'is', value: 'is_referrer' }] },
+  { label: '🆕 New guests this month', starter: 'thanks', rules: () => [{ field: 'customer_since', op: 'between', value: [monthStart(), ymd(new Date())] }] },
+  { label: '🏨 In-house right now', starter: 'inhouse', rules: () => [{ field: 'flag', op: 'is', value: 'in_house' }] },
+  { label: '📅 Upcoming arrivals', starter: 'prearrival', rules: () => [{ field: 'flag', op: 'is', value: 'upcoming' }] },
+  { label: '👥 Group / event guests', starter: 'festival', rules: () => [{ field: 'flag', op: 'is', value: 'group_guest' }] },
+  { label: '🌐 Everyone', starter: '', rules: () => [] },
+];
+
+/* ---------- Message starters ---------- */
+const STARTERS = {
+  winback: { label: 'Win-back offer', subject: 'We miss you, {first_name}! A special offer inside',
+    body: "Dear {name},\n\nIt has been a while since your last stay with us on {last_visit}, and we truly miss having you at {hotel_name}.\n\nAs a valued guest, enjoy 15% off your next stay when you book this month. Just reply to this message or call us at {hotel_phone}.\n\nWe look forward to welcoming you back!\n\nWarm regards,\n{hotel_name}" },
+  loyalty: { label: 'Loyalty thank-you', subject: 'Thank you for {total_stays} wonderful stays, {first_name}',
+    body: "Dear {name},\n\nThank you for choosing {hotel_name} {total_stays} times. Guests like you are the reason we love what we do.\n\nAs a small thank-you, your next stay comes with a complimentary room upgrade (subject to availability). Mention this message when you book.\n\nWith gratitude,\n{hotel_name}\n{hotel_phone}" },
+  thanks: { label: 'Welcome / thank-you', subject: 'Thank you for staying with us, {first_name}',
+    body: "Dear {name},\n\nThank you for choosing {hotel_name}. We hope you enjoyed your stay!\n\nWe would love to host you again. Save our number {hotel_phone} for direct bookings and the best rates.\n\nBest wishes,\n{hotel_name}" },
+  referrer: { label: 'Thank a referrer', subject: 'Thank you for recommending us, {first_name}!',
+    body: "Dear {name},\n\nThank you for recommending {hotel_name} to your friends and family. Your trust means a lot to us.\n\nAs a thank-you, enjoy a special discount on your next stay. Just call us at {hotel_phone}.\n\nWarm regards,\n{hotel_name}" },
+  inhouse: { label: 'In-house guest promotion', subject: 'Something special during your stay, {first_name}',
+    body: "Dear {name},\n\nWe hope you are enjoying your stay at {hotel_name}!\n\nDuring your stay, enjoy our special offers on dining and services. Contact the front desk anytime for assistance.\n\nHave a wonderful day,\n{hotel_name}" },
+  prearrival: { label: 'Pre-arrival welcome', subject: 'We are getting ready for you, {first_name}',
+    body: "Dear {name},\n\nWe are excited to welcome you to {hotel_name} soon!\n\nIf you need airport pickup, an early check-in or anything special, simply reply to this message or call {hotel_phone}.\n\nSee you soon,\n{hotel_name}" },
+  festival: { label: 'Festival / seasonal offer', subject: 'Celebrate with {hotel_name}: special festive rates',
+    body: "Dear {name},\n\nThe festive season is here! Celebrate with your loved ones at {hotel_name} and enjoy exclusive festive rates on all rooms.\n\nLimited rooms available. Book now: {hotel_phone}\n\nWarm wishes,\n{hotel_name}" },
+};
+
+const MERGE_FIELDS = [
+  ['name','Full name'],['first_name','First name'],['last_visit','Last visit'],['first_visit','First visit'],
+  ['days_since_last_visit','Days since visit'],['total_stays','Total stays'],['total_nights','Total nights'],
+  ['total_spent','Total spent'],['avg_spend','Avg spend'],['favorite_room_type','Favourite room'],
+  ['services_used','Services used'],['customer_type','Customer type'],['phone','Phone'],['email','Email'],
+  ['hotel_name','Hotel name'],['hotel_phone','Hotel phone'],['hotel_email','Hotel email'],['hotel_address','Hotel address'],['today','Today']
+];
+
+/* ---------- Tabs ---------- */
+function showTab(name) {
+  document.querySelectorAll('.cp-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.cp-section').forEach(s => s.classList.toggle('active', s.id === 'tab-' + name));
+  history.replaceState(null, '', '#' + name);
+}
+document.querySelectorAll('.cp-tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
+
+/* ---------- Rules UI ---------- */
+function addRule(rule) {
+  const def = FIELDS[rule.field];
+  if (!def) return;
+  RULES.push({ uid: ++ruleSeq, field: rule.field, op: rule.op || def.ops[0][0],
+               value: rule.value !== undefined ? rule.value : (def.type === 'multi' ? [] : def.type === 'daterange' ? ['', ''] : (def.choices ? def.choices[0][0] : '')) });
+  renderRules();
+}
+function addRuleFromSelect() {
+  const f = document.getElementById('addRuleSelect').value;
+  if (f) addRule({ field: f });
+}
+function clearRules() { RULES = []; renderRules(); document.querySelectorAll('#presetBox .cp-chip').forEach(c => c.classList.remove('on')); }
+function removeRule(uid) { RULES = RULES.filter(r => r.uid !== uid); renderRules(); }
+function updRule(uid, key, val) {
+  const r = RULES.find(x => x.uid === uid);
+  if (!r) return;
+  if (key === 'op') { r.op = val; if (FIELDS[r.field].type === 'number') r.value = r.op === 'between' ? ['', ''] : ''; renderRules(); return; }
+  r.value = val;
+}
+function updPair(uid, idx, val) {
+  const r = RULES.find(x => x.uid === uid);
+  if (!Array.isArray(r.value)) r.value = ['', ''];
+  r.value[idx] = val;
+}
+function toggleMulti(uid, opt) {
+  const r = RULES.find(x => x.uid === uid);
+  const i = r.value.indexOf(opt);
+  if (i >= 0) r.value.splice(i, 1); else r.value.push(opt);
+  renderRules();
+}
+
+function renderRuleValue(r, def) {
+  if (def.type === 'daterange') {
+    const v = Array.isArray(r.value) ? r.value : ['', ''];
+    return `<div class="cp-row2"><input type="date" class="input" value="${esc(v[0])}" onchange="updPair(${r.uid},0,this.value)">
+            <span class="cp-muted">to</span><input type="date" class="input" value="${esc(v[1])}" onchange="updPair(${r.uid},1,this.value)"></div>`;
+  }
+  if (def.type === 'number') {
+    if (r.op === 'between') {
+      const v = Array.isArray(r.value) ? r.value : ['', ''];
+      return `<div class="cp-row2"><input type="number" class="input" placeholder="min" value="${esc(v[0])}" oninput="updPair(${r.uid},0,this.value)">
+              <span class="cp-muted">and</span><input type="number" class="input" placeholder="max" value="${esc(v[1])}" oninput="updPair(${r.uid},1,this.value)"></div>`;
+    }
+    return `<input type="number" class="input" placeholder="${esc(def.ph || '')}" value="${esc(r.value)}" oninput="updRule(${r.uid},'value',this.value)">`;
+  }
+  if (def.type === 'text') {
+    return `<input type="text" class="input" placeholder="${esc(def.ph || '')}" value="${esc(r.value)}" oninput="updRule(${r.uid},'value',this.value)">`;
+  }
+  if (def.type === 'select') {
+    return `<select class="input" onchange="updRule(${r.uid},'value',this.value)">${def.choices.map(c =>
+      `<option value="${c[0]}" ${r.value === c[0] ? 'selected' : ''}>${esc(c[1])}</option>`).join('')}</select>`;
+  }
+  if (def.type === 'multi') {
+    const opts = OPTIONS[def.src] || [];
+    if (!opts.length) return `<span class="cp-muted">No options found in your data yet.</span>`;
+    return `<div class="cp-multi">${opts.map(o => {
+      const on = (r.value || []).map(x => String(x).toLowerCase()).includes(String(o).toLowerCase());
+      return `<button type="button" class="cp-chip ${on ? 'on' : ''}" onclick='toggleMulti(${r.uid}, ${esc(JSON.stringify(o))})'>${esc(o)}</button>`;
+    }).join('')}</div>`;
+  }
+  return '';
+}
+
+function renderRules() {
+  const box = document.getElementById('rulesBox');
+  if (!RULES.length) {
+    box.innerHTML = `<div class="cp-muted" style="padding:12px; border:1px dashed var(--cp-border); border-radius:10px; margin-bottom:10px;">
+      No filters yet. Pick a suggested audience above or add a filter below.</div>`;
+    return;
+  }
+  box.innerHTML = RULES.map(r => {
+    const def = FIELDS[r.field];
+    return `<div class="cp-rule">
+      <div style="font-weight:600; padding-top:9px; color:var(--text);">${esc(def.label)}</div>
+      <select class="input" onchange="updRule(${r.uid},'op',this.value)">${def.ops.map(o =>
+        `<option value="${o[0]}" ${r.op === o[0] ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select>
+      <div>${renderRuleValue(r, def)}</div>
+      <button type="button" class="cp-rule-del" title="Remove filter" onclick="removeRule(${r.uid})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function currentFilters() {
+  return { match: document.getElementById('matchMode').value,
+           rules: RULES.map(r => ({ field: r.field, op: r.op, value: r.value })) };
+}
+
+function applyPreset(i, el) {
+  const p = PRESETS[i];
+  RULES = [];
+  p.rules().forEach(addRule);
+  renderRules();
+  document.querySelectorAll('#presetBox .cp-chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  if (p.starter && !document.getElementById('cBody').value.trim()) {
+    document.getElementById('starterSelect').value = p.starter;
+    applyStarter(p.starter);
+  }
+  findAudience();
+}
+
+/* ---------- Audience ---------- */
+async function findAudience() {
+  const body = document.getElementById('audBody');
+  body.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:28px;" class="cp-muted">Searching...</td></tr>`;
+  try {
+    const res = await fetch('/campaigns/audience', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                                     body: JSON.stringify({ filters: currentFilters() }) });
+    const data = await res.json();
+    // keep manually-added people, replace the rest
+    const keep = new Map([...AUD].filter(([id]) => MANUAL.has(id)));
+    AUD = keep;
+    SELECTED = new Set([...SELECTED].filter(id => MANUAL.has(id)));
+    data.customers.forEach(c => { AUD.set(c.id, c); SELECTED.add(c.id); });
+    window.__lastSummary = data.summary;
+    renderTable();
+    document.getElementById('audBody').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } catch (e) {
+    body.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:28px; color:var(--danger);">Search failed: ${esc(e.message)}</td></tr>`;
+  }
+}
+
+function selectAll(on, visibleOnly) {
+  const rows = visibleOnly ? visibleRows() : [...AUD.values()];
+  rows.forEach(c => on ? SELECTED.add(c.id) : SELECTED.delete(c.id));
+  renderTable();
+}
+function toggleSel(id, on) { on ? SELECTED.add(id) : SELECTED.delete(id); renderTable(true); }
+function removePerson(id) { AUD.delete(id); SELECTED.delete(id); MANUAL.delete(id); renderTable(); }
+
+function visibleRows() {
+  const q = document.getElementById('tableSearch').value.trim().toLowerCase();
+  const only = document.getElementById('onlySelected').checked;
+  return [...AUD.values()].filter(c => (!only || SELECTED.has(c.id)) &&
+    (!q || (c.name + ' ' + c.email + ' ' + c.phone).toLowerCase().includes(q)));
+}
+
+function renderTable(keepScroll) {
+  const cur = OPTIONS.currency || '';
+  const rows = visibleRows();
+  const body = document.getElementById('audBody');
+  if (!AUD.size) {
+    body.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:28px;" class="cp-muted">No customers matched. Try loosening your filters.</td></tr>`;
+  } else if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:28px;" class="cp-muted">Nothing matches your search.</td></tr>`;
+  } else {
+    body.innerHTML = rows.map(c => {
+      const on = SELECTED.has(c.id);
+      return `<tr class="${on ? '' : 'off'}">
+        <td><input type="checkbox" ${on ? 'checked' : ''} onchange="toggleSel(${c.id}, this.checked)"></td>
+        <td><b>${esc(c.name)}</b> ${MANUAL.has(c.id) ? '<span class="cp-tag add">added</span>' : ''}</td>
+        <td>${c.email ? esc(c.email) : '<span class="cp-tag no">no email</span>'}</td>
+        <td>${c.phone ? esc(c.phone) : '<span class="cp-tag no">no phone</span>'}</td>
+        <td>${c.customer_type ? `<span class="cp-tag info">${esc(c.customer_type)}</span>` : ''}</td>
+        <td style="text-align:right;">${c.stays}</td>
+        <td style="text-align:right;">${esc(cur)}${Number(c.total_spent).toLocaleString()}</td>
+        <td>${esc(c.last_visit || '—')}</td>
+        <td><button class="cp-x" title="Remove from list" onclick="removePerson(${c.id})">✕</button></td>
+      </tr>`;
+    }).join('');
+  }
+  const allSel = rows.length && rows.every(c => SELECTED.has(c.id));
+  document.getElementById('headCheck').checked = !!allSel;
+  renderStats();
+  refreshPreviewList();
+  renderSendPlan();
+}
+
+function renderStats() {
+  const sel = [...SELECTED].map(id => AUD.get(id)).filter(Boolean);
+  const s = window.__lastSummary;
+  document.getElementById('audStats').innerHTML = `
+    <div class="cp-stat">In list: <b>${AUD.size}</b></div>
+    <div class="cp-stat">Selected: <b style="color:var(--primary-light)">${sel.length}</b></div>
+    <div class="cp-stat">📧 with email: <b>${sel.filter(c => c.email).length}</b></div>
+    <div class="cp-stat">💬 with phone: <b>${sel.filter(c => c.phone).length}</b></div>
+    ${s && s.opted_out_excluded ? `<div class="cp-stat">🚫 opted-out (auto-excluded): <b>${s.opted_out_excluded}</b></div>` : ''}`;
+}
+
+/* ---------- Add person manually ---------- */
+let lookupTimer = null;
+const addInput = document.getElementById('addPerson');
+const addResults = document.getElementById('addPersonResults');
+addInput.addEventListener('input', () => {
+  clearTimeout(lookupTimer);
+  const q = addInput.value.trim();
+  if (!q) { addResults.style.display = 'none'; return; }
+  lookupTimer = setTimeout(async () => {
+    const res = await fetch('/customers/lookup?q=' + encodeURIComponent(q));
+    const data = await res.json();
+    addResults.innerHTML = (data.results || []).length
+      ? data.results.map(c => `<div onclick="addPerson(${c.id})"><b>${esc(c.name)}</b>
+           <span class="cp-muted">${esc(c.phone || '')} ${esc(c.email || '')}</span>
+           ${AUD.has(c.id) ? '<span class="cp-tag ok">in list</span>' : ''}</div>`).join('')
+      : `<div class="cp-muted" style="cursor:default;">No customer found.</div>`;
+    addResults.style.display = 'block';
+  }, 250);
+});
+document.addEventListener('click', e => { if (!addInput.contains(e.target) && !addResults.contains(e.target)) addResults.style.display = 'none'; });
+
+async function addPerson(id) {
+  addResults.style.display = 'none';
+  addInput.value = '';
+  if (AUD.has(id)) { SELECTED.add(id); renderTable(); return; }
+  const res = await fetch('/campaigns/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                                   body: JSON.stringify({ ids: [id] }) });
+  const data = await res.json();
+  const c = (data.customers || [])[0];
+  if (!c) return;
+  if (c.opted_out) { alert(`${c.name} has opted out of marketing messages and cannot be added.`); return; }
+  AUD.set(c.id, c); SELECTED.add(c.id); MANUAL.add(c.id);
+  renderTable();
+}
+
+/* ---------- Message ---------- */
+function setChannel(ch) {
+  CHANNEL = ch;
+  document.querySelectorAll('.cp-channel').forEach(el => el.classList.toggle('on', el.dataset.ch === ch));
+  const usesEmail = ch !== 'whatsapp';
+  document.getElementById('subjectGroup').style.display = usesEmail ? '' : 'none';
+  document.getElementById('previewEmailBox').style.display = usesEmail ? '' : 'none';
+  document.getElementById('previewWaBox').style.display = ch === 'email' ? 'none' : '';
+  document.getElementById('testChannel').value = ch === 'whatsapp' ? 'whatsapp' : 'email';
+  renderPreview(); renderSendPlan(); renderSenderSummary();
+}
+document.querySelectorAll('.cp-channel').forEach(el => el.addEventListener('click', () => setChannel(el.dataset.ch)));
+
+function applyStarter(key) {
+  const s = STARTERS[key];
+  if (!s) return;
+  const body = document.getElementById('cBody');
+  if (body.value.trim() && !confirm('Replace your current message with this template?')) return;
+  document.getElementById('cSubject').value = s.subject;
+  body.value = s.body;
+  if (!document.getElementById('cName').value.trim()) document.getElementById('cName').value = s.label + ' - ' + new Date().toLocaleDateString();
+  renderPreview();
+}
+
+function insertField(key) {
+  const el = lastField || document.getElementById('cBody');
+  const token = '{' + key + '}';
+  const start = el.selectionStart ?? el.value.length, end = el.selectionEnd ?? el.value.length;
+  el.value = el.value.slice(0, start) + token + el.value.slice(end);
+  el.focus();
+  el.selectionStart = el.selectionEnd = start + token.length;
+  renderPreview();
+}
+['cSubject', 'cBody'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('focus', () => lastField = el);
+  el.addEventListener('input', renderPreview);
+});
+
+const MERGE_RE = /\{\{\s*(\w+)\s*\}\}|\{(\w+)\}/g;
+function renderText(text, values) {
+  return (text || '').replace(MERGE_RE, (m, a, b) => { const k = a || b; return k in values ? values[k] : m; });
+}
+function unknownFields(text) {
+  const known = new Set(MERGE_FIELDS.map(f => f[0]));
+  const out = new Set();
+  (text || '').replace(MERGE_RE, (m, a, b) => { const k = a || b; if (!known.has(k)) out.add(m); return m; });
+  return [...out];
+}
+
+function refreshPreviewList() {
+  const sel = document.getElementById('previewWho');
+  const prev = sel.value;
+  const people = [...SELECTED].map(id => AUD.get(id)).filter(Boolean).slice(0, 300);
+  sel.innerHTML = people.length
+    ? people.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')
+    : `<option value="">Sample guest</option>`;
+  if (prev && people.some(c => String(c.id) === prev)) sel.value = prev;
+  renderPreview();
+}
+
+function sampleValues() {
+  const p = AUD.get(Number(document.getElementById('previewWho').value));
+  if (p) return p.merge;
+  return { name: 'Rahim Uddin', first_name: 'Rahim', last_visit: '12 Jul 2026', first_visit: '02 Jan 2025', days_since_last_visit: '84',
+           total_stays: '3', total_nights: '7', total_spent: (OPTIONS.currency || '') + '12,500', avg_spend: (OPTIONS.currency || '') + '4,167',
+           favorite_room_type: 'Deluxe Double', services_used: 'Breakfast, Laundry', customer_type: 'Regular', phone: '01700000000',
+           email: 'guest@example.com', hotel_name: CFG.from_name || 'Our Hotel', hotel_phone: '', hotel_email: '', hotel_address: '',
+           today: new Date().toDateString() };
+}
+
+function renderPreview() {
+  const subj = document.getElementById('cSubject').value, body = document.getElementById('cBody').value;
+  const v = sampleValues();
+  document.getElementById('pvSubject').textContent = renderText(subj, v) || '(no subject)';
+  document.getElementById('pvBody').textContent = renderText(body, v) || 'Your message preview will appear here...';
+  document.getElementById('pvWa').textContent = renderText(body, v) || 'Your message preview will appear here...';
+  document.getElementById('charCount').textContent = body.length;
+  const unk = unknownFields(subj + ' ' + body);
+  document.getElementById('pvWarn').innerHTML = unk.length
+    ? `<div class="cp-warn">⚠️ Unknown field(s): <b>${esc(unk.join(', '))}</b>. They will be sent exactly as typed.</div>` : '';
+}
+
+/* ---------- Send plan ---------- */
+function planCounts() {
+  const sel = [...SELECTED].map(id => AUD.get(id)).filter(Boolean);
+  let email = 0, wa = 0, skip = 0;
+  sel.forEach(c => {
+    const e = !!c.email, p = !!c.phone;
+    if (CHANNEL === 'email') e ? email++ : skip++;
+    else if (CHANNEL === 'whatsapp') p ? wa++ : skip++;
+    else if (CHANNEL === 'both') { if (e) email++; if (p) wa++; if (!e && !p) skip++; }
+    else { if (e) email++; else if (p) wa++; else skip++; }
+  });
+  return { people: sel.length, email, wa, skip };
+}
+function renderSendPlan() {
+  const c = planCounts();
+  document.getElementById('sendPlan').innerHTML = `
+    <div class="cp-stat">Recipients: <b>${c.people}</b></div>
+    ${CHANNEL !== 'whatsapp' ? `<div class="cp-stat">📧 Emails to send: <b>${c.email}</b></div>` : ''}
+    ${CHANNEL !== 'email' ? `<div class="cp-stat">💬 WhatsApp messages: <b>${c.wa}</b></div>` : ''}
+    ${c.skip ? `<div class="cp-stat" style="color:var(--warning)">Skipped (no contact): <b>${c.skip}</b></div>` : ''}`;
+}
+function renderSenderSummary() {
+  const parts = [];
+  if (CHANNEL !== 'whatsapp') {
+    parts.push(CFG.email_ready
+      ? `<div class="cp-okbox" style="margin-bottom:8px;">📧 Emails will be sent from <b>${esc(CFG.from_name || '')} &lt;${esc(CFG.from_email)}&gt;</b></div>`
+      : `<div class="cp-warn" style="margin:0 0 8px;">📧 Email sender not set up yet. <a href="#settings" onclick="showTab('settings')" style="color:inherit;font-weight:700;">Open Sender Settings →</a></div>`);
+  }
+  if (CHANNEL !== 'email') {
+    parts.push(CFG.wa_effective_mode === 'api'
+      ? `<div class="cp-okbox">💬 WhatsApp will be sent <b>automatically</b> via the Cloud API${CFG.wa_sender_number ? ' from <b>' + esc(CFG.wa_sender_number) + '</b>' : ''}.</div>`
+      : `<div class="cp-okbox">💬 WhatsApp uses <b>click-to-send</b>: after you press Send, you'll get a queue where each message opens in WhatsApp ready to send${CFG.wa_sender_number ? ' (log in with <b>' + esc(CFG.wa_sender_number) + '</b>)' : ''}.</div>`);
+  }
+  document.getElementById('senderSummary').innerHTML = parts.join('');
+}
+
+async function sendTest() {
+  const to = document.getElementById('testTo').value.trim();
+  const ch = document.getElementById('testChannel').value;
+  if (!to) { alert('Enter a test email or WhatsApp number.'); return; }
+  const res = await fetch('/campaigns/test-send', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ channel: ch, to, subject: document.getElementById('cSubject').value,
+                           body: document.getElementById('cBody').value, customer_id: document.getElementById('previewWho').value }) });
+  const data = await res.json();
+  if (data.link) window.open(data.link, '_blank');
+  alert(data.error || data.message);
+}
+
+async function sendCampaign() {
+  const c = planCounts();
+  const body = document.getElementById('cBody').value;
+  if (!c.people) { alert('Select at least one recipient.'); return; }
+  if (!body.trim()) { alert('Write a message first.'); return; }
+  if (CHANNEL !== 'whatsapp' && !CFG.email_ready) { alert('Set up the email sender in Sender Settings first.'); showTab('settings'); return; }
+  const parts = [];
+  if (c.email) parts.push(`${c.email} email(s)`);
+  if (c.wa) parts.push(`${c.wa} WhatsApp message(s)`);
+  if (!parts.length) { alert('None of the selected people have the contact info needed for this channel.'); return; }
+  if (!confirm(`Send ${parts.join(' and ')} now?` + (c.skip ? `\n${c.skip} people will be skipped (no contact info).` : ''))) return;
+
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true; btn.innerHTML = 'Sending...';
+  try {
+    const res = await fetch('/campaigns/send', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: document.getElementById('cName').value, channel: CHANNEL,
+        subject: document.getElementById('cSubject').value, body, customer_ids: [...SELECTED], filters: currentFilters() }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    window.location.href = '/campaigns/' + data.campaign_id;
+  } catch (e) {
+    alert(e.message);
+    btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Campaign';
+  }
+}
+
+/* ---------- History actions ---------- */
+async function duplicateCampaign(id) {
+  const res = await fetch(`/campaigns/${id}/json`);
+  const d = await res.json();
+  RULES = [];
+  (d.filters.rules || []).forEach(addRule);
+  document.getElementById('matchMode').value = d.filters.match || 'all';
+  renderRules();
+  document.getElementById('cName').value = d.name + ' (copy)';
+  document.getElementById('cSubject').value = d.subject || '';
+  document.getElementById('cBody').value = d.body || '';
+  setChannel(d.channel || 'email');
+  const pr = await fetch('/campaigns/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                                  body: JSON.stringify({ ids: d.customer_ids }) });
+  const pd = await pr.json();
+  AUD = new Map(); SELECTED = new Set(); MANUAL = new Set(); window.__lastSummary = null;
+  pd.customers.filter(c => !c.opted_out).forEach(c => { AUD.set(c.id, c); SELECTED.add(c.id); });
+  renderTable();
+  showTab('builder');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+async function deleteCampaign(id) {
+  if (!confirm('Delete this campaign and its send log? This cannot be undone.')) return;
+  await fetch(`/campaigns/${id}/delete`, { method: 'POST' });
+  location.reload();
+}
+
+/* ---------- Sender settings ---------- */
+const S_KEYS = ['smtp_host','smtp_port','smtp_security','smtp_username','smtp_password','from_email','from_name','reply_to',
+  'email_delay_seconds','wa_sender_number','wa_mode','wa_default_country_code','wa_api_version','wa_phone_number_id',
+  'wa_access_token','wa_message_type','wa_template_name','wa_template_lang','wa_template_params'];
+function loadSettingsForm() {
+  S_KEYS.forEach(k => { const el = document.getElementById('s_' + k); if (el && k in CFG) el.value = CFG[k] ?? ''; });
+  document.getElementById('s_smtp_password').value = '';
+  document.getElementById('s_wa_access_token').value = '';
+  document.getElementById('pwHint').textContent = CFG.has_smtp_password ? '✅ Saved. Leave blank to keep it.' : 'Not set';
+  document.getElementById('tokenHint').textContent = CFG.has_wa_access_token ? '✅ Saved. Leave blank to keep it.' : 'Not set';
+  toggleWaApi();
+}
+function toggleWaApi() { document.getElementById('waApiBox').style.display = document.getElementById('s_wa_mode').value === 'api' ? '' : 'none'; }
+async function saveSettings() {
+  const payload = {};
+  S_KEYS.forEach(k => { const el = document.getElementById('s_' + k); if (el) payload[k] = el.value; });
+  const res = await fetch('/campaigns/sender-settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  const data = await res.json();
+  CFG = data.settings;
+  loadSettingsForm(); renderSenderSummary();
+  const msg = document.getElementById('settingsMsg');
+  let note = '✅ Saved.';
+  if (CFG.wa_mode === 'api' && !CFG.wa_api_ready) note += ' ⚠️ WhatsApp API needs Phone Number ID + Access Token, so click-to-send will be used until then.';
+  msg.textContent = note;
+  setTimeout(() => msg.textContent = '', 6000);
+}
+async function testEmailSettings() {
+  const to = document.getElementById('testEmailTo').value.trim();
+  if (!to) { alert('Enter an email address.'); return; }
+  await saveSettings();
+  const res = await fetch('/campaigns/test-send', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ channel: 'email', to, subject: 'Email setup test from {hotel_name}',
+                           body: 'Hello!\n\nIf you are reading this, campaign emails from {hotel_name} are configured correctly. ✅' }) });
+  const data = await res.json();
+  alert(data.error || data.message);
+}
+
+/* ---------- Init ---------- */
+(async function init() {
+  document.getElementById('presetBox').innerHTML = PRESETS.map((p, i) =>
+    `<button type="button" class="cp-chip" onclick="applyPreset(${i}, this)">${esc(p.label)}</button>`).join('');
+  document.getElementById('addRuleSelect').innerHTML = `<option value="">Choose a filter...</option>` +
+    Object.entries(FIELDS).map(([k, d]) => `<option value="${k}">${esc(d.label)}</option>`).join('');
+  document.getElementById('starterSelect').innerHTML = `<option value="">Blank message</option>` +
+    Object.entries(STARTERS).map(([k, s]) => `<option value="${k}">${esc(s.label)}</option>`).join('');
+  document.getElementById('mergeBox').innerHTML = MERGE_FIELDS.map(f =>
+    `<button type="button" class="cp-chip" onclick="insertField('${f[0]}')">{${f[0]}} <span style="opacity:.6">${esc(f[1])}</span></button>`).join('');
+  renderRules();
+  loadSettingsForm();
+  setChannel('email');
+  try { OPTIONS = await (await fetch('/campaigns/filter-options')).json(); renderRules(); } catch (e) {}
+  const h = location.hash.replace('#', '');
+  if (['builder', 'history', 'settings'].includes(h)) showTab(h);
+})();
+</script>
+{% endraw %}
+
+{% endblock %}

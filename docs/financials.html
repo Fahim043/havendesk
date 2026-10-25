@@ -1,0 +1,507 @@
+
+<!doctype html>
+<html lang="en">
+<script>
+  // Apply saved theme IMMEDIATELY to prevent flash of wrong theme
+  (function () {
+    var t = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<head>
+<script>
+(function(){
+  const MOCK = {"/ai/insights": {"insights": [{"type": "financial", "text": "Strong weekly revenue (\u09f343,700). Performance is 12% above projected targets.", "confidence": 0.9}]}, "/analytics/data?range=7days": {"total_rooms": 9, "occupied": 4, "available": 3, "revenue": 89800.0, "start_date": "2026-10-18", "end_date": "2026-10-25", "rooms_by_type": [{"name": "Deluxe Single", "value": 2}, {"name": "Emerald Double", "value": 2}, {"name": "Family Quad", "value": 2}, {"name": "Haven Executive Suite", "value": 2}, {"name": "Royal Penthouse", "value": 1}], "top_customers": [{"name": "Samira Karim", "total": 52500.0}, {"name": "Aarav Chowdhury", "total": 35000.0}, {"name": "Rafiq Ahmed", "total": 25500.0}, {"name": "Nusrat Jahan", "total": 18100.0}, {"name": "Farhana Rahman", "total": 7000.0}], "labels": ["2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"], "revenue_trend": [7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "daily_occupancy": [11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 44.4], "daily_revenue": [7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "payment_methods": [{"method": "Card", "count": 3, "total": 56500.0}, {"method": "bKash", "count": 2, "total": 15000.0}, {"method": "Cash", "count": 2, "total": 12200.0}]}, "/analytics/data?range=30days": {"total_rooms": 9, "occupied": 4, "available": 3, "revenue": 117800.0, "start_date": "2026-09-25", "end_date": "2026-10-25", "rooms_by_type": [{"name": "Deluxe Single", "value": 2}, {"name": "Emerald Double", "value": 2}, {"name": "Family Quad", "value": 2}, {"name": "Haven Executive Suite", "value": 2}, {"name": "Royal Penthouse", "value": 1}], "top_customers": [{"name": "Samira Karim", "total": 52500.0}, {"name": "Aarav Chowdhury", "total": 35000.0}, {"name": "Rafiq Ahmed", "total": 25500.0}, {"name": "Nusrat Jahan", "total": 18100.0}, {"name": "Farhana Rahman", "total": 7000.0}], "labels": ["2026-09-25", "2026-09-26", "2026-09-27", "2026-09-28", "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09", "2026-10-10", "2026-10-11", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"], "revenue_trend": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "daily_occupancy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.1, 11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 44.4], "daily_revenue": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "payment_methods": [{"method": "Card", "count": 3, "total": 56500.0}, {"method": "bKash", "count": 2, "total": 15000.0}, {"method": "Cash", "count": 2, "total": 12200.0}]}, "/analytics/comparison": {"ytd": {"current_year": 2026, "previous_year": 2025, "current": {"bookings": 6, "revenue": 117800.0, "period": "Jan 1 - Oct 25, 2026"}, "previous": {"bookings": 0, "revenue": 0, "period": "Jan 1 - Oct 25, 2025"}, "revenue_growth": 0, "bookings_growth": 0, "group": {"current": {"bookings": 0, "revenue": 0.0}, "previous": {"bookings": 0, "revenue": 0.0}}, "individual": {"current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0.0}}}, "mom": {"current_month": "October 2026", "previous_month": "Sep 2026", "current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0}, "revenue_growth": 0, "group": {"current": {"bookings": 0, "revenue": 0.0}, "previous": {"bookings": 0, "revenue": 0.0}}, "individual": {"current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0.0}}}}, "/analytics/advanced": {"booking_velocity": [{"date": "2026-10-11", "count": 1}, {"date": "2026-10-18", "count": 1}, {"date": "2026-10-25", "count": 4}, {"date": "2026-10-27", "count": 1}], "avg_length_of_stay": 2.5, "revpar": 530.74, "revenue_by_room_type": [{"type": "Deluxe Single", "revenue": 14000.0}, {"type": "Emerald Double", "revenue": 23300.0}, {"type": "Haven Executive Suite", "revenue": 28000.0}, {"type": "Royal Penthouse", "revenue": 52500.0}]}, "/analytics/booking-types": {"group_total": 0, "individual_total": 7, "monthly_labels": ["May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026"], "monthly_group": [0, 0, 0, 0, 0, 0], "monthly_individual": [0, 0, 0, 0, 0, 7], "monthly_revenue_group": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "monthly_revenue_individual": [0.0, 0.0, 0.0, 0.0, 0.0, 143300.0]}, "/campaigns/filter-options": {"services": ["Airport Limousine Pickup", "Complimentary Breakfast Buffet", "Express Laundry Service", "Spa & Wellness Package"], "room_types": ["Deluxe Single", "Emerald Double", "Family Quad", "Haven Executive Suite", "Royal Penthouse"], "customer_types": ["Regular", "VIP", "Corporate", "Group", "Walk-in", "Online"], "payment_methods": ["Cash", "Card", "bKash", "Nagad", "Bank Transfer"], "currency": "\u09f3"}, "/bookings/available-rooms": [{"room_number": "101", "room_type": "Deluxe Single", "price_per_night": 3500.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "102", "room_type": "Deluxe Single", "price_per_night": 3500.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "103", "room_type": "Emerald Double", "price_per_night": 5200.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "201", "room_type": "Emerald Double", "price_per_night": 5200.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "202", "room_type": "Haven Executive Suite", "price_per_night": 8500.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "203", "room_type": "Haven Executive Suite", "price_per_night": 8500.0, "status": "Reserved", "has_conflict": false, "conflict_message": ""}, {"room_number": "301", "room_type": "Royal Penthouse", "price_per_night": 12500.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "302", "room_type": "Family Quad", "price_per_night": 7000.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "303", "room_type": "Family Quad", "price_per_night": 7000.0, "status": "Maintenance", "has_conflict": false, "conflict_message": ""}], "/campaigns/audience": {"customers": [{"id": 4, "name": "Samira Karim", "email": "samira.k@example.com", "phone": "01644556677", "customer_type": "VIP", "stays": 1, "nights": 4, "total_spent": 52500.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Samira Karim", "first_name": "Samira", "email": "samira.k@example.com", "phone": "01644556677", "customer_type": "VIP", "total_spent": "\u09f352,500", "avg_spend": "\u09f352,500", "total_stays": "1", "total_nights": "4", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Royal Penthouse", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 1, "name": "Aarav Chowdhury", "email": "aarav.c@example.com", "phone": "01711223344", "customer_type": "VIP", "stays": 2, "nights": 5, "total_spent": 35000.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Aarav Chowdhury", "first_name": "Aarav", "email": "aarav.c@example.com", "phone": "01711223344", "customer_type": "VIP", "total_spent": "\u09f335,000", "avg_spend": "\u09f317,500", "total_stays": "2", "total_nights": "5", "first_visit": "11 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Deluxe Single", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 2, "name": "Nusrat Jahan", "email": "nusrat.j@example.com", "phone": "01822334455", "customer_type": "Regular", "stays": 1, "nights": 3, "total_spent": 18100.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Nusrat Jahan", "first_name": "Nusrat", "email": "nusrat.j@example.com", "phone": "01822334455", "customer_type": "Regular", "total_spent": "\u09f318,100", "avg_spend": "\u09f318,100", "total_stays": "1", "total_nights": "3", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Emerald Double", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 6, "name": "Farhana Rahman", "email": "farhana.r@example.com", "phone": "01566778899", "customer_type": "Corporate", "stays": 1, "nights": 2, "total_spent": 7000.0, "last_visit": "18 Oct 2026", "days_since_last": 7, "opted_out": false, "merge": {"name": "Farhana Rahman", "first_name": "Farhana", "email": "farhana.r@example.com", "phone": "01566778899", "customer_type": "Corporate", "total_spent": "\u09f37,000", "avg_spend": "\u09f37,000", "total_stays": "1", "total_nights": "2", "first_visit": "18 Oct 2026", "last_visit": "18 Oct 2026", "days_since_last_visit": "7", "favorite_room_type": "Deluxe Single", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 3, "name": "Tariqul Islam", "email": "tariq.islam@example.com", "phone": "01933445566", "customer_type": "Corporate", "stays": 1, "nights": 1, "total_spent": 5200.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Tariqul Islam", "first_name": "Tariqul", "email": "tariq.islam@example.com", "phone": "01933445566", "customer_type": "Corporate", "total_spent": "\u09f35,200", "avg_spend": "\u09f35,200", "total_stays": "1", "total_nights": "1", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Emerald Double", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 5, "name": "Rafiq Ahmed", "email": "rafiq.a@example.com", "phone": "01755667788", "customer_type": "Regular", "stays": 0, "nights": 0, "total_spent": 0.0, "last_visit": "", "days_since_last": null, "opted_out": false, "merge": {"name": "Rafiq Ahmed", "first_name": "Rafiq", "email": "rafiq.a@example.com", "phone": "01755667788", "customer_type": "Regular", "total_spent": "\u09f30", "avg_spend": "\u09f30", "total_stays": "0", "total_nights": "0", "first_visit": "", "last_visit": "", "days_since_last_visit": "", "favorite_room_type": "", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}], "summary": {"matched": 6, "opted_out_excluded": 0, "with_email": 6, "with_phone": 6}}};
+
+  const origFetch = window.fetch.bind(window);
+  window.fetch = async function(url, opts) {
+    const key = typeof url === "string" ? url : (url.url || "");
+    if (MOCK[key]) {
+      return new Response(JSON.stringify(MOCK[key]), {status: 200, headers: {"Content-Type": "application/json"}});
+    }
+    const baseKey = key.split("?")[0];
+    if (MOCK[baseKey]) {
+      return new Response(JSON.stringify(MOCK[baseKey]), {status: 200, headers: {"Content-Type": "application/json"}});
+    }
+    return origFetch(url, opts);
+  };
+})();
+</script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HavenDesk Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/theme.css?v=7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+      <img src="static/img/havendesk-logo.svg" alt="Logo" style="height: 32px; width: auto;"> HavenDesk
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+      <a href="rooms.html" class="">
+        <i class="fa-solid fa-bed"></i> Rooms
+      </a>
+      <a href="bookings.html" class="">
+        <i class="fa-solid fa-calendar-check"></i> Bookings
+      </a>
+      <a href="customers.html" class="">
+        <i class="fa-solid fa-users"></i> Customers
+      </a>
+      <a href="inventory.html" class="">
+        <i class="fa-solid fa-boxes-stacked"></i> Inventory
+      </a>
+      <a href="services.html" class="">
+        <i class="fa-solid fa-bell-concierge"></i> Services
+      </a>
+      <a href="financials.html" class="active">
+        <i class="fa-solid fa-coins"></i> Financials
+      </a>
+      <a href="analytics.html" class="">
+        <i class="fa-solid fa-chart-pie"></i> Analytics
+      </a>
+      <a href="daily-report.html" class="">
+        <i class="fa-solid fa-file-invoice"></i> Daily Report
+      </a>
+      <a href="campaigns.html" class="">
+        <i class="fa-solid fa-bullhorn"></i> Campaigns
+      </a>
+      <div style="flex-grow:1"></div>
+      <a href="settings.html" class="">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+      <a href="/auth/logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+    <footer>
+      &copy; 2026 AI-Possible<br>v1.2.0 AI Edition
+    </footer>
+  </aside>
+
+  <div class="content">
+    
+<div style="background:linear-gradient(90deg,rgba(13,148,136,0.22),rgba(5,150,105,0.12));border-bottom:1px solid rgba(45,212,191,0.3);padding:8px 24px;font-size:0.82rem;color:#2dd4bf;display:flex;justify-content:space-between;align-items:center;">
+  <span>✨ <b>HavenDesk Interactive UI Preview</b> (Static GitHub Pages Demo · Powered by AI-Possible)</span>
+  <a href="https://github.com/Fahim043/havendesk" style="color:#fff;font-weight:600;text-decoration:underline;">View Source on GitHub →</a>
+</div>
+<header class="topbar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" id="menuBtn" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div style="font-weight:600; color:var(--text-secondary);">
+        Sunday, 25 October 2026
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="badge success">AI Active</span>
+        <button id="themeToggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode"
+          style="width:36px; height:36px; border-radius:50%; border:1px solid var(--glass-border); background:var(--glass-panel); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; transition:all 0.3s ease; padding:0;">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <div
+          style="width:32px; height:32px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">
+          G
+        </div>
+      </div>
+    </header>
+
+    <div class="main-scroll">
+      <div class="container">
+        
+<h2 style="margin-bottom:24px;">Financial Overview</h2>
+
+<!-- Filter Section -->
+<div class="card" style="margin-bottom: 24px;">
+    <details open>
+        <summary style="cursor: pointer; font-weight: 600; margin-bottom: 16px;">🔍 Filter Transactions</summary>
+        <form method="get" action="/financials"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div>
+                <label
+                    style="display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-secondary);">Search</label>
+                <input type="text" name="search" placeholder="Description or category..." class="input"
+                    value="" style="margin: 0;">
+            </div>
+            <div>
+                <label
+                    style="display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-secondary);">Start
+                    Date</label>
+                <input type="date" name="start_date" class="input" value="" style="margin: 0;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-secondary);">End
+                    Date</label>
+                <input type="date" name="end_date" class="input" value="" style="margin: 0;">
+            </div>
+            <div>
+                <label
+                    style="display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-secondary);">Type</label>
+                <select name="type_filter" class="input" style="margin: 0;">
+                    <option value="">All Types</option>
+                    <option value="income" >Income Only</option>
+                    <option value="expense" >Expense Only</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: flex-end;">
+                <button type="submit" class="btn" style="flex: 1;">Apply</button>
+                <a href="/financials" class="btn secondary"
+                    style="flex: 1; text-align: center; padding: 12px;">Reset</a>
+            </div>
+        </form>
+    </details>
+</div>
+
+<div class="grid cols-3" style="margin-bottom:32px;">
+    <div class="card stat">
+        <div>
+            <div class="label">Total Income</div>
+            <div class="value" style="color:var(--success);">৳71,700.00</div>
+        </div>
+        <i class="fa-solid fa-arrow-trend-up" style="font-size:2.5rem; color:var(--success); opacity:0.3;"></i>
+    </div>
+    <div class="card stat">
+        <div>
+            <div class="label">Total Expenses</div>
+            <div class="value" style="color:var(--danger);">৳19,300.00</div>
+        </div>
+        <i class="fa-solid fa-arrow-trend-down" style="font-size:2.5rem; color:var(--danger); opacity:0.3;"></i>
+    </div>
+    <div class="card stat">
+        <div>
+            <div class="label">Net Profit</div>
+            <div class="value" style="color: var(--success);">
+                ৳52,400.00
+            </div>
+        </div>
+        <i class="fa-solid fa-scale-balanced" style="font-size:2.5rem; opacity:0.3;"></i>
+    </div>
+</div>
+
+<!-- AI Financial Health Panel -->
+<div class="card"
+    style="margin-bottom: 32px; background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(139, 92, 246, 0.05)); border: 1px solid rgba(20, 184, 166, 0.2);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h4 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+            🤖 AI Financial Analysis
+            <span id="health_status" class="badge" style="font-size: 0.75rem;">Loading...</span>
+        </h4>
+        <div id="health_metrics" style="display: flex; gap: 16px; font-size: 0.9rem; color: var(--text-secondary);">
+            <span>Profit Margin: <strong id="profit_margin">--%</strong></span>
+            <span>Trend: <strong id="income_trend">--%</strong></span>
+        </div>
+    </div>
+    <div class="grid cols-2" style="gap: 16px;">
+        <div>
+            <h5 style="margin: 0 0 8px 0; color: var(--danger); font-size: 0.9rem;">⚠️ Alerts</h5>
+            <ul id="health_alerts"
+                style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+                <li>Analyzing...</li>
+            </ul>
+        </div>
+        <div>
+            <h5 style="margin: 0 0 8px 0; color: var(--success); font-size: 0.9rem;">💡 AI Suggestions</h5>
+            <ul id="health_suggestions"
+                style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+                <li>Analyzing...</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    async function loadFinancialHealth() {
+        try {
+            const res = await fetch('/ai/financial-health');
+            const data = await res.json();
+            
+            // Status badge
+            const statusEl = document.getElementById('health_status');
+            statusEl.textContent = data.status;
+            statusEl.className = 'badge ' + (data.status === 'Healthy' ? 'success' : (data.status === 'Caution' ? 'warning' : 'danger'));
+            
+            // Metrics
+            document.getElementById('profit_margin').textContent = data.metrics.profit_margin + '%';
+            document.getElementById('profit_margin').style.color = data.metrics.profit_margin > 20 ? 'var(--success)' : 'var(--warning)';
+            document.getElementById('income_trend').textContent = (data.metrics.income_trend > 0 ? '+' : '') + data.metrics.income_trend + '%';
+            document.getElementById('income_trend').style.color = data.metrics.income_trend > 0 ? 'var(--success)' : 'var(--danger)';
+            
+            // Alerts
+            const alertsEl = document.getElementById('health_alerts');
+            if (data.alerts.length) {
+                alertsEl.innerHTML = data.alerts.map(a => `<li style="color: var(--danger);">${a}</li>`).join('');
+            } else {
+                alertsEl.innerHTML = '<li style="color: var(--success);">No issues detected</li>';
+            }
+            
+            // Suggestions
+            const suggestionsEl = document.getElementById('health_suggestions');
+            suggestionsEl.innerHTML = data.suggestions.map(s => `<li>${s}</li>`).join('');
+        } catch (e) {
+            console.error('Failed to load financial health', e);
+        }
+    }
+    document.addEventListener('DOMContentLoaded', loadFinancialHealth);
+</script>
+
+<div class="grid cols-2" style="margin-bottom: 32px;">
+    <div class="card">
+        <h4 style="margin-top: 0;">Income by Category</h4>
+        <div style="position: relative; height: 300px;">
+            <canvas id="incomeChart"></canvas>
+        </div>
+    </div>
+    <div class="card">
+        <h4 style="margin-top: 0;">Expenses by Category</h4>
+        <div style="position: relative; height: 300px;">
+            <canvas id="expenseChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+        const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+
+        const incomeData = {"Advance Payments": 43700.0, "Room Revenue": 28000.0};
+    const expenseData = {"Supplies": 6800.0, "Utilities": 12500.0};
+
+    new Chart(incomeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(incomeData),
+            datasets: [{
+                data: Object.values(incomeData),
+                backgroundColor: ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#059669'],
+                borderWidth: 0
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    new Chart(expenseCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(expenseData),
+            datasets: [{
+                data: Object.values(expenseData),
+                backgroundColor: ['#ef4444', '#f87171', '#fca5a5', '#b91c1c', '#991b1b'],
+                borderWidth: 0
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    });
+</script>
+
+<div class="grid cols-3">
+    <div class="card" style="grid-column: span 1;">
+        <h3 style="margin-bottom:16px;">Log Transaction</h3>
+        <form action="/financials/add" method="post" style="display:flex; flex-direction:column; gap:16px;">
+            <div>
+                <label style="display:block; margin-bottom:8px;">Type</label>
+                <select name="type" class="input">
+                    <option value="income">Income (+)</option>
+                    <option value="expense">Expense (-)</option>
+                </select>
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Amount</label>
+                <div style="position:relative;">
+                    <span style="position:absolute; left:12px; top:12px; color:var(--text-secondary);">৳</span>
+                    <input type="number" step="0.01" name="amount" class="input" style="padding-left:30px;" required>
+                </div>
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Category</label>
+                <input type="text" name="category" class="input" list="categories" required>
+                <datalist id="categories">
+                    <option value="Bookings">
+                    <option value="Maintenance">
+                    <option value="Salary">
+                    <option value="Utilities">
+                    <option value="F&B">
+                    <option value="Inventory">
+                </datalist>
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Description</label>
+                <input type="text" name="description" class="input">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Entered By</label>
+                <input type="text" name="entered_by" class="input" placeholder="Your name">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:8px;">Date & Time</label>
+                <input type="datetime-local" name="date" id="fin_date_input" class="input">
+            </div>
+            <button type="submit" class="btn">Add Record</button>
+        </form>
+        <script>
+            // Auto-set current datetime on page load
+            (function() {
+                const dt = new Date();
+                const pad = n => String(n).padStart(2, '0');
+                const val = `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+                document.getElementById('fin_date_input').value = val;
+            })();
+        </script>
+    </div>
+
+    <div class="card" style="grid-column: span 2;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3>Recent Transactions</h3>
+            <a href="/financials/export" class="btn secondary" style="padding: 6px 12px; font-size: 0.85rem;">
+                <i class="fa-solid fa-download"></i> Export CSV
+            </a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th><a href="?sort_by=date&sort_order=asc&search=&type_filter="
+                            style="color: inherit; text-decoration: none;">Date & Time ▼</a></th>
+                    <th><a href="?sort_by=category&sort_order=desc&search=&type_filter="
+                            style="color: inherit; text-decoration: none;">Category </a></th>
+                    <th>Description</th>
+                    <th>Entered By</th>
+                    <th><a href="?sort_by=amount&sort_order=desc&search=&type_filter="
+                            style="color: inherit; text-decoration: none;">Amount </a></th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td style="color:var(--text-secondary); font-size:0.85rem; white-space:nowrap;">
+                        2026-10-25<br>
+                        <span style="font-size:0.78rem; opacity:0.7;"></span>
+                    </td>
+                    <td><span
+                            class="badge success">Advance Payments</span>
+                    </td>
+                    <td>Front-desk check-in advances</td>
+                    <td style="color:var(--text-secondary); font-size:0.85rem;">admin</td>
+                    
+                    <td style="font-weight:700; color:var(--success);">
+                        +৳43,700.00
+                    </td>
+                    
+                </tr>
+                
+                <tr>
+                    <td style="color:var(--text-secondary); font-size:0.85rem; white-space:nowrap;">
+                        2026-10-24<br>
+                        <span style="font-size:0.78rem; opacity:0.7;"></span>
+                    </td>
+                    <td><span
+                            class="badge warning">Supplies</span>
+                    </td>
+                    <td>Restocked organic toiletries &amp; mineral water</td>
+                    <td style="color:var(--text-secondary); font-size:0.85rem;">admin</td>
+                    
+                    <td style="font-weight:700; color:var(--danger);">
+                        -৳6,800.00
+                    </td>
+                    
+                </tr>
+                
+                <tr>
+                    <td style="color:var(--text-secondary); font-size:0.85rem; white-space:nowrap;">
+                        2026-10-22<br>
+                        <span style="font-size:0.78rem; opacity:0.7;"></span>
+                    </td>
+                    <td><span
+                            class="badge warning">Utilities</span>
+                    </td>
+                    <td>Monthly commercial electricity &amp; generator fuel</td>
+                    <td style="color:var(--text-secondary); font-size:0.85rem;">admin</td>
+                    
+                    <td style="font-weight:700; color:var(--danger);">
+                        -৳12,500.00
+                    </td>
+                    
+                </tr>
+                
+                <tr>
+                    <td style="color:var(--text-secondary); font-size:0.85rem; white-space:nowrap;">
+                        2026-10-14<br>
+                        <span style="font-size:0.78rem; opacity:0.7;"></span>
+                    </td>
+                    <td><span
+                            class="badge success">Room Revenue</span>
+                    </td>
+                    <td>Suite 202 Checkout Settlement</td>
+                    <td style="color:var(--text-secondary); font-size:0.85rem;">admin</td>
+                    
+                    <td style="font-weight:700; color:var(--success);">
+                        +৳28,000.00
+                    </td>
+                    
+                </tr>
+                
+            </tbody>
+        </table>
+
+        
+    </div>
+</div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Theme Toggle ----
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+    }
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      }
+    }
+    // Set correct icon on load
+    document.addEventListener('DOMContentLoaded', function () {
+      updateThemeIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+    });
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    // Close sidebar when clicking a nav link on mobile
+    document.querySelectorAll('.sidebar .nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

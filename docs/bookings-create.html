@@ -1,0 +1,1418 @@
+
+<!doctype html>
+<html lang="en">
+<script>
+  // Apply saved theme IMMEDIATELY to prevent flash of wrong theme
+  (function () {
+    var t = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<head>
+<script>
+(function(){
+  const MOCK = {"/ai/insights": {"insights": [{"type": "financial", "text": "Strong weekly revenue (\u09f343,700). Performance is 12% above projected targets.", "confidence": 0.9}]}, "/analytics/data?range=7days": {"total_rooms": 9, "occupied": 4, "available": 3, "revenue": 89800.0, "start_date": "2026-10-18", "end_date": "2026-10-25", "rooms_by_type": [{"name": "Deluxe Single", "value": 2}, {"name": "Emerald Double", "value": 2}, {"name": "Family Quad", "value": 2}, {"name": "Haven Executive Suite", "value": 2}, {"name": "Royal Penthouse", "value": 1}], "top_customers": [{"name": "Samira Karim", "total": 52500.0}, {"name": "Aarav Chowdhury", "total": 35000.0}, {"name": "Rafiq Ahmed", "total": 25500.0}, {"name": "Nusrat Jahan", "total": 18100.0}, {"name": "Farhana Rahman", "total": 7000.0}], "labels": ["2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"], "revenue_trend": [7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "daily_occupancy": [11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 44.4], "daily_revenue": [7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "payment_methods": [{"method": "Card", "count": 3, "total": 56500.0}, {"method": "bKash", "count": 2, "total": 15000.0}, {"method": "Cash", "count": 2, "total": 12200.0}]}, "/analytics/data?range=30days": {"total_rooms": 9, "occupied": 4, "available": 3, "revenue": 117800.0, "start_date": "2026-09-25", "end_date": "2026-10-25", "rooms_by_type": [{"name": "Deluxe Single", "value": 2}, {"name": "Emerald Double", "value": 2}, {"name": "Family Quad", "value": 2}, {"name": "Haven Executive Suite", "value": 2}, {"name": "Royal Penthouse", "value": 1}], "top_customers": [{"name": "Samira Karim", "total": 52500.0}, {"name": "Aarav Chowdhury", "total": 35000.0}, {"name": "Rafiq Ahmed", "total": 25500.0}, {"name": "Nusrat Jahan", "total": 18100.0}, {"name": "Farhana Rahman", "total": 7000.0}], "labels": ["2026-09-25", "2026-09-26", "2026-09-27", "2026-09-28", "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09", "2026-10-10", "2026-10-11", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"], "revenue_trend": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "daily_occupancy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.1, 11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 44.4], "daily_revenue": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "payment_methods": [{"method": "Card", "count": 3, "total": 56500.0}, {"method": "bKash", "count": 2, "total": 15000.0}, {"method": "Cash", "count": 2, "total": 12200.0}]}, "/analytics/comparison": {"ytd": {"current_year": 2026, "previous_year": 2025, "current": {"bookings": 6, "revenue": 117800.0, "period": "Jan 1 - Oct 25, 2026"}, "previous": {"bookings": 0, "revenue": 0, "period": "Jan 1 - Oct 25, 2025"}, "revenue_growth": 0, "bookings_growth": 0, "group": {"current": {"bookings": 0, "revenue": 0.0}, "previous": {"bookings": 0, "revenue": 0.0}}, "individual": {"current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0.0}}}, "mom": {"current_month": "October 2026", "previous_month": "Sep 2026", "current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0}, "revenue_growth": 0, "group": {"current": {"bookings": 0, "revenue": 0.0}, "previous": {"bookings": 0, "revenue": 0.0}}, "individual": {"current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0.0}}}}, "/analytics/advanced": {"booking_velocity": [{"date": "2026-10-11", "count": 1}, {"date": "2026-10-18", "count": 1}, {"date": "2026-10-25", "count": 4}, {"date": "2026-10-27", "count": 1}], "avg_length_of_stay": 2.5, "revpar": 530.74, "revenue_by_room_type": [{"type": "Deluxe Single", "revenue": 14000.0}, {"type": "Emerald Double", "revenue": 23300.0}, {"type": "Haven Executive Suite", "revenue": 28000.0}, {"type": "Royal Penthouse", "revenue": 52500.0}]}, "/analytics/booking-types": {"group_total": 0, "individual_total": 7, "monthly_labels": ["May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026"], "monthly_group": [0, 0, 0, 0, 0, 0], "monthly_individual": [0, 0, 0, 0, 0, 7], "monthly_revenue_group": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "monthly_revenue_individual": [0.0, 0.0, 0.0, 0.0, 0.0, 143300.0]}, "/campaigns/filter-options": {"services": ["Airport Limousine Pickup", "Complimentary Breakfast Buffet", "Express Laundry Service", "Spa & Wellness Package"], "room_types": ["Deluxe Single", "Emerald Double", "Family Quad", "Haven Executive Suite", "Royal Penthouse"], "customer_types": ["Regular", "VIP", "Corporate", "Group", "Walk-in", "Online"], "payment_methods": ["Cash", "Card", "bKash", "Nagad", "Bank Transfer"], "currency": "\u09f3"}, "/bookings/available-rooms": [{"room_number": "101", "room_type": "Deluxe Single", "price_per_night": 3500.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "102", "room_type": "Deluxe Single", "price_per_night": 3500.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "103", "room_type": "Emerald Double", "price_per_night": 5200.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "201", "room_type": "Emerald Double", "price_per_night": 5200.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "202", "room_type": "Haven Executive Suite", "price_per_night": 8500.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "203", "room_type": "Haven Executive Suite", "price_per_night": 8500.0, "status": "Reserved", "has_conflict": false, "conflict_message": ""}, {"room_number": "301", "room_type": "Royal Penthouse", "price_per_night": 12500.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "302", "room_type": "Family Quad", "price_per_night": 7000.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "303", "room_type": "Family Quad", "price_per_night": 7000.0, "status": "Maintenance", "has_conflict": false, "conflict_message": ""}], "/campaigns/audience": {"customers": [{"id": 4, "name": "Samira Karim", "email": "samira.k@example.com", "phone": "01644556677", "customer_type": "VIP", "stays": 1, "nights": 4, "total_spent": 52500.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Samira Karim", "first_name": "Samira", "email": "samira.k@example.com", "phone": "01644556677", "customer_type": "VIP", "total_spent": "\u09f352,500", "avg_spend": "\u09f352,500", "total_stays": "1", "total_nights": "4", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Royal Penthouse", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 1, "name": "Aarav Chowdhury", "email": "aarav.c@example.com", "phone": "01711223344", "customer_type": "VIP", "stays": 2, "nights": 5, "total_spent": 35000.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Aarav Chowdhury", "first_name": "Aarav", "email": "aarav.c@example.com", "phone": "01711223344", "customer_type": "VIP", "total_spent": "\u09f335,000", "avg_spend": "\u09f317,500", "total_stays": "2", "total_nights": "5", "first_visit": "11 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Deluxe Single", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 2, "name": "Nusrat Jahan", "email": "nusrat.j@example.com", "phone": "01822334455", "customer_type": "Regular", "stays": 1, "nights": 3, "total_spent": 18100.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Nusrat Jahan", "first_name": "Nusrat", "email": "nusrat.j@example.com", "phone": "01822334455", "customer_type": "Regular", "total_spent": "\u09f318,100", "avg_spend": "\u09f318,100", "total_stays": "1", "total_nights": "3", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Emerald Double", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 6, "name": "Farhana Rahman", "email": "farhana.r@example.com", "phone": "01566778899", "customer_type": "Corporate", "stays": 1, "nights": 2, "total_spent": 7000.0, "last_visit": "18 Oct 2026", "days_since_last": 7, "opted_out": false, "merge": {"name": "Farhana Rahman", "first_name": "Farhana", "email": "farhana.r@example.com", "phone": "01566778899", "customer_type": "Corporate", "total_spent": "\u09f37,000", "avg_spend": "\u09f37,000", "total_stays": "1", "total_nights": "2", "first_visit": "18 Oct 2026", "last_visit": "18 Oct 2026", "days_since_last_visit": "7", "favorite_room_type": "Deluxe Single", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 3, "name": "Tariqul Islam", "email": "tariq.islam@example.com", "phone": "01933445566", "customer_type": "Corporate", "stays": 1, "nights": 1, "total_spent": 5200.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Tariqul Islam", "first_name": "Tariqul", "email": "tariq.islam@example.com", "phone": "01933445566", "customer_type": "Corporate", "total_spent": "\u09f35,200", "avg_spend": "\u09f35,200", "total_stays": "1", "total_nights": "1", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Emerald Double", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 5, "name": "Rafiq Ahmed", "email": "rafiq.a@example.com", "phone": "01755667788", "customer_type": "Regular", "stays": 0, "nights": 0, "total_spent": 0.0, "last_visit": "", "days_since_last": null, "opted_out": false, "merge": {"name": "Rafiq Ahmed", "first_name": "Rafiq", "email": "rafiq.a@example.com", "phone": "01755667788", "customer_type": "Regular", "total_spent": "\u09f30", "avg_spend": "\u09f30", "total_stays": "0", "total_nights": "0", "first_visit": "", "last_visit": "", "days_since_last_visit": "", "favorite_room_type": "", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}], "summary": {"matched": 6, "opted_out_excluded": 0, "with_email": 6, "with_phone": 6}}};
+
+  const origFetch = window.fetch.bind(window);
+  window.fetch = async function(url, opts) {
+    const key = typeof url === "string" ? url : (url.url || "");
+    if (MOCK[key]) {
+      return new Response(JSON.stringify(MOCK[key]), {status: 200, headers: {"Content-Type": "application/json"}});
+    }
+    const baseKey = key.split("?")[0];
+    if (MOCK[baseKey]) {
+      return new Response(JSON.stringify(MOCK[baseKey]), {status: 200, headers: {"Content-Type": "application/json"}});
+    }
+    return origFetch(url, opts);
+  };
+})();
+</script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Booking · HavenDesk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/theme.css?v=7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+      <img src="static/img/havendesk-logo.svg" alt="Logo" style="height: 32px; width: auto;"> HavenDesk
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+      <a href="rooms.html" class="">
+        <i class="fa-solid fa-bed"></i> Rooms
+      </a>
+      <a href="bookings.html" class="active">
+        <i class="fa-solid fa-calendar-check"></i> Bookings
+      </a>
+      <a href="customers.html" class="">
+        <i class="fa-solid fa-users"></i> Customers
+      </a>
+      <a href="inventory.html" class="">
+        <i class="fa-solid fa-boxes-stacked"></i> Inventory
+      </a>
+      <a href="services.html" class="">
+        <i class="fa-solid fa-bell-concierge"></i> Services
+      </a>
+      <a href="financials.html" class="">
+        <i class="fa-solid fa-coins"></i> Financials
+      </a>
+      <a href="analytics.html" class="">
+        <i class="fa-solid fa-chart-pie"></i> Analytics
+      </a>
+      <a href="daily-report.html" class="">
+        <i class="fa-solid fa-file-invoice"></i> Daily Report
+      </a>
+      <a href="campaigns.html" class="">
+        <i class="fa-solid fa-bullhorn"></i> Campaigns
+      </a>
+      <div style="flex-grow:1"></div>
+      <a href="settings.html" class="">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+      <a href="/auth/logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+    <footer>
+      &copy; 2026 AI-Possible<br>v1.2.0 AI Edition
+    </footer>
+  </aside>
+
+  <div class="content">
+    
+<div style="background:linear-gradient(90deg,rgba(13,148,136,0.22),rgba(5,150,105,0.12));border-bottom:1px solid rgba(45,212,191,0.3);padding:8px 24px;font-size:0.82rem;color:#2dd4bf;display:flex;justify-content:space-between;align-items:center;">
+  <span>✨ <b>HavenDesk Interactive UI Preview</b> (Static GitHub Pages Demo · Powered by AI-Possible)</span>
+  <a href="https://github.com/Fahim043/havendesk" style="color:#fff;font-weight:600;text-decoration:underline;">View Source on GitHub →</a>
+</div>
+<header class="topbar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" id="menuBtn" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div style="font-weight:600; color:var(--text-secondary);">
+        Sunday, 25 October 2026
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="badge success">AI Active</span>
+        <button id="themeToggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode"
+          style="width:36px; height:36px; border-radius:50%; border:1px solid var(--glass-border); background:var(--glass-panel); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; transition:all 0.3s ease; padding:0;">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <div
+          style="width:32px; height:32px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">
+          G
+        </div>
+      </div>
+    </header>
+
+    <div class="main-scroll">
+      <div class="container">
+        
+
+<div style="margin-bottom: 32px;">
+  <h2>➕ Create New Booking</h2>
+  <p style="color: var(--text-secondary); margin: 8px 0 0 0;">Fill in the details to check in a guest</p>
+</div>
+
+<!-- Inline Message Banner (replaces buggy alert dialogs) -->
+<div id="guest_banner"
+  style="display: none; padding: 16px 20px; border-radius: 12px; margin-bottom: 24px; font-weight: 500; font-size: 1rem; transition: all 0.3s ease;">
+</div>
+
+<script>
+  function showBanner(message, type) {
+    const banner = document.getElementById('guest_banner');
+    banner.style.display = 'block';
+    banner.textContent = message;
+
+    // Style based on type
+    if (type === 'new') {
+      banner.style.background = 'linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.08))';
+      banner.style.border = '1px solid rgba(212, 175, 55, 0.4)';
+      banner.style.color = '#d4af37';
+      banner.innerHTML = '🌟 <strong>Welcome, New Guest!</strong> — This is their first booking. Make it memorable!';
+    } else if (type === 'error') {
+      banner.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08))';
+      banner.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+      banner.style.color = '#ef4444';
+      banner.innerHTML = '⚠️ ' + message;
+    } else if (type === 'info') {
+      banner.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.08))';
+      banner.style.border = '1px solid rgba(59, 130, 246, 0.4)';
+      banner.style.color = '#3b82f6';
+      banner.innerHTML = 'ℹ️ ' + message;
+    } else if (type === 'returning') {
+      banner.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.08))';
+      banner.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+      banner.style.color = '#10b981';
+      banner.innerHTML = '🎉 <strong>Welcome Back!</strong> — Returning guest found.';
+    }
+  }
+
+  function hideBanner() {
+    document.getElementById('guest_banner').style.display = 'none';
+  }
+</script>
+
+<!-- Main Form wrapping everything -->
+<form id="checkInForm" action="/bookings/checkin" method="post" onsubmit="return prepareFormSubmit()">
+
+  <div class="grid cols-2">
+    <!-- Left: Guest Information -->
+    <div>
+      <div class="card">
+        <h4 style="margin-top: 0;">👤 Guest Information</h4>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Customer Email (for lookup)</label>
+            <input type="email" name="email" id="cust_email" placeholder="guest@example.com" class="input">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Phone (alternative lookup)</label>
+            <input type="tel" name="phone" id="cust_phone" placeholder="+1 (555) 123-4567" class="input">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Full Name *</label>
+            <input type="text" name="customer_name" id="cust_name" placeholder="John Doe" required class="input">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>ID / Passport / NID *</label>
+            <input type="text" name="id_proof" id="cust_idproof" placeholder="Passport Number" required class="input">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Address</label>
+            <input type="text" name="address" id="cust_address" placeholder="123 Main St, City, State" class="input">
+          </div>
+
+          <button type="button" class="btn secondary" onclick="loadCustomerAnalytics()" style="margin-top: 8px;">Lookup
+            Existing Guest</button>
+        </div>
+      </div>
+
+      <!-- Customer Insights Panel -->
+      <div id="customer_insights" style="display: none; margin-top: 20px;">
+        <div class="card">
+          <h4 style="margin-top: 0;">⭐ Guest Loyalty Profile</h4>
+          <div class="grid cols-2" style="gap: 12px;">
+            <div
+              style="padding: 12px; background: rgba(212, 175, 55, 0.05); border-radius: 10px; border-left: 3px solid var(--gold);">
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Total Stays</div>
+              <div id="ci_total_stays" style="font-size: 1.6rem; font-weight: 700; margin-top: 4px;">0</div>
+            </div>
+            <div
+              style="padding: 12px; background: rgba(16, 185, 129, 0.05); border-radius: 10px; border-left: 3px solid var(--success);">
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Lifetime Value</div>
+              <div id="ci_ltv" style="font-size: 1.6rem; font-weight: 700; margin-top: 4px;">৳0</div>
+            </div>
+            <div
+              style="padding: 12px; background: rgba(59, 130, 246, 0.05); border-radius: 10px; border-left: 3px solid var(--info);">
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Avg Nights</div>
+              <div id="ci_avg_nights" style="font-size: 1.6rem; font-weight: 700; margin-top: 4px;">0</div>
+            </div>
+            <div
+              style="padding: 12px; background: rgba(139, 92, 246, 0.05); border-radius: 10px; border-left: 3px solid #8b5cf6;">
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Favorite Room</div>
+              <div id="ci_fav_room" style="font-size: 1.2rem; font-weight: 700; margin-top: 4px;">—</div>
+            </div>
+          </div>
+
+          <h5 style="margin-top: 16px; margin-bottom: 12px;">Recent Bookings</h5>
+          <div style="overflow-x: auto;">
+            <table style="font-size: 0.9rem;">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Room</th>
+                  <th>Type</th>
+                  <th>Check-in</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="ci_recent_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Booking Details -->
+    <div>
+      <div class="card">
+        <h4 style="margin-top: 0;">🛏️ Room & Stay Details</h4>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+
+          <!-- Reservation Mode Toggle (FIRST) -->
+          <div class="form-group"
+            style="margin-bottom: 0; padding: 12px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.05)); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2);">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 0;">
+              <input type="checkbox" name="is_reservation" id="is_reservation" onchange="toggleReservationMode()"
+                style="width: 18px; height: 18px; cursor: pointer;">
+              <span style="font-weight: 600; color: var(--text);">📅 Advance Reservation (Future Check-in)</span>
+            </label>
+            <p style="margin: 8px 0 0 28px; font-size: 0.85rem; color: var(--text-secondary);">
+              Enable for phone/online bookings where guest arrives on a future date
+            </p>
+          </div>
+
+          <!-- Check-in Date (shown only for reservations) -->
+          <div id="checkin_date_container" class="form-group" style="margin-bottom: 0; display: none;">
+            <label>Check-in Date *</label>
+            <input type="date" name="check_in_date" id="check_in_date" class="input"
+              min="2026-10-25">
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
+              For immediate check-in, leave the reservation toggle unchecked.
+            </div>
+          </div>
+
+          <!-- Number of Nights (SECOND) -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Number of Nights *</label>
+            <input type="number" name="nights" id="nights" min="1" placeholder="1" required class="input">
+          </div>
+
+          <!-- Room Number (LAST — after nights, so changing nights doesn't reset room) -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Room Number (Available Only) *</label>
+            <select id="room_number" name="room_number" required class="input" style="cursor: pointer;">
+              <option value="">Loading available rooms...</option>
+            </select>
+            <div id="room_price"
+              style="margin-top: 8px; padding: 10px 12px; background: rgba(212, 175, 55, 0.05); border-radius: 8px; color: var(--gold); font-weight: 600; font-size: 0.9rem; display: none;">
+            </div>
+          </div>
+
+          <!-- Pax Input -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Guests (Pax) *</label>
+            <input type="number" name="pax" id="cust_pax" min="1" value="1" required class="input">
+          </div>
+
+          <!-- Reference Search & Selection -->
+          <div class="form-group" style="margin-bottom: 0; position: relative;">
+            <label>Reference (Optional - Search by Name, Phone, or NID)</label>
+            <input type="text" id="ref_search" class="input" placeholder="Type to search..." autocomplete="off">
+            <input type="hidden" name="reference_id" id="reference_id">
+            
+            <!-- Selection display -->
+            <div id="selected_ref_display" style="display: none; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(20, 184, 166, 0.1); border: 1px solid var(--primary-light); border-radius: 8px; margin-top: 8px;">
+              <div>
+                <strong id="selected_ref_name" style="color: var(--text);"></strong>
+                <span id="selected_ref_info" style="font-size: 0.8rem; color: var(--text-secondary); display: block;"></span>
+              </div>
+              <button type="button" onclick="clearSelectedReference()" class="btn secondary" style="padding: 4px 8px; font-size: 0.8rem; margin: 0;">Remove</button>
+            </div>
+
+            <!-- Dropdown results -->
+            <div id="ref_results" style="display: none; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); max-height: 200px; overflow-y: auto; position: absolute; width: 100%; z-index: 100; box-shadow: var(--shadow-lg); margin-top: 4px;"></div>
+          </div>
+
+          <!-- Add New Reference Mini Form (Hidden initially) -->
+          <div id="new_ref_form" style="display: none; padding: 12px; border: 1px dashed var(--glass-border); border-radius: 8px; background: rgba(255, 255, 255, 0.02); margin-top: 8px; flex-direction: column; gap: 10px;">
+            <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">➕ Create New Reference</div>
+            <input type="text" id="new_ref_name" class="input" placeholder="Reference Full Name *" style="margin: 0;">
+            <input type="tel" id="new_ref_phone" class="input" placeholder="Phone Number (Optional)" style="margin: 0;">
+            <input type="text" id="new_ref_idproof" class="input" placeholder="NID / Passport (Optional)" style="margin: 0;">
+            <div style="display: flex; gap: 8px;">
+              <button type="button" onclick="saveNewReference()" class="btn" style="padding: 6px 12px; font-size: 0.8rem; flex: 1;">Save & Select</button>
+              <button type="button" onclick="hideNewRefForm()" class="btn secondary" style="padding: 6px 12px; font-size: 0.8rem; flex: 1;">Cancel</button>
+            </div>
+          </div>
+
+          <!-- ===== MULTI-ROOM SECTION ===== -->
+          <div style="margin-top: 4px; padding: 14px; background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(59,130,246,0.05)); border-radius: 12px; border: 1px solid rgba(16,185,129,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <label style="margin: 0; font-weight: 700; font-size: 0.95rem;">🏨 Additional Rooms</label>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn secondary" onclick="bookWholeHotel()" style="font-size: 0.82rem; padding: 6px 14px; background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05)); border-color: rgba(212,175,55,0.3); color: var(--gold);">
+                  🏛️ Book Whole Hotel
+                </button>
+                <button type="button" id="addRoomBtn" class="btn secondary" onclick="addRoom()" style="font-size: 0.82rem; padding: 6px 14px;">
+                  ➕ Add Room
+                </button>
+              </div>
+            </div>
+            <div id="extra_rooms_container" style="max-height: 350px; overflow-y: auto; padding-right: 8px;"></div>
+            <!-- Unavailable rooms panel (shown by Book Whole Hotel) -->
+            <div id="unavailable_rooms_panel" style="display: none; margin-top: 10px; padding: 12px 14px; background: rgba(239,68,68,0.06); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
+              <div style="font-size: 0.85rem; font-weight: 700; color: #ef4444; margin-bottom: 8px;">⚠️ Unavailable Rooms</div>
+              <div id="unavailable_rooms_list" style="font-size: 0.85rem;"></div>
+            </div>
+            <div id="group_summary" style="display: none; margin-top: 10px; padding: 10px 14px; background: rgba(212,175,55,0.08); border-radius: 8px; border: 1px solid rgba(212,175,55,0.2);">
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Group Booking Summary</div>
+              <div style="display: flex; gap: 16px; margin-top: 6px; flex-wrap: wrap;">
+                <div><strong id="group_room_count">0</strong> rooms</div>
+                <div>Est. Total: <strong id="group_est_total" style="color: var(--gold);">৳0.00</strong></div>
+              </div>
+            </div>
+            <!-- Group Label (shown when multi-room) -->
+            <div id="group_label_container" style="display: none; margin-top: 10px;">
+              <label style="font-size: 0.85rem;">Group Label (optional)</label>
+              <input type="text" name="group_label" id="group_label" placeholder="e.g. Afridi Family Stay" class="input" style="margin-top: 4px;">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Payment Method <span id="paymentReqStar" style="display:none;">*</span></label>
+            <select name="payment_method" id="payment_method" class="input" style="cursor: pointer;">
+              <option value="">Select payment method</option>
+              <option value="Cash">💵 Cash</option>
+              <option value="Card">💳 Credit/Debit Card</option>
+              <option value="Online">🌐 Online Transfer</option>
+              <option value="Crypto">₿ Cryptocurrency</option>
+            </select>
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;">
+              Required only when advance payment is made.
+            </div>
+          </div>
+
+          <div class="form-group"
+            style="margin-bottom: 0; padding:12px; background:var(--glass-panel); border-radius:8px;">
+            <label>Advance Payment (Optional)</label>
+            <input type="number" name="advance_amount" id="advance_amount" step="0.01" placeholder="0.00" class="input">
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;">Will be recorded as 'Partially
+              Paid' if non-zero. For multi-room bookings, split proportionally.</div>
+          </div>
+
+          <!-- Discount Section -->
+          <div style="padding:14px; background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(212,175,55,0.05)); border-radius:10px; border: 1px solid rgba(245,158,11,0.2);">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <span style="font-size:1.1rem;">🏷️</span>
+              <label style="margin:0; font-weight:700; font-size:0.95rem; color:var(--gold);">Apply Discount (Optional)</label>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div>
+                <select name="discount_type" id="discount_type" class="input" style="margin:0;" onchange="previewDiscount()">
+                  <option value="">No Discount</option>
+                  <option value="percentage">Percentage (%)</option>
+                  <option value="fixed">Fixed Amount (৳)</option>
+                </select>
+              </div>
+              <div>
+                <input type="number" name="discount_value" id="discount_value" step="0.01" min="0" placeholder="Amount / %" class="input" style="margin:0;" oninput="previewDiscount()">
+              </div>
+            </div>
+            <div style="margin-top:8px;">
+              <input type="text" name="discount_reason" id="discount_reason" placeholder="Reason (e.g. Loyal Customer, Promo Code)" class="input" style="margin:0;">
+            </div>
+            <div id="discount_preview" style="display:none; margin-top:10px; padding:8px 12px; background:rgba(16,185,129,0.1); border-radius:6px; font-size:0.9rem; color:var(--success); font-weight:600;"></div>
+          </div>
+
+          <!-- Room Upgrade Suggestions -->
+          <div id="room_upsell_card"
+            style="display:none; margin-bottom: 12px; padding:14px; background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(59,130,246,0.08)); border:1px solid rgba(139,92,246,0.25); border-radius:10px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <span style="font-size:1.1rem;">🏷️</span>
+              <label style="margin:0; font-weight:700; font-size:0.95rem; color:var(--accent);">Room Upgrade
+                Suggestions</label>
+            </div>
+            <div id="room_upsell_list" style="display:flex; flex-direction:column; gap:8px;"></div>
+          </div>
+
+          <!-- Services / Upsells -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Recommended Add-ons ✨</label>
+            <div id="services_container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+              <div style="color: var(--text-secondary); font-size: 0.9rem;">Loading services...</div>
+            </div>
+          </div>
+
+          <hr style="margin: 8px 0;">
+
+          <button type="submit" class="btn" id="submitBtn" style="margin-top: 8px;">✓ Check In Guest</button>
+        </div>
+      </div>
+
+      <!-- Room Availability Status -->
+      <div class="card" style="margin-top: 20px;">
+        <h4 style="margin-top: 0;">Available Rooms Overview</h4>
+        <div id="rooms_overview" style="display: flex; flex-direction: column; gap: 10px;">
+          <div
+            style="display: flex; justify-content: space-between; padding: 10px; background: rgba(16, 185, 129, 0.05); border-radius: 8px; border-left: 3px solid var(--success);">
+            <span>Available Rooms</span>
+            <strong id="available_count">0</strong>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; padding: 10px; background: rgba(239, 68, 68, 0.05); border-radius: 8px; border-left: 3px solid var(--danger);">
+            <span>Occupied Rooms</span>
+            <strong id="occupied_count">0</strong>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; padding: 10px; background: rgba(245, 158, 11, 0.05); border-radius: 8px; border-left: 3px solid var(--warning);">
+            <span>Under Maintenance</span>
+            <strong id="maintenance_count">0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const currency = '৳';
+
+    // Discount preview
+    function previewDiscount() {
+      const type = document.getElementById('discount_type').value;
+      const val = parseFloat(document.getElementById('discount_value').value) || 0;
+      const preview = document.getElementById('discount_preview');
+      if (!type || val <= 0) { preview.style.display = 'none'; return; }
+      if (type === 'percentage') {
+        preview.textContent = `🏷️ ${val}% discount will be applied to room subtotal`;
+      } else {
+        preview.textContent = `🏷️ ${currency}${val.toFixed(2)} discount will be applied`;
+      }
+      preview.style.display = 'block';
+    }
+
+    // Toggle reservation mode
+    function toggleReservationMode() {
+      const isReservation = document.getElementById('is_reservation').checked;
+      const dateContainer = document.getElementById('checkin_date_container');
+      const dateInput = document.getElementById('check_in_date');
+      const submitBtn = document.getElementById('submitBtn');
+
+      if (isReservation) {
+        dateContainer.style.display = 'block';
+        dateInput.required = true;
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+        submitBtn.innerHTML = '📅 Create Reservation';
+        submitBtn.style.background = 'linear-gradient(135deg, #8b5cf6, #3b82f6)';
+        // Reload rooms with date-range availability if date is set
+        reloadRoomsForReservation();
+      } else {
+        dateContainer.style.display = 'none';
+        dateInput.required = false;
+        dateInput.value = '';
+        submitBtn.innerHTML = '✓ Check In Guest';
+        submitBtn.style.background = '';
+        // Reload rooms as walk-in (only Available)
+        loadAvailableRooms(false);
+      }
+    }
+
+    function reloadRoomsForReservation() {
+      const isReservation = document.getElementById('is_reservation').checked;
+      if (!isReservation) return;
+
+      const checkIn = document.getElementById('check_in_date').value;
+      const nightsEl = document.getElementById('num_nights');
+      const nights = nightsEl ? nightsEl.value : 1;
+
+      if (checkIn) {
+        loadAvailableRooms(true, checkIn, nights);
+      }
+    }
+
+    // Re-check room availability when date or nights change
+    document.addEventListener('DOMContentLoaded', () => {
+      const dateInput = document.getElementById('check_in_date');
+      const nightsInput = document.getElementById('nights');
+
+      if (dateInput) {
+        dateInput.addEventListener('change', reloadRoomsForReservation);
+      }
+      if (nightsInput) {
+        nightsInput.addEventListener('change', () => {
+          const isReservation = document.getElementById('is_reservation').checked;
+          if (isReservation) {
+            reloadRoomsForReservation();
+          } else {
+            // Walk-in mode: reload with nights to check for future reservation conflicts
+            const nights = nightsInput.value || 1;
+            loadAvailableRooms(false, '', nights);
+          }
+        });
+      }
+    });
+
+    async function loadAvailableRooms(forReservation = false, checkIn = '', nights = 1) {
+      const select = document.getElementById('room_number');
+      const priceLabel = document.getElementById('room_price');
+      try {
+        let rooms;
+
+        if (forReservation && checkIn) {
+          // For reservations: use date-range availability API
+          const ciDate = new Date(checkIn);
+          const coDate = new Date(ciDate);
+          coDate.setDate(coDate.getDate() + parseInt(nights || 1));
+          const checkOut = coDate.toISOString().split('T')[0];
+
+          const res = await fetch(`/bookings/rooms-for-dates?check_in=${checkIn}&check_out=${checkOut}`);
+          rooms = await res.json();
+        } else {
+          // Walk-in: pass nights to check for future reservation conflicts
+          const nightsParam = parseInt(nights) || 0;
+          const url = nightsParam > 0 ? `/bookings/available-rooms?nights=${nightsParam}` : '/bookings/available-rooms';
+          const res = await fetch(url);
+          rooms = await res.json();
+        }
+
+        // Cache for multi-room selects
+        cachedRooms = rooms;
+        // Count rooms by status
+        let available = 0, occupied = 0, maintenance = 0;
+        rooms.forEach(r => {
+          if (r.status === 'Available') available++;
+          else if (r.status === 'Occupied') occupied++;
+          else maintenance++;
+        });
+        document.getElementById('available_count').textContent = available;
+        document.getElementById('occupied_count').textContent = occupied;
+        document.getElementById('maintenance_count').textContent = maintenance;
+
+        select.innerHTML = '<option value="">-- Select Room --</option>';
+        rooms.forEach(r => {
+          if (forReservation) {
+            // Reservation mode: show all rooms, indicate availability for selected dates
+            if (r.status === 'Out of Service') return;
+            const opt = document.createElement('option');
+            opt.value = r.room_number;
+            const availLabel = r.available_for_dates ? '✅' : '❌ Booked';
+            opt.textContent = `${availLabel} Room ${r.room_number} (${r.room_type}) — ${currency}${r.price_per_night}/night`;
+            opt.dataset.price = r.price_per_night;
+            opt.dataset.type = r.room_type;
+            opt.disabled = !r.available_for_dates;
+            if (!r.available_for_dates) {
+              opt.style.color = '#888';
+            }
+            select.appendChild(opt);
+          } else {
+            // Walk-in: only show Available rooms, but flag conflicts with future reservations
+            if (r.status !== 'Available') return;
+            const opt = document.createElement('option');
+            opt.value = r.room_number;
+            if (r.has_conflict) {
+              opt.textContent = `⚠️ Room ${r.room_number} (${r.room_type}) — ${currency}${r.price_per_night}/night — CONFLICT`;
+              opt.disabled = true;
+              opt.style.color = '#888';
+              opt.title = r.conflict_message;
+            } else {
+              opt.textContent = `Room ${r.room_number} (${r.room_type}) — ${currency}${r.price_per_night}/night`;
+            }
+            opt.dataset.price = r.price_per_night;
+            opt.dataset.type = r.room_type;
+            select.appendChild(opt);
+          }
+        });
+
+        select.addEventListener('change', async () => {
+          const sel = select.options[select.selectedIndex];
+          if (sel && sel.value) {
+            // Check for dynamic pricing
+            const roomType = sel.dataset.type; // We need to add this dataset
+            let finalPrice = parseFloat(sel.dataset.price);
+            let reason = "";
+
+            try {
+              // Mock fetching dynamic rate (or could call /ai/pricing/dynamic)
+              const dynRes = await fetch(`/ai/pricing/dynamic?room_type=${roomType}`);
+              const dynData = await dynRes.json();
+              if (dynData.multiplier !== 1.0) {
+                finalPrice = finalPrice * dynData.multiplier;
+                reason = `(${dynData.reason})`;
+              }
+
+              // Fetch service recommendations
+              loadRecommendations(roomType);
+
+              // Fetch room upsell suggestions
+              const nightsVal = parseInt(document.getElementById('nights').value) || 1;
+              loadRoomUpsell(sel.value, nightsVal);
+
+            } catch (e) { console.error(e); }
+
+            priceLabel.style.display = 'block';
+            priceLabel.innerHTML = `Price: <strong>$${finalPrice.toFixed(2)}</strong> per night ${reason}`;
+            if (reason) priceLabel.style.color = 'var(--accent)';
+            else priceLabel.style.color = 'var(--gold)';
+
+          } else {
+            priceLabel.style.display = 'none';
+            document.getElementById('room_upsell_card').style.display = 'none';
+          }
+        });
+      } catch (err) {
+        console.error('Failed to load rooms', err);
+        select.innerHTML = '<option value="">(Error loading rooms)</option>';
+      }
+    }
+
+    async function loadCustomerAnalytics() {
+      const email = document.getElementById('cust_email').value.trim();
+      const phone = document.getElementById('cust_phone').value.trim();
+
+      if (!email && !phone) {
+        showBanner('Please enter email or phone to look up a guest', 'info');
+        return;
+      }
+
+      const qs = new URLSearchParams();
+      if (email) qs.set('email', email);
+      if (phone) qs.set('phone', phone);
+
+      try {
+        const res = await fetch(`/bookings/customer-lookup?${qs.toString()}`);
+        const data = await res.json();
+
+        if (data.exists) {
+          document.getElementById('cust_name').value = data.name || '';
+          document.getElementById('cust_phone').value = data.phone || '';
+          document.getElementById('cust_email').value = data.email || '';
+          document.getElementById('cust_idproof').value = data.id_proof || '';
+          document.getElementById('cust_address').value = data.address || '';
+
+          if (data.id) {
+            // Store customer ID globally for AI recommendations
+            window.currentCustomerId = data.id;
+
+            const analytics = await fetch(`/bookings/customer-analytics?customer_id=${data.id}`).then(r => r.json());
+            document.getElementById('ci_total_stays').textContent = analytics.total_stays ?? 0;
+            document.getElementById('ci_ltv').textContent = `${currency}${(analytics.lifetime_value || 0).toFixed(2)}`;
+            document.getElementById('ci_avg_nights').textContent = analytics.avg_nights ?? 0;
+            document.getElementById('ci_fav_room').textContent = analytics.favorite_room_type || '—';
+
+            const tbody = document.getElementById('ci_recent_tbody');
+            tbody.innerHTML = '';
+            (analytics.recent_bookings || []).slice(0, 5).forEach(r => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+            <td><code style="background: var(--panel-hover); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">${r.id}</code></td>
+            <td>${r.room_number}</td>
+            <td>${r.room_type || ''}</td>
+            <td>${new Date(r.check_in).toLocaleDateString()}</td>
+            <td><span class="status ${r.status === 'checked_out' ? 'completed' : 'active'}">${r.status}</span></td>
+          `;
+              tbody.appendChild(tr);
+            });
+
+            document.getElementById('customer_insights').style.display = 'block';
+
+            // Refresh recommendations with customer ID if room is already selected
+            const roomSelect = document.getElementById('room_number');
+            if (roomSelect.value) {
+              const sel = roomSelect.options[roomSelect.selectedIndex];
+              if (sel && sel.dataset.type) {
+                loadRecommendations(sel.dataset.type);
+              }
+            }
+          }
+          // Show returning guest banner
+          showBanner('Returning Guest', 'returning');
+        } else {
+          window.currentCustomerId = null;
+          document.getElementById('customer_insights').style.display = 'none';
+          showBanner('New Guest', 'new');
+        }
+      } catch (err) {
+        console.error('Lookup failed', err);
+        showBanner('Error looking up customer. Please try again.', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const initNights = document.getElementById('nights') ? document.getElementById('nights').value : 1;
+      loadAvailableRooms(false, '', initNights);
+      document.getElementById('cust_email').addEventListener('blur', loadCustomerAnalytics);
+      document.getElementById('cust_phone').addEventListener('blur', loadCustomerAnalytics);
+
+      // Check for error message in URL (from redirect)
+      const urlParams = new URLSearchParams(window.location.search);
+      const errorMsg = urlParams.get('error');
+      if (errorMsg) {
+        showBanner(decodeURIComponent(errorMsg), 'error');
+        // Clean up URL without reload
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
+    // ===== MULTI-ROOM LOGIC =====
+    let extraRoomCounter = 0;
+    let cachedRooms = []; // cache from loadAvailableRooms
+
+    function addRoom() {
+      extraRoomCounter++;
+      
+      // Get the current selected nights from the main form to act as the default
+      const defaultNights = document.getElementById('nights') ? parseInt(document.getElementById('nights').value) || 1 : 1;
+      
+      const container = document.getElementById('extra_rooms_container');
+      const div = document.createElement('div');
+      div.id = `extra_room_${extraRoomCounter}`;
+      div.style.cssText = 'display:flex; gap:12px; align-items:center; margin-bottom:12px; padding:12px; background:rgba(255, 255, 255, 0.03); border-radius:8px; border:1px solid var(--border);';
+      div.innerHTML = `
+        <select class="input extra-room-select" style="flex:2; cursor:pointer; background:rgba(0,0,0,0.2); border:1px solid var(--border); border-radius:6px; padding:10px 14px; color:var(--text); font-size:0.95rem;" data-idx="${extraRoomCounter}">
+          <option value="">-- Select Room --</option>
+        </select>
+        <input type="number" class="input extra-room-nights" min="1" value="${defaultNights}" placeholder="Nights" style="flex:1; max-width:100px; box-sizing:border-box; border-radius:6px; background:rgba(0,0,0,0.2); border:1px solid var(--border); padding:10px 14px; color:var(--text); font-size:0.95rem; text-align:center;" data-idx="${extraRoomCounter}">
+        <button type="button" onclick="removeRoom(${extraRoomCounter})" style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); border-radius:6px; cursor:pointer; font-size:1.2rem; color:#ef4444; width:38px; height:38px; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'" title="Remove Room">✕</button>
+      `;
+      container.appendChild(div);
+
+      // Populate room options from cache
+      const select = div.querySelector('.extra-room-select');
+      populateRoomSelect(select);
+
+      select.addEventListener('change', updateGroupSummary);
+      div.querySelector('.extra-room-nights').addEventListener('change', updateGroupSummary);
+
+      updateGroupSummary();
+    }
+
+    function removeRoom(idx) {
+      const el = document.getElementById(`extra_room_${idx}`);
+      if (el) el.remove();
+      updateGroupSummary();
+    }
+
+    function populateRoomSelect(select) {
+      // Get already selected rooms to exclude
+      const usedRooms = getSelectedRooms().map(r => r.room_number);
+      const primaryRoom = document.getElementById('room_number').value;
+      if (primaryRoom) usedRooms.push(primaryRoom);
+
+      select.innerHTML = '<option value="">-- Select Room --</option>';
+      cachedRooms.forEach(r => {
+        if (r.status !== 'Available' && !r.available_for_dates) return;
+        if (usedRooms.includes(r.room_number) && r.room_number !== select.value) return;
+        const opt = document.createElement('option');
+        opt.value = r.room_number;
+        opt.textContent = `Room ${r.room_number} (${r.room_type}) — ${currency}${r.price_per_night}/night`;
+        opt.dataset.price = r.price_per_night;
+        select.appendChild(opt);
+      });
+    }
+
+    function getSelectedRooms() {
+      const rooms = [];
+      document.querySelectorAll('.extra-room-select').forEach(sel => {
+        if (sel.value) {
+          const nightsInput = sel.closest('div').querySelector('.extra-room-nights');
+          const nights = parseInt(nightsInput?.value) || 1;
+          const price = parseFloat(sel.options[sel.selectedIndex]?.dataset?.price) || 0;
+          rooms.push({ room_number: sel.value, nights, price });
+        }
+      });
+      return rooms;
+    }
+
+    function updateGroupSummary() {
+      const extraRooms = getSelectedRooms();
+      const summaryDiv = document.getElementById('group_summary');
+      const labelDiv = document.getElementById('group_label_container');
+      const submitBtn = document.getElementById('submitBtn');
+      const isReservation = document.getElementById('is_reservation').checked;
+      const primarySelect = document.getElementById('room_number');
+      const hasPrimary = primarySelect.value && primarySelect.value !== '';
+
+      if (extraRooms.length > 0) {
+        // Multi-room mode
+        const primaryPrice = hasPrimary ? (parseFloat(primarySelect.options[primarySelect.selectedIndex]?.dataset?.price) || 0) : 0;
+        const primaryNights = parseInt(document.getElementById('nights').value) || 1;
+        const totalRooms = (hasPrimary ? 1 : 0) + extraRooms.length;
+        let estTotal = hasPrimary ? primaryPrice * primaryNights : 0;
+        extraRooms.forEach(r => estTotal += r.price * r.nights);
+
+        document.getElementById('group_room_count').textContent = totalRooms;
+        document.getElementById('group_est_total').textContent = currency + estTotal.toFixed(2);
+        summaryDiv.style.display = 'block';
+        labelDiv.style.display = 'block';
+        submitBtn.innerHTML = isReservation ? '📅 Create Group Reservation' : '🏨 Check In Group (' + totalRooms + ' rooms)';
+        submitBtn.style.background = 'linear-gradient(135deg, #10b981, #3b82f6)';
+      } else {
+        summaryDiv.style.display = 'none';
+        labelDiv.style.display = 'none';
+        submitBtn.innerHTML = isReservation ? '📅 Create Reservation' : '✓ Check In Guest';
+        submitBtn.style.background = isReservation ? 'linear-gradient(135deg, #8b5cf6, #3b82f6)' : '';
+      }
+      // Re-render services so room chips update
+      if (cachedServices.length) renderServices();
+    }
+
+    function prepareFormSubmit() {
+      // Check if reference matches guest details (prevent self-reference)
+      const refId = document.getElementById('reference_id').value;
+      if (refId) {
+        const guestName = document.getElementById('cust_name').value.trim();
+        const guestPhone = document.getElementById('cust_phone').value.trim();
+        const guestNid = document.getElementById('cust_idproof').value.trim();
+        const selectedRefNameText = document.getElementById('selected_ref_name').textContent.trim();
+        const selectedRefInfoText = document.getElementById('selected_ref_info').textContent;
+
+        if (guestName && selectedRefNameText && guestName.toLowerCase() === selectedRefNameText.toLowerCase()) {
+          alert("A guest cannot set themselves as a reference!");
+          return false;
+        }
+        if (guestPhone && selectedRefInfoText.includes(guestPhone)) {
+          alert("A guest cannot set themselves as a reference!");
+          return false;
+        }
+        if (guestNid && selectedRefInfoText.includes(guestNid)) {
+          alert("A guest cannot set themselves as a reference!");
+          return false;
+        }
+      }
+
+      const extraRooms = getSelectedRooms();
+      const form = document.getElementById('checkInForm');
+
+      // Remove any previously injected hidden inputs
+      form.querySelectorAll('.injected-group-input').forEach(el => el.remove());
+
+      if (extraRooms.length > 0) {
+        // Switch to group endpoint
+        form.action = '/bookings/checkin-group';
+
+        const primaryRoom = document.getElementById('room_number').value;
+        const primaryNights = document.getElementById('nights').value;
+
+        const addHidden = (name, value) => {
+          const inp = document.createElement('input');
+          inp.type = 'hidden'; inp.name = name; inp.value = value;
+          inp.className = 'injected-group-input';
+          form.appendChild(inp);
+        };
+
+        // Only add primary room if it has a value (won't have one in Whole Hotel mode)
+        if (primaryRoom) {
+          addHidden('room_numbers', primaryRoom);
+          addHidden('room_nights', primaryNights);
+        }
+
+        extraRooms.forEach(r => {
+          addHidden('room_numbers', r.room_number);
+          addHidden('room_nights', r.nights);
+        });
+
+        // Build per-room services JSON
+        const allRooms = getAllRoomNumbers();
+        const selectedSvcs = document.querySelectorAll('input[name="selected_services"]:checked');
+        if (selectedSvcs.length > 0 && allRooms.length > 1) {
+          const roomSvcMap = {};
+          selectedSvcs.forEach(cb => {
+            const svcId = cb.value;
+            allRooms.forEach(rn => {
+              const roomCb = document.querySelector(`.room-svc-cb[data-svc="${svcId}"][data-room="${rn}"]`);
+              if (roomCb && roomCb.checked) {
+                if (!roomSvcMap[rn]) roomSvcMap[rn] = [];
+                roomSvcMap[rn].push(parseInt(svcId));
+              }
+            });
+          });
+          addHidden('room_services_json', JSON.stringify(roomSvcMap));
+        }
+      } else {
+        form.action = '/bookings/checkin';
+      }
+      return true; // allow form submission
+    }
+    function bookWholeHotel() {
+      const nights = parseInt(document.getElementById('nights').value) || 1;
+      const checkIn = document.getElementById('check_in_date').value;
+
+      fetch(`/bookings/hotel-availability?nights=${nights}&check_in=${checkIn}`)
+        .then(r => r.json())
+        .then(data => {
+          // Clear existing extra rooms
+          document.getElementById('extra_rooms_container').innerHTML = '';
+          extraRoomCounter = 0;
+
+          // Add ALL available rooms as extra rooms (including what's in primary dropdown)
+          data.available.forEach(room => {
+            // Cache this room if not already cached
+            if (!cachedRooms.find(r => r.room_number === room.room_number)) {
+              cachedRooms.push(room);
+            }
+            addRoom(); // adds a blank row
+            // Now select the room in the last added row
+            const lastSelect = document.querySelector(`#extra_room_${extraRoomCounter} .extra-room-select`);
+            if (lastSelect) {
+              // Set value to this room
+              for (let opt of lastSelect.options) {
+                if (opt.value === room.room_number) { opt.selected = true; break; }
+              }
+            }
+            // Set nights
+            const lastNights = document.querySelector(`#extra_room_${extraRoomCounter} .extra-room-nights`);
+            if (lastNights) lastNights.value = nights;
+          });
+
+          // Clear primary room dropdown — all rooms are added as extra rooms
+          const primarySelect = document.getElementById('room_number');
+          primarySelect.value = '';
+          primarySelect.removeAttribute('required');
+
+          // Show unavailable rooms panel
+          const panel = document.getElementById('unavailable_rooms_panel');
+          const list = document.getElementById('unavailable_rooms_list');
+          if (data.unavailable.length > 0) {
+            let html = '';
+            data.unavailable.forEach(r => {
+              html += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(239,68,68,0.1);">
+                <span>Room ${r.room_number} (${r.room_type})</span>
+                <span style="color:var(--text-secondary);">${r.free_from ? 'Free from ' + r.free_from : 'Currently booked'}</span>
+              </div>`;
+            });
+            list.innerHTML = html;
+            panel.style.display = 'block';
+          } else {
+            panel.style.display = 'none';
+          }
+
+          updateGroupSummary();
+          showBanner(`Added ${data.available_count} rooms. ${data.unavailable.length} rooms unavailable.`, 'success');
+        })
+        .catch(err => {
+          console.error('Hotel availability check failed:', err);
+          showBanner('Failed to check hotel availability.', 'error');
+        });
+    }
+  </script>
+
+  <script>
+    // --- Service Loader ---
+    let cachedServices = [];
+    async function loadServices() {
+      try {
+        const res = await fetch('/services/');
+        const data = await res.json();
+        cachedServices = data.services || [];
+        renderServices();
+      } catch (e) {
+        console.error("Failed to load services", e);
+      }
+    }
+
+    function renderServices() {
+      const container = document.getElementById('services_container');
+      container.innerHTML = '';
+
+      // Get all room numbers (primary + extra)
+      const allRooms = getAllRoomNumbers();
+      const isMultiRoom = allRooms.length > 1;
+
+      cachedServices.forEach(svc => {
+        const div = document.createElement('div');
+        div.className = 'service-item';
+        div.dataset.id = svc.id;
+        div.style.cssText = `
+          padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); 
+          border-radius: 8px; transition: 0.2s; margin-bottom: 4px;
+        `;
+
+        let roomChipsHtml = '';
+        if (isMultiRoom) {
+          roomChipsHtml = `<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+            <span style="font-size:0.75rem; color:var(--text-secondary); margin-right:2px;">Rooms:</span>
+            ${allRooms.map(rn => `
+              <label style="display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:12px; font-size:0.78rem; cursor:pointer; background:rgba(20,184,166,0.1); border:1px solid rgba(20,184,166,0.25); transition:0.2s;" 
+                class="room-svc-chip" data-svc="${svc.id}" data-room="${rn}">
+                <input type="checkbox" class="room-svc-cb" data-svc="${svc.id}" data-room="${rn}" 
+                  style="width:auto; margin:0; cursor:pointer; transform:scale(0.8);" checked>
+                <span>${rn}</span>
+              </label>
+            `).join('')}
+            <button type="button" onclick="toggleAllRoomSvc(this, ${svc.id})" style="padding:2px 8px; border-radius:12px; font-size:0.73rem; cursor:pointer; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#10b981; font-weight:600;">All</button>
+          </div>`;
+        }
+
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSvcMain(this)">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" name="selected_services" value="${svc.id}" style="width: auto; margin:0; cursor:pointer;" class="svc-main-cb">
+              <div>
+                <div style="font-weight:600; font-size:0.9rem;">${svc.name}</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary);">${svc.description}</div>
+              </div>
+            </div>
+            <div style="font-weight:700; color:var(--success);">$${svc.price}</div>
+          </div>
+          ${roomChipsHtml}
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    function getAllRoomNumbers() {
+      const rooms = [];
+      const primaryRoom = document.getElementById('room_number').value;
+      if (primaryRoom) rooms.push(primaryRoom);
+      const extraRooms = getSelectedRooms();
+      extraRooms.forEach(r => { if (r.room_number && !rooms.includes(r.room_number)) rooms.push(r.room_number); });
+      return rooms;
+    }
+
+    function toggleSvcMain(el) {
+      const cb = el.querySelector('.svc-main-cb');
+      if (event.target.type !== 'checkbox') cb.checked = !cb.checked;
+      const parent = el.closest('.service-item');
+      if (cb.checked) {
+        parent.style.background = 'rgba(20, 184, 166, 0.2)';
+        parent.style.borderColor = 'var(--primary)';
+      } else {
+        parent.style.background = 'rgba(255,255,255,0.05)';
+        parent.style.borderColor = 'var(--glass-border)';
+      }
+    }
+
+    function toggleAllRoomSvc(btn, svcId) {
+      const chips = document.querySelectorAll(`.room-svc-cb[data-svc="${svcId}"]`);
+      const allChecked = Array.from(chips).every(c => c.checked);
+      chips.forEach(c => c.checked = !allChecked);
+    }
+
+    async function loadRecommendations(roomType) {
+      try {
+        // Include customer_id if available for personalized recommendations
+        let url = `/ai/recommendations?room_type=${roomType}&nights=1`;
+        if (window.currentCustomerId) {
+          url += `&customer_id=${window.currentCustomerId}`;
+        }
+        const res = await fetch(url);
+        const data = await res.json();
+        const ids = data.recommended_service_ids || [];
+
+        // Highlight logic
+        const items = document.querySelectorAll('.service-item');
+        items.forEach(item => {
+          const id = item.dataset.id;
+          const badge = item.querySelector('.rec-badge');
+          if (badge) badge.remove();
+
+          if (ids.includes(id)) {
+            // Add "Recommended" badge
+            const b = document.createElement('span');
+            b.className = 'rec-badge';
+            b.textContent = 'AI PICK';
+            b.style.cssText = 'background:var(--accent); color:white; font-size:0.6rem; padding:2px 6px; border-radius:4px; margin-left:8px;';
+            item.querySelector('div > div > div').appendChild(b); // append to name line
+
+            // Move to top
+            item.parentNode.prepend(item);
+          }
+        });
+
+      } catch (e) { console.error(e); }
+    }
+
+    async function loadRoomUpsell(roomNumber, nights) {
+      const card = document.getElementById('room_upsell_card');
+      const list = document.getElementById('room_upsell_list');
+      try {
+        let url = `/ai/room-upsell?room_number=${roomNumber}&nights=${nights}`;
+        if (window.currentCustomerId) {
+          url += `&customer_id=${window.currentCustomerId}`;
+        }
+        const res = await fetch(url);
+        const data = await res.json();
+        const suggestions = data.suggestions || [];
+
+        if (suggestions.length === 0) {
+          card.style.display = 'none';
+          return;
+        }
+
+        list.innerHTML = '';
+        suggestions.forEach(s => {
+          const item = document.createElement('div');
+          item.style.cssText = `
+            padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+            background: ${s.is_personalized ? 'rgba(245,158,11,0.12)' : 'rgba(255,255,255,0.06)'};
+            border: 1px solid ${s.is_personalized ? 'rgba(245,158,11,0.3)' : 'var(--glass-border)'};
+          `;
+          item.onmouseenter = () => item.style.transform = 'translateX(4px)';
+          item.onmouseleave = () => item.style.transform = '';
+
+          let discountHtml = '';
+          if (s.discount_suggestion) {
+            const ds = s.discount_suggestion;
+            discountHtml = `
+              <div style="margin-top:6px; padding:6px 8px; background:rgba(239,68,68,0.08); border-radius:6px; font-size:0.78rem; color:var(--warning);">
+                💡 Suggestion: Offer ${ds.suggested_discount_pct}% off → ${currency}${ds.discounted_price}/night
+                <span style="color:var(--text-secondary);">(${ds.reason})</span>
+              </div>`;
+          }
+
+          const diffLabel = s.price_diff_per_night > 0
+            ? `<span style="color:var(--warning); font-weight:700;">+${currency}${s.price_diff_per_night}/night</span>`
+            : `<span style="color:var(--success); font-weight:700;">−${currency}${Math.abs(s.price_diff_per_night)}/night</span>`;
+
+          item.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-size:0.88rem; font-weight:600;">${s.pitch}</div>
+                <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">Room ${s.room_number} · ${s.room_type} · ${currency}${s.price_per_night}/night ${diffLabel}</div>
+              </div>
+              <button type="button" class="btn" style="padding:4px 12px; font-size:0.75rem; white-space:nowrap;"
+                onclick="switchRoom('${s.room_number}')">
+                ${s.is_upgrade ? '⬆ Upgrade' : '💰 Switch'}
+              </button>
+            </div>
+            ${discountHtml}`;
+
+          list.appendChild(item);
+        });
+
+        card.style.display = 'block';
+      } catch (e) {
+        console.error('Upsell load failed', e);
+        card.style.display = 'none';
+      }
+    }
+
+    function switchRoom(roomNumber) {
+      const select = document.getElementById('room_number');
+      select.value = roomNumber;
+      select.dispatchEvent(new Event('change'));
+    }
+
+    document.addEventListener('DOMContentLoaded', loadServices);
+
+    // Toggle payment_method required based on advance amount
+    const advInput = document.getElementById('advance_amount');
+    const pmSelect = document.getElementById('payment_method');
+    const pmStar = document.getElementById('paymentReqStar');
+    if (advInput && pmSelect) {
+      advInput.addEventListener('input', function () {
+        const amt = parseFloat(this.value) || 0;
+        if (amt > 0) {
+          pmSelect.required = true;
+          if (pmStar) pmStar.style.display = 'inline';
+        } else {
+          pmSelect.required = false;
+          if (pmStar) pmStar.style.display = 'none';
+        }
+      });
+    }
+    // --- REFERENCE LOOKUP & CREATION SCRIPTS ---
+    const refSearch = document.getElementById('ref_search');
+    const refResults = document.getElementById('ref_results');
+    const refIdInput = document.getElementById('reference_id');
+    const selectedRefDisplay = document.getElementById('selected_ref_display');
+    const selectedRefName = document.getElementById('selected_ref_name');
+    const selectedRefInfo = document.getElementById('selected_ref_info');
+    const newRefForm = document.getElementById('new_ref_form');
+
+    let lookupTimeout = null;
+
+    if (refSearch) {
+      refSearch.addEventListener('input', function() {
+        const query = this.value;
+        clearTimeout(lookupTimeout);
+        
+        if (!query.trim()) {
+          refResults.style.display = 'none';
+          return;
+        }
+
+        lookupTimeout = setTimeout(async () => {
+          try {
+            const res = await fetch(`/customers/lookup?q=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            
+            refResults.innerHTML = '';
+            
+            if (data.results && data.results.length > 0) {
+              data.results.forEach(cust => {
+                const div = document.createElement('div');
+                div.style.padding = '8px 12px';
+                div.style.cursor = 'pointer';
+                div.style.borderBottom = '1px solid var(--glass-border)';
+                div.innerHTML = `
+                  <div style="font-weight: 600; color: var(--text);">${cust.name}</div>
+                  <div style="font-size: 0.8rem; color: var(--text-secondary); text-align: left;">
+                    ${cust.phone ? '📞 ' + cust.phone : ''} ${cust.id_proof ? ' 🪪 ' + cust.id_proof : ''}
+                  </div>
+                `;
+                div.addEventListener('click', () => selectReference(cust));
+                refResults.appendChild(div);
+              });
+            } else {
+              const div = document.createElement('div');
+              div.style.padding = '8px 12px';
+              div.style.color = 'var(--text-secondary)';
+              div.innerHTML = `
+                <div style="margin-bottom: 8px;">No references found.</div>
+                <button type="button" onclick="showNewRefForm()" class="btn" style="padding: 4px 8px; font-size: 0.8rem; width: 100%;">+ Create New Reference</button>
+              `;
+              refResults.appendChild(div);
+            }
+            refResults.style.display = 'block';
+          } catch (err) {
+            console.error("Reference lookup failed", err);
+          }
+        }, 300);
+      });
+
+      // Hide results if clicking outside
+      document.addEventListener('click', function(e) {
+        if (!refSearch.contains(e.target) && !refResults.contains(e.target)) {
+          refResults.style.display = 'none';
+        }
+      });
+    }
+
+    window.selectReference = function(cust) {
+      const guestName = document.getElementById('cust_name').value.trim();
+      const guestPhone = document.getElementById('cust_phone').value.trim();
+      const guestNid = document.getElementById('cust_idproof').value.trim();
+
+      if (guestName && cust.name && guestName.toLowerCase() === cust.name.toLowerCase()) {
+        alert("A guest cannot set themselves as a reference!");
+        return;
+      }
+      if (guestPhone && cust.phone && guestPhone === cust.phone) {
+        alert("A guest cannot set themselves as a reference!");
+        return;
+      }
+      if (guestNid && cust.id_proof && guestNid === cust.id_proof) {
+        alert("A guest cannot set themselves as a reference!");
+        return;
+      }
+
+      refIdInput.value = cust.id;
+      selectedRefName.textContent = cust.name;
+      selectedRefInfo.textContent = `${cust.phone ? 'Phone: ' + cust.phone : ''} ${cust.id_proof ? ' | NID/ID: ' + cust.id_proof : ''}`;
+      
+      refSearch.style.display = 'none';
+      selectedRefDisplay.style.display = 'flex';
+      refResults.style.display = 'none';
+      newRefForm.style.display = 'none';
+    }
+
+    window.clearSelectedReference = function() {
+      refIdInput.value = '';
+      refSearch.value = '';
+      refSearch.style.display = 'block';
+      selectedRefDisplay.style.display = 'none';
+    }
+
+    window.showNewRefForm = function() {
+      refResults.style.display = 'none';
+      newRefForm.style.display = 'flex';
+      
+      // Pre-fill name from search if possible
+      document.getElementById('new_ref_name').value = refSearch.value;
+    }
+
+    window.hideNewRefForm = function() {
+      newRefForm.style.display = 'none';
+    }
+
+    window.saveNewReference = async function() {
+      const name = document.getElementById('new_ref_name').value.trim();
+      const phone = document.getElementById('new_ref_phone').value.trim();
+      const id_proof = document.getElementById('new_ref_idproof').value.trim();
+
+      if (!name) {
+        alert("Reference name is required.");
+        return;
+      }
+
+      const guestName = document.getElementById('cust_name').value.trim();
+      const guestPhone = document.getElementById('cust_phone').value.trim();
+      const guestNid = document.getElementById('cust_idproof').value.trim();
+
+      if (guestName && name && guestName.toLowerCase() === name.toLowerCase()) {
+        alert("A guest cannot set themselves as a reference!");
+        return;
+      }
+      if (guestPhone && phone && guestPhone === phone) {
+        alert("A guest cannot set themselves as a reference!");
+        return;
+      }
+      if (guestNid && id_proof && guestNid === id_proof) {
+        alert("A guest cannot set themselves as a reference!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('name', name);
+      if (phone) formData.append('phone', phone);
+      if (id_proof) formData.append('id_proof', id_proof);
+
+      try {
+        const res = await fetch('/customers/quick-add', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          selectReference(data);
+        } else {
+          alert("Error: " + (data.message || data.error || "Failed to create reference"));
+        }
+      } catch (err) {
+        console.error("Failed to save reference", err);
+        alert("Failed to save reference");
+      }
+    }
+  </script>
+
+  
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Theme Toggle ----
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+    }
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      }
+    }
+    // Set correct icon on load
+    document.addEventListener('DOMContentLoaded', function () {
+      updateThemeIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+    });
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    // Close sidebar when clicking a nav link on mobile
+    document.querySelectorAll('.sidebar .nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

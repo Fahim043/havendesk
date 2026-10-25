@@ -1,0 +1,276 @@
+{% extends "base.html" if not print_mode else "print_base_dummy.html" %}
+{% block title %}{% if period_type == 'daily' %}Daily Room Sales Sheet{% elif period_type == 'weekly' %}Weekly Room Sales Sheet{% elif period_type == 'monthly' %}Monthly Room Sales Sheet{% else %}Room Sales Sheet ({{ start_str }} to {{ end_str }}){% endif %}{% endblock %}
+{% block content %}
+
+{% if not print_mode %}
+<style>
+  /* Scrollable wrapper for sales table */
+  .sales-table-wrapper {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  
+  /* Sticky headers */
+  .sales-table th {
+    position: sticky;
+    top: 0;
+    background: var(--bg-secondary) !important;
+    z-index: 10;
+    box-shadow: 0 1px 0 var(--glass-border);
+  }
+  
+  /* Sticky footers */
+  .sales-table tfoot td {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-secondary) !important;
+    z-index: 10;
+    box-shadow: 0 -1px 0 var(--glass-border);
+  }
+
+  /* Reset styling in print mode to display full layout */
+  @media print {
+    .sales-table-wrapper {
+      max-height: none !important;
+      overflow-y: visible !important;
+      border: none !important;
+      margin-bottom: 0 !important;
+    }
+    .sales-table th, .sales-table tfoot td {
+      position: static !important;
+      background: #f2f2f2 !important;
+      box-shadow: none !important;
+    }
+  }
+</style>
+{% endif %}
+
+{% if not print_mode %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+  <h2 style="margin: 0;">📊 Room Sales Report</h2>
+  <div>
+    <button onclick="printReport()" class="btn" style="display: flex; align-items: center; gap: 8px;">
+      <i class="fa-solid fa-print"></i> Print Report
+    </button>
+  </div>
+</div>
+
+<!-- Period Filter Panel -->
+<div class="card" style="margin-bottom: 24px; padding: 20px;">
+  <form method="get" action="/analytics/daily-report" id="filterForm" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;">
+    <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
+      <label for="period_type">Period Type</label>
+      <select name="period_type" id="period_type" class="input" style="margin: 0; cursor: pointer;" onchange="togglePeriodInputs()">
+        <option value="daily" {% if period_type == 'daily' %}selected{% endif %}>Daily</option>
+        <option value="weekly" {% if period_type == 'weekly' %}selected{% endif %}>Weekly</option>
+        <option value="monthly" {% if period_type == 'monthly' %}selected{% endif %}>Monthly</option>
+        <option value="custom" {% if period_type == 'custom' %}selected{% endif %}>Custom Range</option>
+      </select>
+    </div>
+
+    <!-- Date (for Daily/Weekly) -->
+    <div class="form-group" id="dateInputGroup" style="margin-bottom: 0; min-width: 150px;">
+      <label for="date">Select Date</label>
+      <input type="date" name="date" id="date" class="input" style="margin: 0;" value="{{ date }}">
+    </div>
+
+    <!-- Month (for Monthly) -->
+    <div class="form-group" id="monthInputGroup" style="margin-bottom: 0; min-width: 150px; display: none;">
+      <label for="month">Select Month</label>
+      <input type="month" name="month" id="month" class="input" style="margin: 0;" value="{{ month }}">
+    </div>
+
+    <!-- Start Date (for Custom) -->
+    <div class="form-group" id="startDateGroup" style="margin-bottom: 0; min-width: 150px; display: none;">
+      <label for="start_date">Start Date</label>
+      <input type="date" name="start_date" id="start_date" class="input" style="margin: 0;" value="{{ start_date }}">
+    </div>
+
+    <!-- End Date (for Custom) -->
+    <div class="form-group" id="endDateGroup" style="margin-bottom: 0; min-width: 150px; display: none;">
+      <label for="end_date">End Date</label>
+      <input type="date" name="end_date" id="end_date" class="input" style="margin: 0;" value="{{ end_date }}">
+    </div>
+
+    <button type="submit" class="btn" style="padding: 10px 24px;">Generate</button>
+  </form>
+</div>
+{% endif %}
+
+<!-- Printable Sales Sheet Container -->
+<div class="card report-sheet" style="padding: 24px; background: {% if print_mode %}white{% else %}var(--glass-panel){% endif %}; color: {% if print_mode %}black{% else %}var(--text){% endif %}; border: {% if print_mode %}1px solid #333{% else %}1px solid var(--glass-border){% endif %};">
+  
+  <!-- Sheet Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid {% if print_mode %}#000{% else %}var(--primary){% endif %}; padding-bottom: 12px; margin-bottom: 20px;">
+    <div>
+      <h3 style="margin: 0; font-size: 1.5rem; text-transform: uppercase; color: {% if print_mode %}#000{% else %}var(--text){% endif %};">
+        {% if period_type == 'daily' %}Daily Room Sales Sheet{% elif period_type == 'weekly' %}Weekly Room Sales Sheet{% elif period_type == 'monthly' %}Monthly Room Sales Sheet{% else %}Room Sales Sheet ({{ start_str }} to {{ end_str }}){% endif %}
+      </h3>
+      <span style="font-size: 0.9rem; color: {% if print_mode %}#444{% else %}var(--text-secondary){% endif %};">
+        {% if period_type == 'daily' %}
+          Date: {{ start_str }}
+        {% elif period_type == 'weekly' %}
+          Week: {{ start_str }} to {{ end_str }}
+        {% elif period_type == 'monthly' %}
+          Month: {{ month }}
+        {% else %}
+          Range: {{ start_str }} to {{ end_str }}
+        {% endif %}
+      </span>
+    </div>
+    <div style="text-align: right;">
+      <h4 style="margin: 0; font-size: 1.1rem; color: {% if print_mode %}#000{% else %}var(--text){% endif %};">HavenDesk</h4>
+      <span style="font-size: 0.8rem; color: {% if print_mode %}#666{% else %}var(--text-muted){% endif %};">Printed at: <span id="timestamp-placeholder"></span></span>
+    </div>
+  </div>
+
+  <!-- The sales table -->
+  <div class="{% if not print_mode %}sales-table-wrapper{% endif %}" style="overflow-x: auto;">
+    <table class="sales-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+      <thead>
+        <tr style="background: {% if print_mode %}#f2f2f2{% else %}rgba(20, 184, 166, 0.1){% endif %}; border-bottom: 2px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+          <th style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Room No</th>
+          <th style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Room Type</th>
+          <th style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Guest Name</th>
+          <th style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Pax</th>
+          <th style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Check In</th>
+          <th style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Check Out</th>
+          <th style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Nights</th>
+          <th style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Reference</th>
+          <th style="padding: 10px; text-align: right; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">Rent ({{ currency }})</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if not report_rows %}
+        <tr>
+          <td colspan="9" style="text-align: center; padding: 32px 10px; color: {% if print_mode %}#666{% else %}var(--text-secondary){% endif %}; font-style: italic; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            No check-ins recorded for this period.
+          </td>
+        </tr>
+        {% endif %}
+        {% for row in report_rows %}
+        <tr style="border-bottom: 1px solid {% if print_mode %}#ccc{% else %}rgba(255,255,255,0.05){% endif %}; {% if row.booking_id %}background: {% if print_mode %}#fff{% else %}rgba(20, 184, 166, 0.02){% endif %};{% endif %}">
+          <td style="padding: 8px 10px; font-weight: bold; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">{{ row.room_number }}</td>
+          <td style="padding: 8px 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">{{ row.room_type }}</td>
+          <td style="padding: 8px 10px; font-weight: {% if row.booking_id %}600{% else %}normal{% endif %}; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            {{ row.guest_name or '' }}
+          </td>
+          <td style="padding: 8px 10px; text-align: center; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            {{ row.pax or '' }}
+          </td>
+          <td style="padding: 8px 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            {{ row.check_in_formatted or '' }}
+          </td>
+          <td style="padding: 8px 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            {{ row.check_out_formatted or '' }}
+          </td>
+          <td style="padding: 8px 10px; text-align: center; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            {{ row.num_nights or '' }}
+          </td>
+          <td style="padding: 8px 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            {{ row.reference_name or '' }}
+          </td>
+          <td style="padding: 8px 10px; text-align: right; font-weight: bold; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %}; color: {% if row.booking_id %}{% if print_mode %}#000{% else %}var(--success){% endif %}{% else %}inherit{% endif %};">
+            {% if row.rent is not none %}
+              {{ "{:,.2f}".format(row.rent) }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="background: {% if print_mode %}#eaeaea{% else %}rgba(20, 184, 166, 0.08){% endif %}; border-top: 2px solid {% if print_mode %}#000{% else %}var(--primary){% endif %}; font-weight: bold;">
+          <td colspan="3" style="padding: 10px; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            Total Sales Count: <span style="font-size: 1.1rem; color: var(--primary);">{{ total_occupied }}</span>
+          </td>
+          <td style="padding: 10px; text-align: center; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            Total Pax:<br><span style="font-size: 1.1rem;">{{ total_pax }}</span>
+          </td>
+          <td colspan="4" style="padding: 10px; text-align: right; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            Grand Total Rent:
+          </td>
+          <td style="padding: 10px; text-align: right; font-size: 1.1rem; color: {% if print_mode %}#000{% else %}var(--success){% endif %}; border: 1px solid {% if print_mode %}#000{% else %}var(--glass-border){% endif %};">
+            {{ currency }}{{ "{:,.2f}".format(grand_total_rent) }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Signatures for printed records -->
+  {% if print_mode %}
+  <div style="display: flex; justify-content: space-between; margin-top: 80px; padding: 0 40px;">
+    <div style="text-align: center; width: 200px;">
+      <div style="border-top: 1px solid #000; padding-top: 8px; font-weight: bold; font-size: 0.95rem;">Front Office Manager</div>
+    </div>
+    <div style="text-align: center; width: 200px;">
+      <div style="border-top: 1px solid #000; padding-top: 8px; font-weight: bold; font-size: 0.95rem;">Operation Manager</div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  // Populate print timestamp
+  document.getElementById('timestamp-placeholder').textContent = new Date().toLocaleString();
+
+  function togglePeriodInputs() {
+    const val = document.getElementById('period_type').value;
+    document.getElementById('dateInputGroup').style.display = (val === 'daily' || val === 'weekly') ? 'block' : 'none';
+    document.getElementById('monthInputGroup').style.display = (val === 'monthly') ? 'block' : 'none';
+    document.getElementById('startDateGroup').style.display = (val === 'custom') ? 'block' : 'none';
+    document.getElementById('endDateGroup').style.display = (val === 'custom') ? 'block' : 'none';
+  }
+
+  function printReport() {
+    const period_type = document.getElementById('period_type').value;
+    const date = document.getElementById('date').value;
+    const month = document.getElementById('month').value;
+    const start_date = document.getElementById('start_date').value;
+    const end_date = document.getElementById('end_date').value;
+    
+    let url = `/analytics/daily-report/print?period_type=${period_type}`;
+    if (period_type === 'daily' || period_type === 'weekly') {
+      url += `&date=${date}`;
+    } else if (period_type === 'monthly') {
+      url += `&month=${month}`;
+    } else if (period_type === 'custom') {
+      url += `&start_date=${start_date}&end_date=${end_date}`;
+    }
+    
+    window.open(url, '_blank');
+  }
+
+  {% if not print_mode %}
+  // Initialize period input display on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    togglePeriodInputs();
+  });
+  {% endif %}
+</script>
+
+<style>
+  @media print {
+    /* Set page landscape orientation */
+    @page {
+      size: landscape;
+      margin: 10mm;
+    }
+    body {
+      background: white !important;
+      color: black !important;
+    }
+    .card {
+      border: none !important;
+      box-shadow: none !important;
+      background: white !important;
+      padding: 0 !important;
+    }
+  }
+</style>
+
+{% endblock %}

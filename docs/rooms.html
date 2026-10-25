@@ -1,0 +1,816 @@
+
+<!doctype html>
+<html lang="en">
+<script>
+  // Apply saved theme IMMEDIATELY to prevent flash of wrong theme
+  (function () {
+    var t = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<head>
+<script>
+(function(){
+  const MOCK = {"/ai/insights": {"insights": [{"type": "financial", "text": "Strong weekly revenue (\u09f343,700). Performance is 12% above projected targets.", "confidence": 0.9}]}, "/analytics/data?range=7days": {"total_rooms": 9, "occupied": 4, "available": 3, "revenue": 89800.0, "start_date": "2026-10-18", "end_date": "2026-10-25", "rooms_by_type": [{"name": "Deluxe Single", "value": 2}, {"name": "Emerald Double", "value": 2}, {"name": "Family Quad", "value": 2}, {"name": "Haven Executive Suite", "value": 2}, {"name": "Royal Penthouse", "value": 1}], "top_customers": [{"name": "Samira Karim", "total": 52500.0}, {"name": "Aarav Chowdhury", "total": 35000.0}, {"name": "Rafiq Ahmed", "total": 25500.0}, {"name": "Nusrat Jahan", "total": 18100.0}, {"name": "Farhana Rahman", "total": 7000.0}], "labels": ["2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"], "revenue_trend": [7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "daily_occupancy": [11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 44.4], "daily_revenue": [7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "payment_methods": [{"method": "Card", "count": 3, "total": 56500.0}, {"method": "bKash", "count": 2, "total": 15000.0}, {"method": "Cash", "count": 2, "total": 12200.0}]}, "/analytics/data?range=30days": {"total_rooms": 9, "occupied": 4, "available": 3, "revenue": 117800.0, "start_date": "2026-09-25", "end_date": "2026-10-25", "rooms_by_type": [{"name": "Deluxe Single", "value": 2}, {"name": "Emerald Double", "value": 2}, {"name": "Family Quad", "value": 2}, {"name": "Haven Executive Suite", "value": 2}, {"name": "Royal Penthouse", "value": 1}], "top_customers": [{"name": "Samira Karim", "total": 52500.0}, {"name": "Aarav Chowdhury", "total": 35000.0}, {"name": "Rafiq Ahmed", "total": 25500.0}, {"name": "Nusrat Jahan", "total": 18100.0}, {"name": "Farhana Rahman", "total": 7000.0}], "labels": ["2026-09-25", "2026-09-26", "2026-09-27", "2026-09-28", "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09", "2026-10-10", "2026-10-11", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"], "revenue_trend": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "daily_occupancy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.1, 11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 11.1, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 44.4], "daily_revenue": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82800.0], "payment_methods": [{"method": "Card", "count": 3, "total": 56500.0}, {"method": "bKash", "count": 2, "total": 15000.0}, {"method": "Cash", "count": 2, "total": 12200.0}]}, "/analytics/comparison": {"ytd": {"current_year": 2026, "previous_year": 2025, "current": {"bookings": 6, "revenue": 117800.0, "period": "Jan 1 - Oct 25, 2026"}, "previous": {"bookings": 0, "revenue": 0, "period": "Jan 1 - Oct 25, 2025"}, "revenue_growth": 0, "bookings_growth": 0, "group": {"current": {"bookings": 0, "revenue": 0.0}, "previous": {"bookings": 0, "revenue": 0.0}}, "individual": {"current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0.0}}}, "mom": {"current_month": "October 2026", "previous_month": "Sep 2026", "current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0}, "revenue_growth": 0, "group": {"current": {"bookings": 0, "revenue": 0.0}, "previous": {"bookings": 0, "revenue": 0.0}}, "individual": {"current": {"bookings": 6, "revenue": 117800.0}, "previous": {"bookings": 0, "revenue": 0.0}}}}, "/analytics/advanced": {"booking_velocity": [{"date": "2026-10-11", "count": 1}, {"date": "2026-10-18", "count": 1}, {"date": "2026-10-25", "count": 4}, {"date": "2026-10-27", "count": 1}], "avg_length_of_stay": 2.5, "revpar": 530.74, "revenue_by_room_type": [{"type": "Deluxe Single", "revenue": 14000.0}, {"type": "Emerald Double", "revenue": 23300.0}, {"type": "Haven Executive Suite", "revenue": 28000.0}, {"type": "Royal Penthouse", "revenue": 52500.0}]}, "/analytics/booking-types": {"group_total": 0, "individual_total": 7, "monthly_labels": ["May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026"], "monthly_group": [0, 0, 0, 0, 0, 0], "monthly_individual": [0, 0, 0, 0, 0, 7], "monthly_revenue_group": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "monthly_revenue_individual": [0.0, 0.0, 0.0, 0.0, 0.0, 143300.0]}, "/campaigns/filter-options": {"services": ["Airport Limousine Pickup", "Complimentary Breakfast Buffet", "Express Laundry Service", "Spa & Wellness Package"], "room_types": ["Deluxe Single", "Emerald Double", "Family Quad", "Haven Executive Suite", "Royal Penthouse"], "customer_types": ["Regular", "VIP", "Corporate", "Group", "Walk-in", "Online"], "payment_methods": ["Cash", "Card", "bKash", "Nagad", "Bank Transfer"], "currency": "\u09f3"}, "/bookings/available-rooms": [{"room_number": "101", "room_type": "Deluxe Single", "price_per_night": 3500.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "102", "room_type": "Deluxe Single", "price_per_night": 3500.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "103", "room_type": "Emerald Double", "price_per_night": 5200.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "201", "room_type": "Emerald Double", "price_per_night": 5200.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "202", "room_type": "Haven Executive Suite", "price_per_night": 8500.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "203", "room_type": "Haven Executive Suite", "price_per_night": 8500.0, "status": "Reserved", "has_conflict": false, "conflict_message": ""}, {"room_number": "301", "room_type": "Royal Penthouse", "price_per_night": 12500.0, "status": "Occupied", "has_conflict": false, "conflict_message": ""}, {"room_number": "302", "room_type": "Family Quad", "price_per_night": 7000.0, "status": "Available", "has_conflict": false, "conflict_message": ""}, {"room_number": "303", "room_type": "Family Quad", "price_per_night": 7000.0, "status": "Maintenance", "has_conflict": false, "conflict_message": ""}], "/campaigns/audience": {"customers": [{"id": 4, "name": "Samira Karim", "email": "samira.k@example.com", "phone": "01644556677", "customer_type": "VIP", "stays": 1, "nights": 4, "total_spent": 52500.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Samira Karim", "first_name": "Samira", "email": "samira.k@example.com", "phone": "01644556677", "customer_type": "VIP", "total_spent": "\u09f352,500", "avg_spend": "\u09f352,500", "total_stays": "1", "total_nights": "4", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Royal Penthouse", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 1, "name": "Aarav Chowdhury", "email": "aarav.c@example.com", "phone": "01711223344", "customer_type": "VIP", "stays": 2, "nights": 5, "total_spent": 35000.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Aarav Chowdhury", "first_name": "Aarav", "email": "aarav.c@example.com", "phone": "01711223344", "customer_type": "VIP", "total_spent": "\u09f335,000", "avg_spend": "\u09f317,500", "total_stays": "2", "total_nights": "5", "first_visit": "11 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Deluxe Single", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 2, "name": "Nusrat Jahan", "email": "nusrat.j@example.com", "phone": "01822334455", "customer_type": "Regular", "stays": 1, "nights": 3, "total_spent": 18100.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Nusrat Jahan", "first_name": "Nusrat", "email": "nusrat.j@example.com", "phone": "01822334455", "customer_type": "Regular", "total_spent": "\u09f318,100", "avg_spend": "\u09f318,100", "total_stays": "1", "total_nights": "3", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Emerald Double", "services_used": "Airport Limousine Pickup", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 6, "name": "Farhana Rahman", "email": "farhana.r@example.com", "phone": "01566778899", "customer_type": "Corporate", "stays": 1, "nights": 2, "total_spent": 7000.0, "last_visit": "18 Oct 2026", "days_since_last": 7, "opted_out": false, "merge": {"name": "Farhana Rahman", "first_name": "Farhana", "email": "farhana.r@example.com", "phone": "01566778899", "customer_type": "Corporate", "total_spent": "\u09f37,000", "avg_spend": "\u09f37,000", "total_stays": "1", "total_nights": "2", "first_visit": "18 Oct 2026", "last_visit": "18 Oct 2026", "days_since_last_visit": "7", "favorite_room_type": "Deluxe Single", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 3, "name": "Tariqul Islam", "email": "tariq.islam@example.com", "phone": "01933445566", "customer_type": "Corporate", "stays": 1, "nights": 1, "total_spent": 5200.0, "last_visit": "25 Oct 2026", "days_since_last": 0, "opted_out": false, "merge": {"name": "Tariqul Islam", "first_name": "Tariqul", "email": "tariq.islam@example.com", "phone": "01933445566", "customer_type": "Corporate", "total_spent": "\u09f35,200", "avg_spend": "\u09f35,200", "total_stays": "1", "total_nights": "1", "first_visit": "25 Oct 2026", "last_visit": "25 Oct 2026", "days_since_last_visit": "0", "favorite_room_type": "Emerald Double", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}, {"id": 5, "name": "Rafiq Ahmed", "email": "rafiq.a@example.com", "phone": "01755667788", "customer_type": "Regular", "stays": 0, "nights": 0, "total_spent": 0.0, "last_visit": "", "days_since_last": null, "opted_out": false, "merge": {"name": "Rafiq Ahmed", "first_name": "Rafiq", "email": "rafiq.a@example.com", "phone": "01755667788", "customer_type": "Regular", "total_spent": "\u09f30", "avg_spend": "\u09f30", "total_stays": "0", "total_nights": "0", "first_visit": "", "last_visit": "", "days_since_last_visit": "", "favorite_room_type": "", "services_used": "", "hotel_name": "HavenDesk Grand Hotel", "hotel_phone": "+880 1700-000000", "hotel_email": "concierge@havendesk.example", "hotel_address": "42 Emerald Avenue, Gulshan-2, Dhaka", "today": "25 Oct 2026"}}], "summary": {"matched": 6, "opted_out_excluded": 0, "with_email": 6, "with_phone": 6}}};
+
+  const origFetch = window.fetch.bind(window);
+  window.fetch = async function(url, opts) {
+    const key = typeof url === "string" ? url : (url.url || "");
+    if (MOCK[key]) {
+      return new Response(JSON.stringify(MOCK[key]), {status: 200, headers: {"Content-Type": "application/json"}});
+    }
+    const baseKey = key.split("?")[0];
+    if (MOCK[baseKey]) {
+      return new Response(JSON.stringify(MOCK[baseKey]), {status: 200, headers: {"Content-Type": "application/json"}});
+    }
+    return origFetch(url, opts);
+  };
+})();
+</script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rooms · HavenDesk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/theme.css?v=7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+      <img src="static/img/havendesk-logo.svg" alt="Logo" style="height: 32px; width: auto;"> HavenDesk
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+      <a href="rooms.html" class="active">
+        <i class="fa-solid fa-bed"></i> Rooms
+      </a>
+      <a href="bookings.html" class="">
+        <i class="fa-solid fa-calendar-check"></i> Bookings
+      </a>
+      <a href="customers.html" class="">
+        <i class="fa-solid fa-users"></i> Customers
+      </a>
+      <a href="inventory.html" class="">
+        <i class="fa-solid fa-boxes-stacked"></i> Inventory
+      </a>
+      <a href="services.html" class="">
+        <i class="fa-solid fa-bell-concierge"></i> Services
+      </a>
+      <a href="financials.html" class="">
+        <i class="fa-solid fa-coins"></i> Financials
+      </a>
+      <a href="analytics.html" class="">
+        <i class="fa-solid fa-chart-pie"></i> Analytics
+      </a>
+      <a href="daily-report.html" class="">
+        <i class="fa-solid fa-file-invoice"></i> Daily Report
+      </a>
+      <a href="campaigns.html" class="">
+        <i class="fa-solid fa-bullhorn"></i> Campaigns
+      </a>
+      <div style="flex-grow:1"></div>
+      <a href="settings.html" class="">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+      <a href="/auth/logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+    <footer>
+      &copy; 2026 AI-Possible<br>v1.2.0 AI Edition
+    </footer>
+  </aside>
+
+  <div class="content">
+    
+<div style="background:linear-gradient(90deg,rgba(13,148,136,0.22),rgba(5,150,105,0.12));border-bottom:1px solid rgba(45,212,191,0.3);padding:8px 24px;font-size:0.82rem;color:#2dd4bf;display:flex;justify-content:space-between;align-items:center;">
+  <span>✨ <b>HavenDesk Interactive UI Preview</b> (Static GitHub Pages Demo · Powered by AI-Possible)</span>
+  <a href="https://github.com/Fahim043/havendesk" style="color:#fff;font-weight:600;text-decoration:underline;">View Source on GitHub →</a>
+</div>
+<header class="topbar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" id="menuBtn" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div style="font-weight:600; color:var(--text-secondary);">
+        Sunday, 25 October 2026
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="badge success">AI Active</span>
+        <button id="themeToggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode"
+          style="width:36px; height:36px; border-radius:50%; border:1px solid var(--glass-border); background:var(--glass-panel); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; transition:all 0.3s ease; padding:0;">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <div
+          style="width:32px; height:32px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">
+          G
+        </div>
+      </div>
+    </header>
+
+    <div class="main-scroll">
+      <div class="container">
+        
+
+<div style="margin-bottom: 32px;">
+  <h2>🛏️ Room Management</h2>
+  <p style="color: var(--text-secondary); margin: 8px 0 0 0;">Manage all hotel rooms with real-time status updates</p>
+</div>
+
+<!-- Enhanced search and filter section -->
+<div class="card" style="margin-bottom: 32px;">
+  <details open>
+    <summary><strong>🔍 Filter & Search Rooms</strong></summary>
+    <form method="get" action="/rooms"
+      style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 160px; gap: 12px; margin-top: 16px; align-items: end;">
+      <div>
+        <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Search
+          Room</label>
+        <input type="text" name="search" placeholder="Room number..." class="input" style="width: 100%; margin: 0;"
+          value="">
+      </div>
+      <div>
+        <label
+          style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Type</label>
+        <select name="filter_type" id="filterRoomType" class="input" style="width: 100%; margin: 0; cursor: pointer;">
+          <option value="">All Types</option>
+          <!-- Dynamically populated -->
+        </select>
+      </div>
+      <div>
+        <label
+          style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Status</label>
+        <select name="filter_status" class="input" style="width: 100%; margin: 0; cursor: pointer;">
+          <option value="">All Status</option>
+          <option value="Available" >
+            Available</option>
+          <option value="Occupied" >
+            Occupied</option>
+          <option value="UnderMaintenance" >Maintenance</option>
+        </select>
+      </div>
+      <div>
+        <label
+          style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Housekeeping</label>
+        <select name="filter_housekeeping" class="input" style="width: 100%; margin: 0; cursor: pointer;">
+          <option value="">All</option>
+          <option value="Clean" >
+            Clean</option>
+          <option value="Dirty" >
+            Dirty</option>
+          <option value="InUse" >In
+            Use</option>
+        </select>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button type="submit" class="btn" style="flex: 1; padding: 10px 12px;">Apply</button>
+        <a href="/rooms" class="btn secondary"
+          style="padding: 10px 12px; text-decoration: none; text-align: center;">↺</a>
+      </div>
+    </form>
+  </details>
+</div>
+
+<!-- Add New Room Form -->
+<div class="card" style="margin-bottom: 32px;">
+  <details>
+    <summary><strong>+ Add New Room</strong></summary>
+    <form id="addRoomForm"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px;">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Room Number *</label>
+        <input type="text" name="room_number" placeholder="e.g., 101" required class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Room Type *</label>
+        <input type="text" name="room_type" list="addRoomTypeList" required class="input"
+          placeholder="Select or type custom..." autocomplete="off">
+        <datalist id="addRoomTypeList">
+          <!-- Dynamically populated -->
+        </datalist>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Price per Night *</label>
+        <input type="number" name="price_per_night" placeholder="e.g., 150.00" step="0.01" required class="input">
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <button type="submit" class="btn" style="width: 100%;">Add Room</button>
+      </div>
+    </form>
+  </details>
+</div>
+
+<!-- Rooms Table with Status Management -->
+<div class="card" style="margin-bottom: 32px;">
+  <h4 style="margin-top: 0;">📊 All Rooms (9 total)</h4>
+  
+  
+  
+  
+  
+  
+
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 80px;"><a
+              href="/rooms?sort_by=room_number&order=desc"
+              style="color:var(--text-secondary);">Room # ↕</a></th>
+          <th style="width: 120px;"><a
+              href="/rooms?sort_by=room_type&order=desc"
+              style="color:var(--text-secondary);">Type ↕</a></th>
+          <th style="width: 100px;"><a
+              href="/rooms?sort_by=price_per_night&order=desc"
+              style="color:var(--text-secondary);">Price ↕</a></th>
+          <th style="width: 110px;"><a
+              href="/rooms?sort_by=status&order=desc"
+              style="color:var(--text-secondary);">Status ↕</a></th>
+          <th style="width: 110px;">Housekeeping</th>
+          <th style="width: 80px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">101</strong></td>
+          <td style="font-size: 0.9rem;">Deluxe Single</td>
+          <td><strong style="color: var(--text);">৳3500.0</strong></td>
+          <td>
+            
+            <span class="status pending">🔒 Occupied</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('101', 'Deluxe Single', 3500.0, 'Occupied', 'Clean')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">102</strong></td>
+          <td style="font-size: 0.9rem;">Deluxe Single</td>
+          <td><strong style="color: var(--text);">৳3500.0</strong></td>
+          <td>
+            
+            <span class="status active">✓ Available</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('102', 'Deluxe Single', 3500.0, 'Available', 'Clean')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">103</strong></td>
+          <td style="font-size: 0.9rem;">Emerald Double</td>
+          <td><strong style="color: var(--text);">৳5200.0</strong></td>
+          <td>
+            
+            <span class="status pending">🔒 Occupied</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('103', 'Emerald Double', 5200.0, 'Occupied', 'Clean')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">201</strong></td>
+          <td style="font-size: 0.9rem;">Emerald Double</td>
+          <td><strong style="color: var(--text);">৳5200.0</strong></td>
+          <td>
+            
+            <span class="status pending">🔒 Occupied</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('201', 'Emerald Double', 5200.0, 'Occupied', 'Clean')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">202</strong></td>
+          <td style="font-size: 0.9rem;">Haven Executive Suite</td>
+          <td><strong style="color: var(--text);">৳8500.0</strong></td>
+          <td>
+            
+            <span class="status active">✓ Available</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('202', 'Haven Executive Suite', 8500.0, 'Available', 'Clean')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">203</strong></td>
+          <td style="font-size: 0.9rem;">Haven Executive Suite</td>
+          <td><strong style="color: var(--text);">৳8500.0</strong></td>
+          <td>
+            
+            <span class="status">Reserved</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('203', 'Haven Executive Suite', 8500.0, 'Reserved', 'Clean')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">301</strong></td>
+          <td style="font-size: 0.9rem;">Royal Penthouse</td>
+          <td><strong style="color: var(--text);">৳12500.0</strong></td>
+          <td>
+            
+            <span class="status pending">🔒 Occupied</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('301', 'Royal Penthouse', 12500.0, 'Occupied', 'Clean')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">302</strong></td>
+          <td style="font-size: 0.9rem;">Family Quad</td>
+          <td><strong style="color: var(--text);">৳7000.0</strong></td>
+          <td>
+            
+            <span class="status active">✓ Available</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(239, 68, 68, 0.15); color: var(--danger); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">⚠️
+              Dirty</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('302', 'Family Quad', 7000.0, 'Available', 'Dirty')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color: var(--accent); font-size: 0.95rem;">303</strong></td>
+          <td style="font-size: 0.9rem;">Family Quad</td>
+          <td><strong style="color: var(--text);">৳7000.0</strong></td>
+          <td>
+            
+            <span class="status">Maintenance</span>
+            
+          </td>
+          <td>
+            
+            <span
+              style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓
+              Clean</span>
+            
+          </td>
+          <td>
+            <button class="btn secondary" style="padding: 6px 14px; font-size: 0.85rem;"
+              onclick="openEditModal('303', 'Family Quad', 7000.0, 'Maintenance', 'Clean')">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination for rooms table -->
+  
+  
+</div>
+
+<!-- Housekeeping Status Management -->
+<div class="card">
+  <h4 style="margin-top: 0;">🧹 Update Housekeeping Status</h4>
+  <form action="/rooms/housekeeping" method="post" onsubmit="return updateHousekeeping(event)"
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+    <div class="form-group" style="margin-bottom: 0;">
+      <label>Room Number *</label>
+      <input type="text" name="room_number" placeholder="e.g., 101" required class="input">
+    </div>
+    <div class="form-group" style="margin-bottom: 0;">
+      <label>Status *</label>
+      <select name="housekeeping_status" required class="input" style="cursor: pointer;">
+        <option value="">— Select Status —</option>
+        <option value="Clean">✓ Clean</option>
+        <option value="Dirty">⚠️ Dirty</option>
+        <option value="InUse">In Use</option>
+        <option value="OutOfService">Out of Service</option>
+      </select>
+    </div>
+    <div style="display: flex; align-items: flex-end;">
+      <button type="submit" class="btn" style="width: 100%;">Update Status</button>
+    </div>
+  </form>
+</div>
+
+<!-- Edit Room Modal -->
+<div id="editRoomModal"
+  style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9998; justify-content: center; align-items: center;">
+  <div
+    style="background: var(--card-bg, #1e1e2e); border: 1px solid var(--border); border-radius: 16px; padding: 32px; width: 90%; max-width: 520px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative;">
+    <button onclick="closeEditModal()"
+      style="position: absolute; top: 12px; right: 16px; background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 4px;">✕</button>
+    <h3 style="margin-top: 0; margin-bottom: 24px;">✏️ Edit Room Details</h3>
+    <form id="editRoomForm" style="display: grid; gap: 16px;">
+      <input type="hidden" name="original_room_number" id="editOriginalRoomNumber">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Room Number *</label>
+        <input type="text" name="room_number" id="editRoomNumber" required class="input">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Room Type *</label>
+        <input type="text" name="room_type" id="editRoomType" list="editRoomTypeList" required class="input"
+          placeholder="Select or type custom..." autocomplete="off">
+        <datalist id="editRoomTypeList">
+          <!-- Dynamically populated -->
+        </datalist>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Price per Night *</label>
+        <input type="number" name="price_per_night" id="editPricePerNight" step="0.01" required class="input">
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>Status *</label>
+          <select name="status" id="editStatus" required class="input" style="cursor: pointer;">
+            <option value="Available">✓ Available</option>
+            <option value="Occupied">🔒 Occupied</option>
+            <option value="UnderMaintenance">⚙️ Maintenance</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>Housekeeping *</label>
+          <select name="housekeeping_status" id="editHousekeeping" required class="input" style="cursor: pointer;">
+            <option value="Clean">✓ Clean</option>
+            <option value="Dirty">⚠️ Dirty</option>
+            <option value="InUse">In Use</option>
+            <option value="OutOfService">Out of Service</option>
+          </select>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 8px;">
+        <button type="submit" class="btn" style="flex: 1;">Save Changes</button>
+        <button type="button" class="btn secondary" onclick="closeEditModal()" style="flex: 0.5;">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // ─── Load Room Types Dynamically ───
+  async function loadRoomTypes() {
+    try {
+      const res = await fetch('/rooms/types');
+      const data = await res.json();
+      const types = data.types || [];
+
+      // Populate Add form datalist
+      const addList = document.getElementById('addRoomTypeList');
+      if (addList) {
+        addList.innerHTML = '';
+        types.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          addList.appendChild(opt);
+        });
+      }
+
+      // Populate Edit modal datalist
+      const editList = document.getElementById('editRoomTypeList');
+      if (editList) {
+        editList.innerHTML = '';
+        types.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          editList.appendChild(opt);
+        });
+      }
+
+      // Populate filter dropdown
+      const filterSel = document.getElementById('filterRoomType');
+      if (filterSel) {
+        const currentFilter = '';
+        // Keep "All Types" option
+        filterSel.innerHTML = '<option value="">All Types</option>';
+        types.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          opt.textContent = t;
+          if (t === currentFilter) opt.selected = true;
+          filterSel.appendChild(opt);
+        });
+      }
+    } catch (e) { console.error('Failed to load room types', e); }
+  }
+  document.addEventListener('DOMContentLoaded', loadRoomTypes);
+
+  // ─── Add Room (AJAX) ───
+  document.getElementById('addRoomForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch('/rooms/add', { method: 'POST', body: formData })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showToast('Room added successfully!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Failed to add room', 'error');
+        }
+      })
+      .catch(() => showToast('Error adding room', 'error'));
+  });
+
+  // ─── Edit Modal ───
+  function openEditModal(roomNumber, roomType, price, status, housekeeping) {
+    document.getElementById('editOriginalRoomNumber').value = roomNumber;
+    document.getElementById('editRoomNumber').value = roomNumber;
+    document.getElementById('editRoomType').value = roomType;
+    document.getElementById('editPricePerNight').value = price;
+    document.getElementById('editStatus').value = status;
+    document.getElementById('editHousekeeping').value = housekeeping;
+    document.getElementById('editRoomModal').style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editRoomModal').style.display = 'none';
+  }
+
+  // Close modal on background click
+  document.getElementById('editRoomModal').addEventListener('click', function (e) {
+    if (e.target === this) closeEditModal();
+  });
+
+  // Close modal on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeEditModal();
+  });
+
+  // ─── Edit Room Submit (AJAX) ───
+  document.getElementById('editRoomForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    fetch('/rooms/update', { method: 'POST', body: formData })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showToast('Room updated successfully!', 'success');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          showToast(data.message || 'Failed to update room', 'error');
+        }
+      })
+      .catch(() => showToast('Error updating room', 'error'));
+  });
+
+  // ─── Housekeeping AJAX ───
+  function updateHousekeeping(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const roomNumber = formData.get('room_number');
+    const status = formData.get('housekeeping_status');
+
+    fetch('/rooms/housekeeping', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const tableRows = document.querySelectorAll('tbody tr');
+          tableRows.forEach(row => {
+            const roomNumCell = row.querySelector('td:first-child strong');
+            if (roomNumCell && roomNumCell.textContent === roomNumber) {
+              // Update housekeeping badge (column index 4)
+              const hkCell = row.children[4];
+              let badgeHTML = '';
+              if (status === 'Clean') {
+                badgeHTML = '<span style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✓ Clean</span>';
+              } else if (status === 'Dirty') {
+                badgeHTML = '<span style="display: inline-block; background: rgba(239, 68, 68, 0.15); color: var(--danger); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">⚠️ Dirty</span>';
+              } else if (status === 'InUse') {
+                badgeHTML = '<span style="display: inline-block; background: rgba(245, 158, 11, 0.15); color: var(--warning); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">In Use</span>';
+              } else {
+                badgeHTML = '<span style="display: inline-block; background: rgba(139, 92, 246, 0.15); color: var(--purple); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">' + status + '</span>';
+              }
+              hkCell.innerHTML = badgeHTML;
+
+              // Update room status badge (column index 3) based on backend response
+              const roomStatus = data.status;
+              const statusCell = row.children[3];
+              let statusHTML = '';
+              if (roomStatus === 'Available') {
+                statusHTML = '<span class="status active">✓ Available</span>';
+              } else if (roomStatus === 'Occupied') {
+                statusHTML = '<span class="status pending">🔒 Occupied</span>';
+              } else if (roomStatus === 'OutOfService') {
+                statusHTML = '<span class="status cancelled" style="background: rgba(239,68,68,0.15); color: #ef4444;">🚫 Out of Service</span>';
+              } else if (roomStatus === 'UnderMaintenance') {
+                statusHTML = '<span class="status cancelled">⚙️ Maintenance</span>';
+              } else {
+                statusHTML = '<span class="status">' + roomStatus + '</span>';
+              }
+              statusCell.innerHTML = statusHTML;
+            }
+          });
+          showToast('Housekeeping status updated successfully!', 'success');
+          form.reset();
+        } else {
+          showToast('Failed to update status', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showToast('Error updating status', 'error');
+      });
+    return false;
+  }
+
+  // ─── Toast Notification ───
+  function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+  `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.animation = 'fadeOut 0.3s ease-out';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+</script>
+
+<style>
+  @keyframes slideIn {
+    from {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+</style>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Theme Toggle ----
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+    }
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      }
+    }
+    // Set correct icon on load
+    document.addEventListener('DOMContentLoaded', function () {
+      updateThemeIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+    });
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    // Close sidebar when clicking a nav link on mobile
+    document.querySelectorAll('.sidebar .nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

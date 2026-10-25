@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Service Management · HavenDesk{% endblock %}
+{% block content %}
+
+<h2 style="margin-bottom: 24px;">🛎️ Service Management</h2>
+
+<div class="card" style="margin-bottom: 24px;">
+    <h4 style="margin-top: 0;">Active Bookings</h4>
+    <p style="color: var(--text-secondary); margin-bottom: 20px;">Add services to active bookings</p>
+
+    {% if active_bookings and active_bookings|length > 0 %}
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Room</th>
+                    <th>Check-in</th>
+                    <th>Current Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in active_bookings %}
+                <tr>
+                    <td><strong>#{{ booking.id }}</strong></td>
+                    <td>{{ booking.customer_name }}</td>
+                    <td>{{ booking.room_number }}</td>
+                    <td>{{ booking.check_in[:10] }}</td>
+                    <td>{{ currency }}{{ "%.2f"|format(booking.total_amount) }}</td>
+                    <td>
+                        <button onclick="openServiceModal({{ booking.id }}, '{{ booking.customer_name }}')" class="btn"
+                            style="padding: 8px 16px; font-size: 0.85rem;">
+                            + Add Service
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p style="text-align: center; color: var(--text-secondary); padding: 40px;">No active bookings</p>
+    {% endif %}
+</div>
+
+<!-- Service Modal -->
+<div id="serviceModal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="card" style="width: 520px; max-width: 92%; margin: auto; margin-top: 8vh;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin: 0;">🛎️ Add Service</h3>
+            <button onclick="closeServiceModal()"
+                style="background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+
+        <form action="/services/add-to-booking" method="post" style="display: flex; flex-direction: column; gap: 16px;">
+            <input type="hidden" name="booking_id" id="modalBookingId">
+            <input type="hidden" name="room_number" id="modalRoomNumber">
+
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Guest</label>
+                <p id="modalCustomerName" style="color: var(--text-secondary); margin: 0;"></p>
+            </div>
+
+            <div class="form-group">
+                <label>Service *</label>
+                <select name="service_id" id="serviceSelect" required class="input" onchange="updateServicePrice()">
+                    <option value="">— Select Service —</option>
+                    {% for service in services %}
+                    <option value="{{ service.id }}" data-price="{{ service.price }}">{{ service.name }} - {{ currency }}{{
+                        "%.2f"|format(service.price) }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Quantity</label>
+                <input type="number" name="quantity" id="quantity" value="1" min="1" max="10" class="input"
+                    onchange="updateTotal()">
+            </div>
+
+            <div class="form-group">
+                <label>Service Date <span style="color:var(--text-secondary); font-size:0.8rem;">(which day?)</span></label>
+                <input type="date" name="service_date" id="serviceDate" class="input">
+            </div>
+
+            <!-- Group: pick which room -->
+            <div id="groupRoomRow" style="display:none;" class="form-group">
+                <label>Apply to Room <span style="color:var(--text-secondary); font-size:0.8rem;">(group booking)</span></label>
+                <select id="groupRoomSelect" class="input" onchange="document.getElementById('modalRoomNumber').value = this.value;">
+                    <option value="">All Rooms (Group)</option>
+                </select>
+            </div>
+
+            <div
+                style="background: rgba(20, 184, 166, 0.1); padding: 16px; border-radius: 8px; border: 1px solid var(--primary);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600;">Total Amount:</span>
+                    <span id="totalAmount" style="font-size: 1.5rem; color: var(--primary);">{{ currency }}0.00</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%;">Add Service to Booking</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Map booking_id -> group_id and group rooms
+    const bookingGroupMap = {};
+    {% for booking in active_bookings %}
+    bookingGroupMap[{{ booking.id }}] = {
+        group_id: {{ booking.group_id if booking.group_id else 'null' }},
+        room_number: '{{ booking.room_number }}'
+    };
+    {% endfor %}
+
+    function openServiceModal(bookingId, customerName) {
+        document.getElementById('modalBookingId').value = bookingId;
+        document.getElementById('modalCustomerName').textContent = customerName;
+        document.getElementById('modalRoomNumber').value = '';
+        // Set today as default service date
+        document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
+
+        // Check if group booking
+        const meta = bookingGroupMap[bookingId];
+        const groupRow = document.getElementById('groupRoomRow');
+        const groupSel = document.getElementById('groupRoomSelect');
+        groupSel.innerHTML = '<option value="">All Rooms (Group)</option>';
+
+        if (meta && meta.group_id) {
+            groupRow.style.display = 'block';
+            fetch(`/bookings/group/${meta.group_id}/rooms-json`)
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    if (data && data.rooms) {
+                        data.rooms.forEach(r => {
+                            const opt = document.createElement('option');
+                            opt.value = r.room_number;
+                            opt.textContent = `Room ${r.room_number} (${r.status})`;
+                            groupSel.appendChild(opt);
+                        });
+                    }
+                }).catch(() => {});
+        } else {
+            groupRow.style.display = 'none';
+            if (meta) document.getElementById('modalRoomNumber').value = meta.room_number;
+        }
+
+        document.getElementById('serviceModal').style.display = 'flex';
+        updateServicePrice();
+    }
+
+    function closeServiceModal() {
+        document.getElementById('serviceModal').style.display = 'none';
+        document.getElementById('serviceSelect').value = '';
+        document.getElementById('quantity').value = 1;
+        updateTotal();
+    }
+
+    function updateServicePrice() {
+        updateTotal();
+    }
+
+    function updateTotal() {
+        const select = document.getElementById('serviceSelect');
+        const quantity = parseInt(document.getElementById('quantity').value) || 1;
+        const price = parseFloat(select.options[select.selectedIndex]?.dataset.price || 0);
+        const total = price * quantity;
+        document.getElementById('totalAmount').textContent = '{{ currency }}' + total.toFixed(2);
+    }
+</script>
+
+{% endblock %}

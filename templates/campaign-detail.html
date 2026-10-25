@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}Campaign · {{ c.name }}{% endblock %}
+{% block content %}
+
+<style>
+  :root { --cp-border: rgba(148, 163, 184, 0.28); --cp-soft: rgba(20, 184, 166, 0.08); }
+  .cp-muted { color: var(--text-secondary); font-size: 0.85rem; }
+  .cp-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .cp-stat { padding: 10px 16px; border-radius: 10px; border: 1px solid var(--cp-border); font-size: 0.85rem; min-width: 110px; }
+  .cp-stat b { display: block; font-size: 1.35rem; color: var(--text); }
+  .cp-bar { height: 10px; border-radius: 999px; background: var(--cp-soft); overflow: hidden; display: flex; margin: 16px 0 6px; }
+  .cp-bar span { display: block; height: 100%; transition: width .4s; }
+  .cp-table-wrap { max-height: 520px; overflow: auto; border: 1px solid var(--cp-border); border-radius: 10px; }
+  .cp-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  .cp-table th { position: sticky; top: 0; background: var(--bg-secondary); z-index: 2; text-align: left; padding: 10px;
+                 border-bottom: 1px solid var(--cp-border); color: var(--text-secondary); font-weight: 600; }
+  .cp-table td { padding: 9px 10px; border-bottom: 1px solid var(--cp-border); color: var(--text); vertical-align: top; }
+  .st { padding: 3px 10px; border-radius: 999px; font-size: 0.74rem; font-weight: 700; text-transform: capitalize; white-space: nowrap; }
+  .st.sent, .st.completed { background: rgba(16,185,129,.15); color: var(--success); }
+  .st.failed { background: rgba(239,68,68,.13); color: var(--danger); }
+  .st.pending, .st.in_progress { background: rgba(245,158,11,.15); color: var(--warning); }
+  .st.skipped { background: rgba(148,163,184,.18); color: var(--text-secondary); }
+  .st.sending { background: rgba(20,184,166,.15); color: var(--primary-light); }
+  .cp-msg { white-space: pre-wrap; font-size: 0.9rem; line-height: 1.55; color: var(--text); border: 1px solid var(--cp-border);
+            border-radius: 10px; padding: 14px; background: var(--bg-secondary); max-height: 260px; overflow: auto; }
+  .q-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px; border: 1px solid var(--cp-border);
+           border-radius: 10px; margin-bottom: 8px; align-items: center; }
+  .q-row.done { opacity: .5; }
+  .q-row.current { border-color: #25D366; box-shadow: 0 0 0 1px #25D366 inset; }
+  .wa-btn { background: #25D366 !important; border-color: #25D366 !important; color: #fff !important; }
+  .sm { padding: 5px 10px !important; font-size: 0.8rem !important; }
+</style>
+
+<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+  <div>
+    <a href="/campaigns/#history" class="cp-muted" style="text-decoration:none;">← All campaigns</a>
+    <h2 style="margin:6px 0 4px;">{{ c.name }}</h2>
+    <div class="cp-muted">
+      {{ {'email':'📧 Email','whatsapp':'💬 WhatsApp','both':'📧 + 💬 Both','smart':'🧠 Smart (email, else WhatsApp)'}.get(c.channel, c.channel) }}
+      {% if c.channel != 'email' %}· WhatsApp: {{ 'Cloud API (automatic)' if c.wa_mode == 'api' else 'Click-to-send' }}{% endif %}
+      · Created {{ c.created_fmt }}
+    </div>
+  </div>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <span class="st {{ c.status }}" id="campStatus">{{ (c.status or '').replace('_', ' ') }}</span>
+    <button class="btn secondary sm" id="retryBtn" onclick="retryFailed()" style="{{ '' if counts.failed else 'display:none;' }}">↻ Retry failed</button>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:20px;">
+  <div class="cp-stats">
+    <div class="cp-stat">Total<b id="cTotal">{{ counts.total }}</b></div>
+    <div class="cp-stat">Sent<b id="cSent" style="color:var(--success)">{{ counts.sent }}</b></div>
+    <div class="cp-stat">Pending<b id="cPending" style="color:var(--warning)">{{ counts.pending }}</b></div>
+    <div class="cp-stat">Failed<b id="cFailed" style="color:var(--danger)">{{ counts.failed }}</b></div>
+    <div class="cp-stat">Skipped<b id="cSkipped" style="color:var(--text-secondary)">{{ counts.skipped }}</b></div>
+  </div>
+  <div class="cp-bar">
+    <span id="barSent" style="background:var(--success); width:0"></span>
+    <span id="barFailed" style="background:var(--danger); width:0"></span>
+    <span id="barSkipped" style="background:rgba(148,163,184,.5); width:0"></span>
+  </div>
+  <div class="cp-muted" id="progressText"></div>
+</div>
+
+{% if manual_queue %}
+<div class="card" style="margin-bottom:20px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+    <div>
+      <h4 style="margin:0;">💬 WhatsApp Send Queue</h4>
+      <div class="cp-muted">Click <b>Open & Send</b>. WhatsApp opens with the personalised message ready; press Send there, then come back for the next one.</div>
+    </div>
+    <button class="btn wa-btn" onclick="openNext()"><i class="fa-brands fa-whatsapp"></i> Open next pending</button>
+  </div>
+  <div id="queue">
+    {% for r in manual_queue %}
+    <div class="q-row {{ 'done' if r.status != 'pending' else '' }}" id="q-{{ r.id }}" data-status="{{ r.status }}">
+      <div>
+        <b>{{ r.name }}</b> <span class="cp-muted">+{{ r.address }}</span>
+        <span class="st {{ r.status }}" id="qs-{{ r.id }}">{{ r.status }}</span>
+        <div class="cp-muted" style="margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:640px;">{{ r.message[:140] }}</div>
+      </div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="btn wa-btn sm" onclick="openWa({{ r.id }})" data-link="{{ r.wa_link }}" id="ql-{{ r.id }}">Open & Send</button>
+        <button class="btn secondary sm" onclick="setStatus({{ r.id }}, 'sent')">Mark sent</button>
+        <button class="btn secondary sm" onclick="setStatus({{ r.id }}, 'skipped')">Skip</button>
+        <button class="btn secondary sm" onclick="setStatus({{ r.id }}, 'pending')" title="Put back in queue">↺</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px; align-items:start;" class="cd-grid">
+  <div class="card">
+    <h4 style="margin-top:0;">✉️ Message Template</h4>
+    {% if c.subject %}
+    <div class="cp-muted" style="font-size:0.78rem;">Subject</div>
+    <div style="font-weight:700; margin-bottom:10px;">{{ c.subject }}</div>
+    {% endif %}
+    <div class="cp-msg">{{ c.body }}</div>
+    <div class="cp-muted" style="margin-top:8px;">Placeholders like <code>{name}</code> were replaced separately for each recipient.</div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
+      <h4 style="margin:0;">📋 Delivery Log</h4>
+      <select id="logFilter" class="input" style="width:auto; margin:0;" onchange="filterLog()">
+        <option value="">All</option><option value="sent">Sent</option><option value="pending">Pending</option>
+        <option value="failed">Failed</option><option value="skipped">Skipped</option>
+      </select>
+    </div>
+    <div class="cp-table-wrap">
+      <table class="cp-table">
+        <thead><tr><th>Recipient</th><th>Channel</th><th>To</th><th>Status</th><th>Time / Reason</th><th></th></tr></thead>
+        <tbody>
+          {% for r in recipients %}
+          <tr data-status="{{ r.status }}" id="r-{{ r.id }}">
+            <td><b>{{ r.name }}</b></td>
+            <td>{{ '📧' if r.channel == 'email' else '💬' }} {{ r.channel }}</td>
+            <td class="cp-muted">{{ ('+' ~ r.address) if (r.channel == 'whatsapp' and r.address) else (r.address or '—') }}</td>
+            <td><span class="st {{ r.status }}" id="rs-{{ r.id }}">{{ r.status }}</span></td>
+            <td class="cp-muted" id="re-{{ r.id }}" style="max-width:260px;">{{ r.error or r.sent_fmt or '' }}</td>
+            <td style="white-space:nowrap; text-align:right;">
+              <button class="btn secondary sm" title="Customer asked not to be contacted again" onclick="optOut({{ r.id }}, this)">🚫 Opt-out</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>@media (max-width: 1000px) { .cd-grid { grid-template-columns: 1fr !important; } }</style>
+
+<script>
+  const CID = {{ c.id }};
+  let STATUS = {{ (c.status or '')|tojson }};
+  let COUNTS = {{ counts|tojson }};
+</script>
+{% raw %}
+<script>
+function renderCounts() {
+  const t = COUNTS.total || 0;
+  const pct = n => t ? (100 * n / t) + '%' : '0';
+  ['total','sent','pending','failed','skipped'].forEach(k => {
+    const el = document.getElementById('c' + k[0].toUpperCase() + k.slice(1));
+    if (el) el.textContent = COUNTS[k] || 0;
+  });
+  document.getElementById('barSent').style.width = pct(COUNTS.sent || 0);
+  document.getElementById('barFailed').style.width = pct(COUNTS.failed || 0);
+  document.getElementById('barSkipped').style.width = pct(COUNTS.skipped || 0);
+  const done = (COUNTS.sent || 0) + (COUNTS.failed || 0) + (COUNTS.skipped || 0);
+  document.getElementById('progressText').textContent =
+    STATUS === 'sending' ? `Sending in the background... ${done} of ${t} processed. You can leave this page; sending continues.`
+    : STATUS === 'in_progress' ? `${COUNTS.pending} WhatsApp message(s) still waiting in the queue below.`
+    : `Finished: ${COUNTS.sent} sent, ${COUNTS.failed} failed, ${COUNTS.skipped} skipped.`;
+  const st = document.getElementById('campStatus');
+  st.className = 'st ' + STATUS; st.textContent = STATUS.replace('_', ' ');
+  document.getElementById('retryBtn').style.display = COUNTS.failed ? '' : 'none';
+}
+
+function paintRow(id, status, text) {
+  const b = document.getElementById('rs-' + id);
+  if (b) { b.className = 'st ' + status; b.textContent = status; }
+  const row = document.getElementById('r-' + id);
+  if (row) row.dataset.status = status;
+  if (text !== undefined) { const e = document.getElementById('re-' + id); if (e) e.textContent = text; }
+  const q = document.getElementById('q-' + id);
+  if (q) {
+    q.dataset.status = status;
+    q.classList.toggle('done', status !== 'pending');
+    q.classList.remove('current');
+    const qs = document.getElementById('qs-' + id);
+    if (qs) { qs.className = 'st ' + status; qs.textContent = status; }
+  }
+}
+
+async function setStatus(id, status) {
+  const res = await fetch(`/campaigns/recipients/${id}/status`, { method: 'POST',
+    headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+  const data = await res.json();
+  if (!res.ok) { alert(data.error || 'Failed'); return; }
+  COUNTS = data.counts;
+  STATUS = COUNTS.pending ? (STATUS === 'sending' ? 'sending' : 'in_progress') : 'completed';
+  paintRow(id, status, status === 'pending' ? '' : new Date().toLocaleString());
+  renderCounts();
+}
+
+function openWa(id) {
+  const link = document.getElementById('ql-' + id).dataset.link;
+  window.open(link, '_blank');
+  setStatus(id, 'sent');
+}
+
+function openNext() {
+  const next = [...document.querySelectorAll('.q-row')].find(r => r.dataset.status === 'pending');
+  if (!next) { alert('🎉 All WhatsApp messages in the queue are done!'); return; }
+  next.classList.add('current');
+  next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  openWa(Number(next.id.replace('q-', '')));
+}
+
+function filterLog() {
+  const f = document.getElementById('logFilter').value;
+  document.querySelectorAll('tr[data-status]').forEach(r => r.style.display = (!f || r.dataset.status === f) ? '' : 'none');
+}
+
+async function optOut(id, btn) {
+  if (!confirm('Mark this customer as opted-out? They will be excluded from all future campaigns.')) return;
+  const res = await fetch(`/campaigns/recipients/${id}/opt-out`, { method: 'POST' });
+  if (res.ok) { btn.textContent = '✅ Opted-out'; btn.disabled = true; }
+}
+
+async function retryFailed() {
+  if (!confirm(`Retry ${COUNTS.failed} failed message(s)?`)) return;
+  await fetch(`/campaigns/${CID}/retry-failed`, { method: 'POST' });
+  STATUS = 'sending';
+  poll();
+}
+
+async function poll() {
+  try {
+    const res = await fetch(`/campaigns/${CID}/status`);
+    const d = await res.json();
+    STATUS = d.status; COUNTS = d.counts;
+    d.recipients.forEach(r => paintRow(r.id, r.status, r.error || (r.sent_at ? new Date(r.sent_at).toLocaleString() : '')));
+    renderCounts();
+  } catch (e) {}
+  if (STATUS === 'sending') setTimeout(poll, 2500);
+}
+
+renderCounts();
+if (STATUS === 'sending') setTimeout(poll, 1500);
+</script>
+{% endraw %}
+
+{% endblock %}

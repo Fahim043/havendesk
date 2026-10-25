@@ -1,0 +1,501 @@
+{% extends "base.html" %}
+{% block title %}Group Booking #{{ group.id }} · HavenDesk{% endblock %}
+{% block content %}
+
+<style>
+  .group-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+  }
+  .group-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+  .stat-badge {
+    padding: 10px 18px; border-radius: 12px; text-align: center; min-width: 120px;
+    background: var(--glass-panel); border: 1px solid var(--border);
+  }
+  .stat-badge .num { font-size: 1.8rem; font-weight: 700; }
+  .stat-badge .lbl { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
+  .room-card {
+    background: var(--glass-panel); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px; margin-bottom: 16px; transition: all .2s;
+  }
+  .room-card:hover { border-color: var(--primary-light); box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+  .room-card-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+  }
+  .room-number-badge {
+    font-size: 1.3rem; font-weight: 700; padding: 4px 14px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff; border-radius: 8px;
+  }
+  .status-pill {
+    padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+  }
+  .status-Booked { background: rgba(59,130,246,.15); color: #3b82f6; }
+  .status-Active { background: rgba(59,130,246,.15); color: #3b82f6; }
+  .status-Reserved { background: rgba(139,92,246,.15); color: #8b5cf6; }
+  .status-Checked-out { background: rgba(16,185,129,.15); color: #10b981; }
+  .status-Cancelled { background: rgba(239,68,68,.15); color: #ef4444; }
+  .room-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .room-detail { font-size: 0.9rem; }
+  .room-detail .label { color: var(--text-secondary); font-size: 0.8rem; }
+  .room-detail .value { font-weight: 600; margin-top: 2px; }
+  .invoice-tabs {
+    display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .invoice-tab {
+    padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+    text-decoration: none; color: var(--text); border: 1px solid var(--border);
+    background: var(--glass-panel); transition: all .2s;
+  }
+  .invoice-tab:hover {
+    background: var(--primary); color: #fff; border-color: var(--primary);
+  }
+  .checkout-all-section {
+    margin-top: 24px; padding: 20px; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(239,68,68,.05), rgba(239,68,68,.02));
+    border: 1px solid rgba(239,68,68,.2);
+  }
+  .add-room-section {
+    margin-top: 24px; padding: 20px; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(16,185,129,.02));
+    border: 1px solid rgba(16,185,129,.2);
+  }
+  .add-room-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+  .add-room-form .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .add-room-form .form-group label { font-size: 0.82rem; color: var(--text-secondary); }
+  .remove-btn {
+    background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3);
+    color: #ef4444; padding: 6px 14px; border-radius: 8px; cursor: pointer;
+    font-size: 0.82rem; font-weight: 600; transition: all .2s;
+  }
+  .remove-btn:hover { background: rgba(239,68,68,.2); }
+
+  /* Inline Action Styles */
+  .inline-action-panel {
+    display: none; padding: 16px; border-radius: 12px; margin-top: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    animation: slideDown 0.2s ease-out;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .inline-confirm {
+    display: none; align-items: center; gap: 8px; padding: 4px 10px;
+    border-radius: 8px; background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.2);
+  }
+</style>
+
+<!-- Header -->
+{% if request.query_params.get('error') %}
+<div style="padding: 14px 16px; background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; border-radius: 8px; color: #ef4444; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+  <span style="font-size: 1.2rem;">⚠️</span>
+  <div>
+    <strong>Action Failed</strong><br>
+    <span style="font-size: 0.9rem;">{{ request.query_params.get('error') }}</span>
+  </div>
+</div>
+{% endif %}
+
+<div class="group-header">
+  <div>
+    <h2 style="margin: 0 0 6px 0;">🏨 {{ group.label or ('Group #' ~ group.id) }}</h2>
+    <div style="color: var(--text-secondary);">
+      👤 <strong>{{ customer.name or 'Guest' }}</strong>
+      {% if customer.email %} · 📧 {{ customer.email }}{% endif %}
+      {% if customer.phone %} · 📞 {{ customer.phone }}{% endif %}
+    </div>
+  </div>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <a href="/bookings/group-list" class="btn secondary" style="font-size: 0.9rem;">📋 All Groups</a>
+    <a href="/bookings" class="btn secondary" style="font-size: 0.9rem;">← Back to Bookings</a>
+    {% set has_active = bookings | selectattr('status', 'in', ['Booked', 'Active', 'Reserved']) | list | length > 0 %}
+    {% if has_active %}
+    <button type="button" id="btn-cancel-all" onclick="togglePanel('panel-cancel-all')" class="btn" style="background:rgba(239,68,68,.15); color:#ef4444; border:1px solid rgba(239,68,68,.4); font-size:0.9rem;">🚫 Cancel All Active</button>
+    {% endif %}
+  </div>
+</div>
+
+{% if has_active %}
+<div id="panel-cancel-all" class="inline-action-panel" style="margin-top:0; margin-bottom: 24px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+    <h4 style="margin: 0; color: #ef4444;">🚫 Cancel All Active & Reserved Rooms</h4>
+    <button type="button" class="btn secondary" style="font-size: 0.75rem; padding: 4px 8px; min-height: auto;" onclick="togglePanel('panel-cancel-all')">✕ Close</button>
+  </div>
+  <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0 0 16px 0;">This will cancel all active rooms in the group. Please specify the refund policy.</p>
+  <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <label style="font-size: 0.85rem; color: var(--text-secondary);">Refund Type</label>
+      <select id="cancel-all-refund-type" class="input" onchange="toggleCancelAllPct()">
+        <option value="none">No Refund</option>
+        <option value="full">Full Refund</option>
+        <option value="partial">Partial Refund</option>
+      </select>
+    </div>
+    <div id="cancel-all-pct-row" style="display: none; flex-direction: column; gap: 6px;">
+      <label style="font-size: 0.85rem; color: var(--text-secondary);">Refund %</label>
+      <input type="number" id="cancel-all-pct" value="50" min="1" max="99" class="input" style="width: 100px;">
+    </div>
+    <button type="button" onclick="submitCancelAll()" class="btn" style="background: #ef4444; height: fit-content;">Confirm Cancel All</button>
+  </div>
+</div>
+{% endif %}
+
+<!-- Stats -->
+<div class="group-stats" style="margin-bottom: 24px;">
+  <div class="stat-badge">
+    <div class="num">{{ bookings|length }}</div>
+    <div class="lbl">Total Rooms</div>
+  </div>
+  <div class="stat-badge" style="border-left: 3px solid #3b82f6;">
+    <div class="num" style="color: #3b82f6;">{{ active_count }}</div>
+    <div class="lbl">Active</div>
+  </div>
+  <div class="stat-badge" style="border-left: 3px solid #10b981;">
+    <div class="num" style="color: #10b981;">{{ checked_out_count }}</div>
+    <div class="lbl">Checked Out</div>
+  </div>
+  <div class="stat-badge" style="border-left: 3px solid var(--gold);">
+    <div class="num" style="color: var(--gold);">{{ currency }}{{ '%.2f'|format(group_total) }}</div>
+    <div class="lbl">Group Total</div>
+  </div>
+  <div class="stat-badge" style="border-left: 3px solid #10b981;">
+    <div class="num" style="color: #10b981;">{{ currency }}{{ '%.2f'|format(group_paid) }}</div>
+    <div class="lbl">Paid</div>
+  </div>
+  {% if group_balance > 0 %}
+  <div class="stat-badge" style="border-left: 3px solid #ef4444;">
+    <div class="num" style="color: #ef4444;">{{ currency }}{{ '%.2f'|format(group_balance) }}</div>
+    <div class="lbl">Balance Due</div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Invoice Tabs -->
+<div>
+  <h4 style="margin: 0 0 12px 0;">📋 Group Invoices</h4>
+  <div class="invoice-tabs">
+    <a href="/bookings/group/{{ group.id }}/invoice" class="invoice-tab">📄 Combined Invoice</a>
+    <a href="/bookings/group/{{ group.id }}/invoice/per-room" class="invoice-tab">🛏️ Per Room Invoice</a>
+    <a href="/bookings/group/{{ group.id }}/invoice/per-day" class="invoice-tab">📅 Per Day Invoice</a>
+  </div>
+</div>
+
+<!-- Add Room Section -->
+<div class="add-room-section">
+  <h4 style="margin: 0 0 12px 0; color: #10b981;">➕ Add Room to Group</h4>
+  <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0 0 16px 0;">
+    Add another room to this group booking. The new room will use the same check-in dates.
+  </p>
+  <form method="post" action="/bookings/group/{{ group.id }}/add-room" class="add-room-form">
+    <div class="form-group">
+      <label>Room</label>
+      <select name="room_number" id="addRoomSelect" class="input" style="min-width: 220px;" required>
+        <option value="">Loading rooms...</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Nights</label>
+      <input type="number" name="nights" min="1" value="{{ bookings[0].num_nights if bookings else 1 }}" class="input" style="width: 90px;" required>
+    </div>
+    <div class="form-group">
+      <label>Advance (optional)</label>
+      <input type="number" name="advance_amount" min="0" step="0.01" value="0" class="input" style="width: 120px;">
+    </div>
+    <div class="form-group">
+      <label>Payment</label>
+      <select name="payment_method" class="input" style="min-width: 120px;">
+        <option value="Cash">💵 Cash</option>
+        <option value="Card">💳 Card</option>
+        <option value="Online">🌐 Online</option>
+      </select>
+    </div>
+    <button type="submit" class="btn" style="background: #10b981; white-space: nowrap; height: fit-content;">
+      ➕ Add Room
+    </button>
+  </form>
+</div>
+
+<!-- Group Check-In All Reserved -->
+{% set reserved_count = bookings | selectattr('status', 'equalto', 'Reserved') | list | length %}
+{% if reserved_count > 0 %}
+<div style="margin-top: 24px; padding: 20px; border-radius: 14px; background: linear-gradient(135deg, rgba(59,130,246,.05), rgba(139,92,246,.02)); border: 1px solid rgba(59,130,246,.2);">
+  <h4 style="margin: 0 0 12px 0; color: #3b82f6;">✅ Check In All Reserved Rooms</h4>
+  <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0 0 16px 0;">
+    This will check in all {{ reserved_count }} reserved room(s) at once. Each room's check-in time will be set to now.
+  </p>
+  <form method="post" action="/bookings/group/{{ group.id }}/checkin-all" style="display: flex; gap: 12px; align-items: center;">
+    <button type="button" id="btn-checkin-all" class="btn" style="background: #3b82f6; white-space: nowrap;"
+      onclick="toggleConfirm('checkin-all')">
+      ✅ Check In All {{ reserved_count }} Room(s)
+    </button>
+    <div id="confirm-checkin-all" class="inline-confirm" style="display:none; background:rgba(59,130,246,.1); border-color:rgba(59,130,246,.2);">
+      <span style="font-size:0.8rem;color:#3b82f6;">Sure?</span>
+      <button type="submit" class="btn" style="font-size:0.75rem;padding:4px 10px;background:#3b82f6;min-height:auto;">Yes</button>
+      <button type="button" class="btn secondary" style="font-size:0.75rem;padding:4px 10px;min-height:auto;" onclick="toggleConfirm('checkin-all')">No</button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+<!-- Group Checkout All (only for Booked/Active, NOT Reserved) -->
+{% set booked_count = bookings | selectattr('status', 'in', ['Booked', 'Active']) | list | length %}
+{% if booked_count > 0 %}
+<div class="checkout-all-section">
+  <h4 style="margin: 0 0 12px 0; color: #ef4444;">🚪 Checkout All Rooms</h4>
+  <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0 0 16px 0;">
+    This will checkout all {{ booked_count }} active room(s) at once. Reserved rooms will not be affected.
+  </p>
+  <form method="post" action="/bookings/group/{{ group.id }}/checkout-all" style="display: flex; gap: 12px; align-items: center;">
+    <select name="payment_method" class="input" style="max-width: 200px;">
+      <option value="Cash">💵 Cash</option>
+      <option value="Card">💳 Card</option>
+      <option value="Online">🌐 Online Transfer</option>
+    </select>
+    <button type="button" id="btn-checkout-all" class="btn" style="background: #ef4444; white-space: nowrap;"
+      onclick="toggleConfirm('checkout-all')">
+      🚪 Checkout All {{ booked_count }} Room(s)
+    </button>
+    <div id="confirm-checkout-all" class="inline-confirm" style="display:none;">
+      <span style="font-size:0.8rem;color:#ef4444;">Sure?</span>
+      <button type="submit" class="btn" style="font-size:0.75rem;padding:4px 10px;background:#ef4444;min-height:auto;">Yes, Checkout All</button>
+      <button type="button" class="btn secondary" style="font-size:0.75rem;padding:4px 10px;min-height:auto;" onclick="toggleConfirm('checkout-all')">Cancel</button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+<!-- Room Cards -->
+<h4 style="margin: 24px 0 16px 0;">🛏️ Rooms in this Group</h4>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px;">
+{% for b in bookings %}
+<div class="room-card" style="margin-bottom: 0;">
+  <div class="room-card-header">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span class="room-number-badge">{{ b.room_number }}</span>
+      <span class="status-pill status-{{ b.status }}">{{ b.status }}</span>
+      <span style="color: var(--text-secondary); font-size: 0.85rem;">Booking #{{ b.id }}</span>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <a href="/bookings/{{ b.id }}/invoice" class="btn secondary" style="font-size: 0.82rem; padding: 6px 14px;">
+        📄 Room Invoice
+      </a>
+      {% if b.status in ['Booked', 'Active'] %}
+      <button type="button" id="btn-checkout-{{ b.id }}" class="btn" style="font-size: 0.82rem; padding: 6px 14px; background: #ef4444;"
+        onclick="toggleConfirm('checkout-{{ b.id }}')">
+        🚪 Checkout
+      </button>
+      <form method="post" action="/bookings/checkout" id="confirm-checkout-{{ b.id }}" class="inline-confirm" style="margin: 0;">
+        <input type="hidden" name="booking_id" value="{{ b.id }}">
+        <span style="font-size:0.8rem;color:#ef4444;">Sure?</span>
+        <button type="submit" class="btn" style="font-size:0.75rem;padding:4px 10px;background:#ef4444;min-height:auto;">Yes</button>
+        <button type="button" class="btn secondary" style="font-size:0.75rem;padding:4px 10px;min-height:auto;" onclick="toggleConfirm('checkout-{{ b.id }}')">No</button>
+      </form>
+      {% endif %}
+      {% if b.status == 'Reserved' %}
+      <form method="post" action="/bookings/activate_reservation/{{ b.id }}" style="margin: 0;">
+        <button type="submit" class="btn" style="font-size: 0.82rem; padding: 6px 14px;">
+          ✅ Check In
+        </button>
+      </form>
+      <button type="button" class="btn" style="font-size: 0.82rem; padding: 6px 14px; background: rgba(239,68,68,.15); color:#ef4444; border:1px solid rgba(239,68,68,.4);"
+        onclick="togglePanel('panel-cancel-{{ b.id }}')">
+        🚫 Cancel Reservation
+      </button>
+      {% endif %}
+      {% if b.status in ['Booked', 'Reserved', 'Active'] %}
+      <button type="button" class="remove-btn" onclick="togglePanel('panel-remove-{{ b.id }}')">
+        ✕ Remove Room
+      </button>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Inline Panels for Cancel & Remove -->
+  {% if b.status == 'Reserved' %}
+  <div id="panel-cancel-{{ b.id }}" class="inline-action-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <h5 style="margin:0; color:#ef4444;">🚫 Cancel Room {{ b.room_number }}</h5>
+      <button type="button" class="btn secondary" style="font-size: 0.75rem; padding: 4px 8px; min-height: auto;" onclick="togglePanel('panel-cancel-{{ b.id }}')">✕ Close</button>
+    </div>
+    <form method="post" action="" id="form-cancel-{{ b.id }}" onsubmit="submitIndividualCancel(event, {{ b.id }})" style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 0.85rem; color: var(--text-secondary);">Refund Type</label>
+        <select name="refund_type" id="refund-type-{{ b.id }}" class="input" onchange="toggleRefundPct({{ b.id }})" {% if not b.amount_paid %}disabled{% endif %}>
+          <option value="none">No Refund</option>
+          <option value="full">Full Refund</option>
+          <option value="partial">Partial Refund</option>
+        </select>
+      </div>
+      <div id="pct-row-{{ b.id }}" style="display: none; flex-direction: column; gap: 6px;">
+        <label style="font-size: 0.85rem; color: var(--text-secondary);">Refund %</label>
+        <input type="number" name="refund_percentage" id="refund-pct-{{ b.id }}" value="100" min="1" max="99" class="input" style="width: 100px;">
+      </div>
+      <button type="submit" class="btn" style="background: #ef4444; height: fit-content;">Confirm Cancel</button>
+      <div style="color:var(--text-secondary); font-size:0.85rem; align-self:center; margin-left:8px;">Amount Paid: {{ currency }}{{ '%.2f'|format(b.amount_paid or 0) }}</div>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if b.status in ['Booked', 'Reserved', 'Active'] %}
+  <div id="panel-remove-{{ b.id }}" class="inline-action-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <h5 style="margin:0; color:#ef4444;">🗑️ Remove Room {{ b.room_number }} from Group</h5>
+      <button type="button" class="btn secondary" style="font-size: 0.75rem; padding: 4px 8px; min-height: auto;" onclick="togglePanel('panel-remove-{{ b.id }}')">✕ Close</button>
+    </div>
+    <form method="post" action="/bookings/group/{{ group.id }}/remove-room/{{ b.id }}" style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 0.85rem; color: var(--text-secondary);">Refund Type</label>
+        <select name="refund_type" id="rm-refund-type-{{ b.id }}" class="input" onchange="toggleRmRefundPct({{ b.id }})" {% if not b.amount_paid %}disabled{% endif %}>
+          <option value="none">No Refund</option>
+          <option value="transfer">🔄 Transfer to Remaining Rooms</option>
+          <option value="full">Full Refund</option>
+          <option value="partial">Partial Refund</option>
+        </select>
+      </div>
+      <div id="rm-pct-row-{{ b.id }}" style="display: none; flex-direction: column; gap: 6px;">
+        <label style="font-size: 0.85rem; color: var(--text-secondary);">Refund %</label>
+        <input type="number" name="refund_percentage" id="rm-refund-pct-{{ b.id }}" value="50" min="1" max="99" class="input" style="width: 100px;">
+      </div>
+      <button type="submit" class="btn" style="background: #ef4444; height: fit-content;">Confirm Remove</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <div class="room-details">
+    <div class="room-detail">
+      <div class="label">Check-in</div>
+      <div class="value">{{ b.check_in.strftime('%b %d, %Y') if b.check_in else '—' }}</div>
+    </div>
+    <div class="room-detail">
+      <div class="label">Expected Checkout</div>
+      <div class="value">{{ b.expected_check_out.strftime('%b %d, %Y') if b.expected_check_out else '—' }}</div>
+    </div>
+    <div class="room-detail">
+      <div class="label">Nights</div>
+      <div class="value">{{ b.num_nights }}</div>
+    </div>
+    <div class="room-detail">
+      <div class="label">Rate/Night</div>
+      <div class="value">{{ currency }}{{ '%.2f'|format(b.room_rate) }}</div>
+    </div>
+    <div class="room-detail">
+      <div class="label">Room Total</div>
+      <div class="value" style="color: var(--gold);">{{ currency }}{{ '%.2f'|format(b.total_amount or 0) }}</div>
+    </div>
+    <div class="room-detail">
+      <div class="label">Advance Paid</div>
+      <div class="value" style="color: #10b981;">{{ currency }}{{ '%.2f'|format(b.advance_amount) }}</div>
+    </div>
+  </div>
+
+  {% if b.extra_charges %}
+  <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 6px;">Extra Charges:</div>
+    {% for c in b.extra_charges %}
+    <div style="display: flex; justify-content: space-between; font-size: 0.88rem; padding: 2px 0;">
+      <span>{{ c.description }}</span>
+      <span style="font-weight: 600;">{{ currency }}{{ '%.2f'|format(c.amount) }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endfor %}
+</div>
+
+
+<script>
+  // Load available rooms for Add Room dropdown
+  {% set first_b = bookings[0] if bookings else none %}
+  {% if first_b %}
+    fetch(`/bookings/rooms-for-dates?check_in={{ first_b.check_in.strftime('%Y-%m-%d') }}&check_out={{ first_b.expected_check_out.strftime('%Y-%m-%d') if first_b.expected_check_out else first_b.check_in.strftime('%Y-%m-%d') }}`)
+  {% else %}
+    fetch('/bookings/available-rooms')
+  {% endif %}
+    .then(r => r.json())
+    .then(rooms => {
+      const sel = document.getElementById('addRoomSelect');
+      sel.innerHTML = '<option value="">-- Select Room --</option>';
+      const usedRooms = [{% for b in bookings %}'{{ b.room_number }}',{% endfor %}];
+      rooms.forEach(r => {
+        if (r.status !== 'Available' && !r.available_for_dates) return;
+        if (usedRooms.includes(r.room_number)) return;
+        const opt = document.createElement('option');
+        opt.value = r.room_number;
+        opt.textContent = `Room ${r.room_number} (${r.room_type}) — {{ currency }}${r.price_per_night}/night`;
+        sel.appendChild(opt);
+      });
+    });
+
+  // Inline confirmations toggler
+  function toggleConfirm(id) {
+    const btn = document.getElementById('btn-' + id);
+    const conf = document.getElementById('confirm-' + id);
+    if (!btn || !conf) return;
+    if (conf.style.display === 'flex') {
+      conf.style.display = 'none';
+      btn.style.display = 'block';
+    } else {
+      conf.style.display = 'flex';
+      btn.style.display = 'none';
+    }
+  }
+
+  // Action Panel Toggler
+  function togglePanel(id) {
+    const pnl = document.getElementById(id);
+    if (!pnl) return;
+    pnl.style.display = (pnl.style.display === 'block') ? 'none' : 'block';
+  }
+
+  // Refund toggles for Individual Cancel
+  function toggleRefundPct(bookingId) {
+    const type = document.getElementById('refund-type-' + bookingId).value;
+    document.getElementById('pct-row-' + bookingId).style.display = (type === 'partial') ? 'flex' : 'none';
+  }
+
+  // Refund toggles for Remove Room
+  function toggleRmRefundPct(bookingId) {
+    const type = document.getElementById('rm-refund-type-' + bookingId).value;
+    document.getElementById('rm-pct-row-' + bookingId).style.display = (type === 'partial') ? 'flex' : 'none';
+  }
+
+  // Refund toggle for Cancel All
+  function toggleCancelAllPct() {
+    const type = document.getElementById('cancel-all-refund-type').value;
+    document.getElementById('cancel-all-pct-row').style.display = (type === 'partial') ? 'flex' : 'none';
+  }
+
+  // Handle local individual cancellation fetch logic
+  function submitIndividualCancel(e, bookingId) {
+    e.preventDefault();
+    const type = document.getElementById('refund-type-' + bookingId).value;
+    const pct = document.getElementById('refund-pct-' + bookingId) ? document.getElementById('refund-pct-' + bookingId).value : '0';
+    const form = new FormData();
+    form.append('refund_type', type);
+    form.append('refund_percentage', type === 'partial' ? pct : (type === 'full' ? '100' : '0'));
+    fetch(`/bookings/cancel/${bookingId}`, {method: 'POST', body: form})
+      .then(() => window.location.reload());
+  }
+
+  // Handle Cancel All logic
+  function submitCancelAll() {
+    const type = document.getElementById('cancel-all-refund-type').value;
+    const pct = document.getElementById('cancel-all-pct').value;
+    const bookingIds = [{% for b in bookings %}{% if b.status in ['Booked', 'Active', 'Reserved'] %}{{ b.id }},{% endif %}{% endfor %}];
+    
+    (async () => {
+      for (const bid of bookingIds) {
+        const form = new FormData();
+        form.append('refund_type', type);
+        form.append('refund_percentage', type === 'partial' ? pct : (type === 'full' ? '100' : '0'));
+        await fetch(`/bookings/cancel/${bid}`, {method: 'POST', body: form});
+      }
+      window.location.reload();
+    })();
+  }
+</script>
+
+{% endblock %}

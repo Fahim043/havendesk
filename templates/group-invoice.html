@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+{% block title %}Group Invoice #{{ group.id }}{% endblock %}
+
+{% block content %}
+<style>
+  .invoice {
+    max-width: 960px; margin: 0 auto; background: #ffffff !important;
+    padding: 40px; border: 1px solid #e2e8f0; border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08); color: #000 !important;
+  }
+  .invoice h2, .invoice h3, .invoice h4, .invoice .muted,
+  .invoice table th, .invoice table td, .invoice strong,
+  .invoice span, .invoice div, .invoice p { color: #000 !important; -webkit-text-fill-color: #000 !important; }
+  .invoice .badge { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+
+  .invoice header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #e2e8f0;
+  }
+  .invoice table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .invoice table th {
+    background: #f8fafc !important; border-bottom: 2px solid #e2e8f0;
+    padding: 10px 14px; text-align: left; font-size: 0.85rem; text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .invoice table td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-size: 0.92rem; }
+
+  .invoice .guest-info {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    margin-bottom: 28px; padding: 20px; background: #f8fafc !important;
+    border-radius: 12px; border: 1px solid #e2e8f0;
+  }
+  .invoice .info-box h4 { margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .totals-section { margin-top: 24px; display: flex; justify-content: flex-end; }
+  .totals { min-width: 320px; }
+  .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.95rem; }
+  .total-row.grand { font-size: 1.15rem; font-weight: 700; border-top: 2px solid #333; padding-top: 12px; margin-top: 8px; }
+
+  .mode-tabs {
+    display: flex; gap: 4px; margin-bottom: 24px; background: #f1f5f9;
+    border-radius: 10px; padding: 4px; width: fit-content;
+  }
+  .mode-tab {
+    padding: 8px 18px; border-radius: 8px; font-size: 0.88rem; font-weight: 600;
+    text-decoration: none; color: #64748b; transition: all .2s;
+  }
+  .mode-tab.active { background: #fff; color: #000; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .mode-tab:hover:not(.active) { color: #000; }
+
+  .room-section {
+    margin: 24px 0; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;
+    background: #fafbfc;
+  }
+  .room-section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;
+  }
+  .room-badge {
+    padding: 4px 12px; background: #132329; color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    border-radius: 6px; font-weight: 700; font-size: 0.95rem;
+  }
+
+  .day-section {
+    margin: 16px 0; padding: 16px; border-left: 3px solid #3b82f6;
+    background: #f8fafc; border-radius: 0 8px 8px 0;
+  }
+  .day-header {
+    font-weight: 700; font-size: 1rem; margin-bottom: 10px;
+    color: #132329 !important;
+  }
+
+  .invoice-footer {
+    margin-top: 32px; padding-top: 20px; border-top: 1px solid #e2e8f0;
+    text-align: center; font-size: 0.85rem; color: #94a3b8 !important;
+    -webkit-text-fill-color: #94a3b8 !important;
+  }
+
+  .status-banner {
+    margin-top: 20px; padding: 16px 20px; border-radius: 12px;
+    display: flex; align-items: center; gap: 12px; font-size: 0.95rem;
+  }
+  .status-banner.cancelled {
+    background: #fef2f2; border: 2px solid #fca5a5; color: #991b1b !important;
+    -webkit-text-fill-color: #991b1b !important;
+  }
+  .status-banner.paid {
+    background: #f0fdf4; border: 2px solid #86efac; color: #166534 !important;
+    -webkit-text-fill-color: #166534 !important;
+  }
+  .status-banner.checked-out {
+    background: #eff6ff; border: 2px solid #93c5fd; color: #1e40af !important;
+    -webkit-text-fill-color: #1e40af !important;
+  }
+  .refund-line { color: #dc2626 !important; -webkit-text-fill-color: #dc2626 !important; }
+
+  @media print {
+    .no-print { display: none !important; }
+    .invoice { box-shadow: none; border: none; }
+  }
+</style>
+
+<div class="invoice">
+  <!-- Header -->
+  <header>
+    <div style="display: flex; gap: 16px; align-items: flex-start;">
+      <img src="/static/img/havendesk-logo.svg" alt="Hotel Logo" style="width: 56px; height: auto;">
+      <div>
+        <h2 style="margin: 0 0 4px 0;">{{ hotel.name }}</h2>
+        <div class="muted">{{ hotel.address }}</div>
+        <div class="muted">{{ hotel.email }} • {{ hotel.phone }}</div>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <div class="badge" style="display: inline-block; padding: 6px 16px; background: #132329; border-radius: 6px; font-weight: 700;">GROUP INVOICE</div>
+      <div class="muted" style="margin-top: 8px;">Generated: {{ generated_at.strftime("%Y-%m-%d %H:%M") }}</div>
+      <div class="muted" style="font-weight: 600; margin-top: 4px;">Group #{{ group.id }}</div>
+    </div>
+  </header>
+
+  <!-- Guest Info -->
+  <div class="guest-info">
+    <div class="info-box">
+      <h4>🏷️ Billed To</h4>
+      <div><strong>{{ customer.name or 'Guest' }}</strong></div>
+      {% if customer.email %}<div style="font-size: 0.9rem;">📧 {{ customer.email }}</div>{% endif %}
+      {% if customer.phone %}<div style="font-size: 0.9rem;">📞 {{ customer.phone }}</div>{% endif %}
+    </div>
+    <div class="info-box">
+      <h4>📋 Group Details</h4>
+      <div>{{ group.label }}</div>
+      <div style="font-size: 0.9rem; margin-top: 4px;">Created: {{ group.created_at[:10] if group.created_at else '—' }}</div>
+    </div>
+  </div>
+
+  <!-- Mode Tabs (no-print) -->
+  <div class="mode-tabs no-print">
+    <a href="/bookings/group/{{ group.id }}/invoice" class="mode-tab {{ 'active' if mode == 'combined' }}">📄 Combined</a>
+    <a href="/bookings/group/{{ group.id }}/invoice/per-room" class="mode-tab {{ 'active' if mode == 'per_room' }}">🛏️ Per Room</a>
+    <a href="/bookings/group/{{ group.id }}/invoice/per-day" class="mode-tab {{ 'active' if mode == 'per_day' }}">📅 Per Day</a>
+  </div>
+
+  <!-- ====================== COMBINED MODE ====================== -->
+  {% if mode == 'combined' %}
+  <h3 style="margin: 0 0 16px 0;">Combined Invoice — All Rooms</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th style="width: 160px; text-align: right;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rs in room_sections %}
+      <tr>
+        <td><strong>Room {{ rs.room_number }}</strong> × {{ rs.nights }} night(s) @ {{ currency }}{{ '%.2f'|format(rs.rate) }}/night
+          {% if rs.status == 'Cancelled' %}
+            <span style="font-size: 0.8rem; color: #dc2626; margin-left: 8px; font-weight: 600;">[Cancelled]</span>
+          {% elif rs.status == 'Checked-out' %}
+            <span style="font-size: 0.8rem; color: #2563eb; margin-left: 8px; font-weight: 600;">[Checked-out]</span>
+          {% else %}
+            <span style="font-size: 0.8rem; color: #94a3b8; margin-left: 8px;">[{{ rs.status }}]</span>
+          {% endif %}
+        </td>
+        <td style="text-align: right;"><strong>{{ currency }}{{ '%.2f'|format(rs.room_amount) }}</strong></td>
+      </tr>
+      {% for c in rs.charges %}
+      <tr>
+        {% set desc = c.description or c.get('desc', '') or 'Charge' %}
+        {% if c.amount|float < 0 %}
+        <td style="padding-left: 32px;" class="refund-line">↳ {{ desc }}</td>
+        <td style="text-align: right;" class="refund-line">{{ currency }}{{ '%.2f'|format(c.amount|float) }}</td>
+        {% else %}
+        <td style="padding-left: 32px; color: #64748b;">↳ {{ desc }}</td>
+        <td style="text-align: right;">{{ currency }}{{ '%.2f'|format(c.amount|float) }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals-section">
+    <div class="totals">
+      <div class="total-row">
+        <span>Subtotal</span> <span>{{ currency }}{{ '%.2f'|format(subtotal) }}</span>
+      </div>
+      <div class="total-row">
+        <span>Tax ({{ tax_rate_pct }}%)</span> <span>{{ currency }}{{ '%.2f'|format(tax) }}</span>
+      </div>
+      <div class="total-row grand">
+        <span>Grand Total</span> <span>{{ currency }}{{ '%.2f'|format(grand_total) }}</span>
+      </div>
+      {% if advance_amount > 0 %}
+      <div class="total-row" style="margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 8px;">
+        <span>💵 Total Advance Paid</span>
+        <span style="color: green;">-{{ currency }}{{ '%.2f'|format(advance_amount) }}</span>
+      </div>
+      {% endif %}
+      {% if amount_paid > advance_amount %}
+      <div class="total-row">
+        <span>Additional Payments</span>
+        <span style="color: green;">-{{ currency }}{{ '%.2f'|format(amount_paid - advance_amount) }}</span>
+      </div>
+      {% endif %}
+      {% if balance_due > 0 %}
+      <div class="total-row grand" style="background: #f8fafc; padding: 10px; border-radius: 8px; margin-top: 8px;">
+        <span>Balance Due</span> <span>{{ currency }}{{ '%.2f'|format(balance_due) }}</span>
+      </div>
+      {% elif balance_due <= 0 %}
+      <div class="total-row grand" style="background: #f0fdf4; padding: 10px; border-radius: 8px; margin-top: 8px;">
+        <span>Balance Due</span> <span style="color: green;">{{ currency }}0.00</span>
+      </div>
+      {% endif %}
+      {% if refund_due is defined and refund_due > 0 %}
+      <div class="total-row" style="background: #fef9c3; padding: 10px; border-radius: 8px; margin-top: 8px;">
+        <span>💰 Refund Due</span> <span style="color: #ca8a04; font-weight: 700;">{{ currency }}{{ '%.2f'|format(refund_due) }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Status Banners #}
+  {% set all_cancelled = room_sections|selectattr('status', 'equalto', 'Cancelled')|list|length == room_sections|length %}
+  {% set all_checked_out = room_sections|selectattr('status', 'equalto', 'Checked-out')|list|length == room_sections|length %}
+  {% if all_cancelled %}
+  <div class="status-banner cancelled">
+    <span style="font-size: 1.3rem;">✕</span>
+    <div><strong>All Bookings Cancelled</strong></div>
+  </div>
+  {% elif all_checked_out %}
+  <div class="status-banner {{ 'paid' if balance_due <= 0 else 'checked-out' }}">
+    <span style="font-size: 1.3rem;">{{ '✓' if balance_due <= 0 else '🚪' }}</span>
+    <div><strong>{{ 'PAID — All Rooms Checked Out' if balance_due <= 0 else 'All Rooms Checked Out' }}</strong></div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <!-- ====================== PER-ROOM MODE ====================== -->
+  {% if mode == 'per_room' %}
+  <h3 style="margin: 0 0 16px 0;">Per-Room Breakdown</h3>
+
+  {% for ri in room_invoices %}
+  <div class="room-section" style="{{ 'border-left: 3px solid #dc2626;' if ri.status == 'Cancelled' else ('border-left: 3px solid #2563eb;' if ri.status == 'Checked-out' else '') }}">
+    <div class="room-section-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span class="room-badge">Room {{ ri.room_number }}</span>
+        {% if ri.status == 'Cancelled' %}
+        <span style="font-size: 0.85rem; color: #dc2626; font-weight: 600;">Booking #{{ ri.booking_id }} · Cancelled</span>
+        {% elif ri.status == 'Checked-out' %}
+        <span style="font-size: 0.85rem; color: #2563eb; font-weight: 600;">Booking #{{ ri.booking_id }} · Checked-out</span>
+        {% else %}
+        <span style="font-size: 0.85rem; color: #64748b;">Booking #{{ ri.booking_id }} · {{ ri.status }}</span>
+        {% endif %}
+      </div>
+      <div style="font-size: 0.85rem;">
+        {{ ri.check_in[:10] if ri.check_in else '—' }} → {{ ri.check_out[:10] if ri.check_out else '—' }}
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Description</th><th style="width: 140px; text-align: right;">Amount</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Room {{ ri.room_number }} × {{ ri.nights }} night(s) @ {{ currency }}{{ '%.2f'|format(ri.rate) }}/night</td>
+          <td style="text-align: right;"><strong>{{ currency }}{{ '%.2f'|format(ri.room_amount) }}</strong></td>
+        </tr>
+        {% for c in ri.charges %}
+        <tr>
+          {% set desc = c.description or c.get('desc', '') or 'Charge' %}
+          {% if c.amount|float < 0 %}
+          <td style="padding-left: 20px;" class="refund-line">{{ desc }}</td>
+          <td style="text-align: right;" class="refund-line">{{ currency }}{{ '%.2f'|format(c.amount|float) }}</td>
+          {% else %}
+          <td style="padding-left: 20px; color: #64748b;">{{ desc }}</td>
+          <td style="text-align: right;">{{ currency }}{{ '%.2f'|format(c.amount|float) }}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div style="display: flex; justify-content: flex-end;">
+      <div style="min-width: 260px;">
+        <div class="total-row"><span>Subtotal</span><span>{{ currency }}{{ '%.2f'|format(ri.subtotal) }}</span></div>
+        <div class="total-row"><span>Tax ({{ tax_rate_pct }}%)</span><span>{{ currency }}{{ '%.2f'|format(ri.tax) }}</span></div>
+        <div class="total-row" style="font-weight: 700; border-top: 1px solid #ccc; padding-top: 8px;">
+          <span>Room Total</span><span>{{ currency }}{{ '%.2f'|format(ri.total) }}</span>
+        </div>
+        {% if ri.advance > 0 %}
+        <div class="total-row"><span style="color: green;">Advance Paid</span><span style="color: green;">-{{ currency }}{{ '%.2f'|format(ri.advance) }}</span></div>
+        {% endif %}
+        {% if ri.balance > 0 %}
+        <div class="total-row"><span><strong>Balance</strong></span><span><strong>{{ currency }}{{ '%.2f'|format(ri.balance) }}</strong></span></div>
+        {% elif ri.status in ['Checked-out', 'Cancelled'] %}
+        <div class="total-row" style="background: #f0fdf4; padding: 6px 8px; border-radius: 6px;">
+          <span style="color: green !important; -webkit-text-fill-color: green !important;"><strong>Balance</strong></span>
+          <span style="color: green !important; -webkit-text-fill-color: green !important;"><strong>{{ currency }}0.00</strong></span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Per-room status indicator #}
+    {% if ri.status == 'Cancelled' %}
+    <div style="margin-top: 10px; padding: 8px 14px; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; font-size: 0.85rem; color: #991b1b !important; -webkit-text-fill-color: #991b1b !important;">
+      ✕ <strong>Cancelled</strong>
+    </div>
+    {% elif ri.status == 'Checked-out' and ri.balance <= 0 %}
+    <div style="margin-top: 10px; padding: 8px 14px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; font-size: 0.85rem; color: #166534 !important; -webkit-text-fill-color: #166534 !important;">
+      ✓ <strong>RESOLVED — Checked Out &amp; Paid</strong>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <!-- Group total summary -->
+  <div class="totals-section" style="margin-top: 32px; padding-top: 20px; border-top: 2px solid #333;">
+    <div class="totals">
+      <div class="total-row grand">
+        <span>Group Grand Total</span> <span>{{ currency }}{{ '%.2f'|format(group_grand_total) }}</span>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ====================== PER-DAY MODE ====================== -->
+  {% if mode == 'per_day' %}
+  <h3 style="margin: 0 0 16px 0;">Daily Breakdown — All Rooms</h3>
+
+  {% for day in daily_breakdown %}
+  <div class="day-section">
+    <div class="day-header">📅 {{ day.date }}</div>
+    <table>
+      <thead>
+        <tr><th>Description</th><th style="width: 140px; text-align: right;">Amount</th></tr>
+      </thead>
+      <tbody>
+        {% for item in day.line_items %}
+        <tr>
+          <td>{{ item.description }}</td>
+          <td style="text-align: right;">{{ currency }}{{ '%.2f'|format(item.amount) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="font-weight: 700; border-top: 2px solid #e2e8f0;">
+          <td>Day Total</td>
+          <td style="text-align: right;">{{ currency }}{{ '%.2f'|format(day.day_total) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  {% endfor %}
+
+  <div class="totals-section">
+    <div class="totals">
+      <div class="total-row">
+        <span>Subtotal (All Days)</span> <span>{{ currency }}{{ '%.2f'|format(subtotal) }}</span>
+      </div>
+      <div class="total-row">
+        <span>Tax ({{ tax_rate_pct }}%)</span> <span>{{ currency }}{{ '%.2f'|format(tax) }}</span>
+      </div>
+      <div class="total-row grand">
+        <span>Grand Total</span> <span>{{ currency }}{{ '%.2f'|format(grand_total) }}</span>
+      </div>
+      {% if advance_amount > 0 %}
+      <div class="total-row" style="margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 8px;">
+        <span>💵 Total Advance</span>
+        <span style="color: green;">-{{ currency }}{{ '%.2f'|format(advance_amount) }}</span>
+      </div>
+      {% endif %}
+      {% if amount_paid is defined and amount_paid > advance_amount %}
+      <div class="total-row">
+        <span>Additional Payments</span>
+        <span style="color: green;">-{{ currency }}{{ '%.2f'|format(amount_paid - advance_amount) }}</span>
+      </div>
+      {% endif %}
+      {% if balance_due > 0 %}
+      <div class="total-row grand" style="background: #f8fafc; padding: 10px; border-radius: 8px; margin-top: 8px;">
+        <span>Balance Due</span> <span>{{ currency }}{{ '%.2f'|format(balance_due) }}</span>
+      </div>
+      {% elif balance_due <= 0 %}
+      <div class="total-row grand" style="background: #f0fdf4; padding: 10px; border-radius: 8px; margin-top: 8px;">
+        <span>Balance Due</span> <span style="color: green;">{{ currency }}0.00</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Footer -->
+  <div class="invoice-footer">
+    <p>Thank you for staying with us at {{ hotel.name }}. For inquiries, contact {{ hotel.email }}.</p>
+  </div>
+</div>
+
+<!-- Action Buttons (no-print) -->
+<div class="no-print" style="max-width: 960px; margin: 20px auto; display: flex; gap: 12px; justify-content: center;">
+  <button onclick="window.print()" class="btn" style="padding: 10px 24px;">🖨️ Print Invoice</button>
+  <a href="/bookings/group/{{ group.id }}" class="btn secondary" style="padding: 10px 24px;">← Back to Group</a>
+  <a href="/bookings" class="btn secondary" style="padding: 10px 24px;">← All Bookings</a>
+</div>
+
+{% endblock %}

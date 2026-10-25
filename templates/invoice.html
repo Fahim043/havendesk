@@ -1,0 +1,590 @@
+{% extends "base.html" %}
+{% block title %}Invoice #{{ b.id }}{% endblock %}
+
+{% block content %}
+<style>
+  .invoice {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff !important;
+    padding: 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    color: #000000 !important;
+  }
+
+  .invoice h2,
+  .invoice h4,
+  .invoice .muted,
+  .invoice table th,
+  .invoice table td,
+  .invoice .total-label,
+  .invoice .total-amount,
+  .invoice strong,
+  .invoice span,
+  .invoice div {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+  }
+
+  .invoice header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .invoice .badge {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  .invoice table th {
+    background: #f8fafc !important;
+    border-bottom: 2px solid #e2e8f0;
+    color: #000000 !important;
+  }
+
+  .invoice table td {
+    border-bottom: 1px solid #e2e8f0;
+    color: #000000 !important;
+  }
+
+  .invoice .guest-info {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0;
+  }
+
+  .invoice .info-box h4 {
+    margin: 0 0 12px 0;
+    color: var(--primary-light);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .invoice .info-box div {
+    margin: 6px 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  .invoice .info-box .label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
+
+  .invoice .info-box strong {
+    color: var(--text);
+  }
+
+  .invoice-footer {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
+
+  .no-print {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .no-print .btn {
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+
+    .invoice,
+    .invoice * {
+      visibility: visible;
+    }
+
+    .invoice {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+      box-shadow: none;
+      border: none;
+      padding: 0;
+    }
+
+    .no-print {
+      display: none;
+    }
+
+    a[href]:after {
+      content: none;
+    }
+
+    @page {
+      margin: 12mm;
+    }
+  }
+</style>
+
+<div class="invoice">
+  <header>
+    <div style="display: flex; gap: 16px; align-items: flex-start;">
+      <img src="/static/img/havendesk-logo.svg" alt="Hotel Logo" style="width: 56px; height: auto;">
+      <div>
+        <h2 style="margin-top: 0; margin-bottom: 4px;">{{ hotel.name }}</h2>
+        <div class="muted">{{ hotel.address }}</div>
+        <div class="muted">{{ hotel.email }} • {{ hotel.phone }}</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="badge">INVOICE</div>
+      <div class="muted">Generated: {{ generated_at.strftime("%Y-%m-%d %H:%M") }}</div>
+      <div class="muted" style="font-weight: 600; margin-top: 8px;">Invoice #{{ b.id }}</div>
+    </div>
+  </header>
+
+  <div class="guest-info">
+    <div class="info-box">
+      <h4>🏷️ Billed To</h4>
+      <div><strong>{{ b.customer_name or 'Guest' }}</strong></div>
+      {% if b.customer_email %}<div style="font-size: 0.9rem;">📧 {{ b.customer_email }}</div>{% endif %}
+      {% if b.customer_phone %}<div style="font-size: 0.9rem;">📞 {{ b.customer_phone }}</div>{% endif %}
+    </div>
+    <div class="info-box">
+      <h4>📋 Booking Details</h4>
+      <div><span class="label">Room:</span> <strong>{{ b.room_number }}</strong></div>
+      <div><span class="label">Check-in:</span> <span>{{ b.check_in[:10] if b.check_in else '—' }}</span></div>
+      <div><span class="label">Check-out:</span> <span>{{ b.expected_check_out[:10] if b.expected_check_out else '—' }}</span></div>
+      <div><span class="label">Guests (Pax):</span> <span>{{ b.pax or 1 }}</span></div>
+      {% if b.reference_name %}
+      <div><span class="label">Reference:</span> <strong>{{ b.reference_name }}</strong></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th style="width: 160px; text-align: right;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ room_line.description }}</td>
+        <td style="text-align: right;"><strong>{{ currency }}{{ '%.2f'|format(room_line.amount) }}</strong></td>
+      </tr>
+      {% for c in charges %}
+      <tr>
+        <td>{{ c.description or c.desc or 'Extra charge' }}</td>
+        <td style="text-align: right;"><strong>{{ currency }}{{ '%.2f'|format(c.amount|float) }}</strong></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals-section">
+    <div class="totals">
+      <div class="total-row">
+        <span class="total-label">Subtotal</span>
+        <span class="total-amount">{{ currency }}{{ '%.2f'|format(subtotal) }}</span>
+      </div>
+      <div class="total-row">
+        <span class="total-label">Tax ({{ tax_rate_pct }}%)</span>
+        <span class="total-amount">{{ currency }}{{ '%.2f'|format(tax) }}</span>
+      </div>
+      <div class="total-row grand">
+        <span class="total-label grand">Grand Total</span>
+        <span class="total-amount grand">{{ currency }}{{ '%.2f'|format(grand_total) }}</span>
+      </div>
+
+      {% if advance_amount > 0 %}
+      <div class="total-row" style="margin-top:8px; border-top:1px dashed #ccc; padding-top:8px;">
+        <span class="total-label">💵 Advance Paid</span>
+        <span class="total-amount" style="color:green;">-{{ currency }}{{ '%.2f'|format(advance_amount) }}</span>
+      </div>
+      {% if amount_paid > advance_amount %}
+      <div class="total-row">
+        <span class="total-label">Checkout Payment</span>
+        <span class="total-amount" style="color:green;">-{{ currency }}{{ '%.2f'|format(amount_paid - advance_amount) }}</span>
+      </div>
+      {% endif %}
+      {% elif amount_paid > 0 %}
+      <div class="total-row" style="margin-top:8px; border-top:1px dashed #ccc; padding-top:8px;">
+        <span class="total-label">Amount Paid</span>
+        <span class="total-amount" style="color:green;">-{{ currency }}{{ '%.2f'|format(amount_paid) }}</span>
+      </div>
+      {% endif %}
+      {% if amount_paid > 0 or advance_amount > 0 %}
+      <div class="total-row grand" style="background:#f8fafc; padding:10px; border-radius:8px; margin-top:8px;">
+        <span class="total-label grand">Balance Due</span>
+        {% if b.status == 'Cancelled' %}
+        <span class="total-amount grand" style="color:#888;">{{ currency }}0.00</span>
+        {% else %}
+        <span class="total-amount grand">{{ currency }}{{ '%.2f'|format(balance_due) }}</span>
+        {% endif %}
+      </div>
+      {% elif b.status == 'Cancelled' %}
+      <div class="total-row grand" style="background:#ffebee; padding:10px; border-radius:8px; margin-top:8px;">
+        <span class="total-label grand">Balance Due</span>
+        <span class="total-amount grand" style="color:#888;">{{ currency }}0.00 (Cancelled)</span>
+      </div>
+      {% else %}
+      <!-- No payment yet, grand total is due -->
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="invoice-footer">
+    <p>Thank you for staying with us at HavenDesk. For inquiries, contact {{ hotel.email }}.</p>
+  </div>
+
+  <div class="no-print">
+    <a href="/bookings" class="btn secondary">← Back to Bookings</a>
+    <a href="/bookings/{{ b.id }}/invoice.pdf" target="_blank" class="btn secondary">📥 Download PDF</a>
+    <button onclick="window.print()" class="btn">🖨️ Print / Save as PDF</button>
+    {% if b.status != 'Checked-out' %}
+    <button onclick="toggleEditMode()" class="btn" style="background: var(--warning);">✏️ Edit Invoice</button>
+    {% endif %}
+  </div>
+
+  <!-- Actions Section based on Status -->
+  {% if b.status == 'Booked' %}
+  <div class="no-print"
+    style="margin-top: 24px; padding: 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(14, 165, 233, 0.05)); border: 2px solid var(--success); border-radius: 12px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h4 style="margin: 0 0 4px 0; color: var(--text);">Ready to Complete Checkout?</h4>
+        <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Review the invoice above, then
+          checkout when ready.</p>
+      </div>
+      <form action="/bookings/checkout" method="post"
+        style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <input type="hidden" name="booking_id" value="{{ b.id }}">
+        {% set balance_due = (grand_total|default(0)|float) - (amount_paid|default(0)|float) %}
+        {% if balance_due > 0 %}
+        <select name="payment_method" required class="input" style="min-width:160px;">
+          <option value="">Payment Method *</option>
+          <option value="Cash">💵 Cash</option>
+          <option value="Card">💳 Card</option>
+          <option value="Online">🌐 Online</option>
+          <option value="Crypto">₿ Crypto</option>
+        </select>
+        {% else %}
+        <input type="hidden" name="payment_method" value="">
+        {% endif %}
+        <button type="submit" class="btn" style="background: var(--success); padding: 12px 24px; font-size: 1.1rem;">
+          ✅ Confirm Checkout
+        </button>
+      </form>
+    </div>
+  </div>
+  {% elif b.status == 'Reserved' %}
+  <div class="no-print"
+    style="margin-top: 24px; padding: 20px; background: #fff3e0; border: 2px solid #e65100; border-radius: 12px;">
+    <h4 style="margin: 0 0 8px 0; color: #e65100;">Cancel Reservation</h4>
+    <p style="margin: 0 0 16px 0; color: #333;">This will cancel the booking and release the room.</p>
+
+    <form action="/bookings/cancel/{{ b.id }}" method="post">
+      {% if amount_paid > 0 %}
+      <div
+        style="margin-bottom: 16px; padding: 12px; background: #fffde7; border: 1px solid #fbc02d; border-radius: 8px;">
+        <p style="margin: 0 0 8px 0; color: #333;"><strong>Advance Paid: {{ currency }}{{ '%.2f'|format(amount_paid) }}</strong></p>
+
+        <label style="display: block; margin-bottom: 4px; color: #333;">
+          <input type="radio" name="refund_type" value="full" checked id="rfFull">
+          Full Refund ({{ currency }}{{ '%.2f'|format(amount_paid) }})
+        </label>
+
+        <label style="display: block; margin-bottom: 4px; color: #333;">
+          <input type="radio" name="refund_type" value="partial" id="rfPartial">
+          Partial Refund
+        </label>
+
+        <div id="pctBox"
+          style="display: none; margin: 8px 0 8px 24px; padding: 8px; background: #fff; border-radius: 4px;">
+          <label style="color: #333;">
+            Percentage:
+            <input type="number" name="refund_percentage" id="refundPct" min="1" max="99" value="50"
+              style="width: 70px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; color: #000; background: #fff;">%
+          </label>
+          <p style="margin: 8px 0 0 0; color: #388e3c; font-weight: bold;">
+            Refund Amount: {{ currency }}<span id="refundPreview">{{ '%.2f'|format(amount_paid * 0.5) }}</span>
+          </p>
+        </div>
+
+        <label style="display: block; color: #333;">
+          <input type="radio" name="refund_type" value="none" id="rfNone">
+          No Refund
+        </label>
+      </div>
+
+      <script>
+        (function () {
+          var advancePaid = {{ amount_paid|default (0)
+        }};
+        var pctBox = document.getElementById('pctBox');
+        var pctInput = document.getElementById('refundPct');
+        var preview = document.getElementById('refundPreview');
+
+        document.getElementById('rfFull').onclick = function () { pctBox.style.display = 'none'; };
+        document.getElementById('rfPartial').onclick = function () { pctBox.style.display = 'block'; updatePreview(); };
+        document.getElementById('rfNone').onclick = function () { pctBox.style.display = 'none'; };
+
+        pctInput.oninput = updatePreview;
+
+        function updatePreview() {
+          var pct = parseFloat(pctInput.value) || 0;
+          pct = Math.max(1, Math.min(99, pct));
+          var refund = (advancePaid * pct / 100).toFixed(2);
+          preview.textContent = refund;
+        }
+        }) ();
+      </script>
+      {% else %}
+      <input type="hidden" name="refund_type" value="none">
+      <input type="hidden" name="refund_percentage" value="0">
+      {% endif %}
+
+      <button type="submit"
+        style="background: #d32f2f; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+        🚫 Cancel Reservation
+      </button>
+    </form>
+  </div>
+  {% elif b.status == 'Cancelled' %}
+  <div class="no-print"
+    style="margin-top: 24px; padding: 20px; background: #ffebee; border: 2px solid #c62828; border-radius: 12px;">
+    <h4 style="margin: 0 0 8px 0; color: #c62828;">✕ Booking Cancelled</h4>
+    <p style="margin: 0 0 8px 0; color: #333;">Cancelled on: <strong>{{ b.updated_at[:10] if b.updated_at else 'N/A'
+        }}</strong></p>
+
+    {% if charges %}
+    {% for c in charges %}
+    {% if c.amount < 0 %} <p style="margin: 0; padding: 8px; background: #e8f5e9; border-radius: 4px; color: #2e7d32;">
+      <strong>💰 {{ c.description or c.desc or 'Refund' }}:</strong> {{ currency }}{{ '%.2f'|format(c.amount|abs) }}
+      </p>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+  </div>
+  {% elif b.status == 'Checked-out' %}
+  <div class="no-print"
+    style="margin-top: 24px; padding: 16px; background: rgba(16, 185, 129, 0.15); border-radius: 12px; text-align: center;">
+    <span style="color: var(--success); font-weight: 600;">✓ This booking has been checked out on {{
+      b.actual_check_out[:10] if b.actual_check_out else 'N/A' }}</span>
+  </div>
+  {% endif %}
+
+  <!-- Invoice Edit Mode Panel (Hidden by default) -->
+  <div id="editPanel" class="no-print"
+    style="display: none; margin-top: 24px; padding: 24px; background: var(--panel); border-radius: 12px; border: 1px solid var(--border-subtle);">
+    <h3 style="margin: 0 0 20px 0; color: var(--text);">✏️ Edit Invoice</h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+
+      <!-- Apply Discount -->
+      <div class="card" style="padding: 16px;">
+        <h4 style="margin: 0 0 12px 0; color: var(--gold);">💸 Apply Discount</h4>
+        <form action="/bookings/apply_discount/{{ b.id }}" method="post">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <select name="discount_type" class="input" required>
+              <option value="percentage">Percentage (%)</option>
+              <option value="fixed">Fixed Amount ({{ currency }})</option>
+            </select>
+            <input type="number" name="discount_value" step="0.01" min="0" placeholder="Amount/Percentage" class="input"
+              required>
+            <input type="text" name="reason" placeholder="Reason (e.g. Loyalty Discount)" class="input"
+              value="Discount">
+            <button type="submit" class="btn" style="background: var(--gold);">Apply Discount</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Add Extra Charge -->
+      <div class="card" style="padding: 16px;">
+        <h4 style="margin: 0 0 12px 0; color: var(--info);">➕ Add Charge/Credit</h4>
+        <form action="/bookings/add_charge/{{ b.id }}" method="post">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <input type="text" name="description" placeholder="Description (e.g. Mini Bar)" class="input" required>
+            <input type="number" name="amount" step="0.01" placeholder="Amount (negative for credit)" class="input"
+              required>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Use negative amount for
+              credits/refunds</p>
+            <button type="submit" class="btn secondary">Add Charge</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Update Booking Details -->
+      <div class="card" style="padding: 16px;">
+        <h4 style="margin: 0 0 12px 0; color: var(--primary);">📋 Update Booking</h4>
+        <form action="/bookings/update/{{ b.id }}" method="post">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <input type="number" name="room_rate" step="0.01" placeholder="Room Rate ({{ currency }}/night)" class="input"
+              value="{{ '%.2f'|format(b.room_rate) }}">
+            <input type="number" name="num_nights" placeholder="Number of Nights" class="input"
+              value="{{ b.num_nights }}">
+            <button type="submit" class="btn secondary">Update Booking</button>
+          </div>
+        </form>
+      </div>
+
+      {% if b.status in ('Reserved', 'Booked') %}
+      <!-- Change Room -->
+      <div class="card" style="padding: 16px;">
+        <h4 style="margin: 0 0 12px 0; color: #0ea5e9;">🔄 Change Room</h4>
+        <div style="margin-bottom: 10px; font-size: 0.9rem; color: var(--text-secondary);">
+          Current: <strong style="color: var(--text);">Room {{ b.room_number }}</strong> @ {{ currency }}{{
+          '%.2f'|format(b.room_rate) }}/night
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <select id="invoiceChangeRoomSelect" class="input" onchange="invoicePreviewRoom()">
+            <option value="">Loading rooms...</option>
+          </select>
+          <div id="invoiceRoomPreview"
+            style="display: none; font-size: 0.85rem; padding: 8px; background: rgba(0,0,0,0.08); border-radius: 8px;">
+          </div>
+          <div id="invoiceRoomMsg" style="display: none; font-size: 0.85rem; padding: 8px; border-radius: 8px;"></div>
+          <button type="button" class="btn" style="background: linear-gradient(135deg, #0ea5e9, #8b5cf6);"
+            onclick="invoiceChangeRoom()">Change Room</button>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Update Customer Info -->
+      <div class="card" style="padding: 16px;">
+        <h4 style="margin: 0 0 12px 0; color: var(--success);">👤 Update Customer</h4>
+        <form action="/bookings/update/{{ b.id }}" method="post">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <input type="text" name="customer_name" placeholder="Customer Name" class="input"
+              value="{{ b.customer_name or '' }}">
+            <input type="email" name="customer_email" placeholder="Email" class="input"
+              value="{{ b.customer_email or '' }}">
+            <input type="tel" name="customer_phone" placeholder="Phone" class="input"
+              value="{{ b.customer_phone or '' }}">
+            <button type="submit" class="btn secondary">Update Customer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Remove Existing Charges -->
+    {% if charges and charges|length > 0 %}
+    <div style="margin-top: 20px;">
+      <h4 style="margin: 0 0 12px 0; color: var(--danger);">🗑️ Remove Charges</h4>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        {% for c in charges %}
+        <form action="/bookings/remove_charge/{{ b.id }}" method="post" style="display: inline;">
+          <input type="hidden" name="charge_index" value="{{ loop.index0 }}">
+          <button type="submit" class="btn btn-small" style="background: var(--danger);"
+            onclick="return confirm('Remove this charge?');">
+            ✕ {{ c.description or c.desc or 'Charge' }} ({{ currency }}{{ '%.2f'|format(c.amount|float) }})
+          </button>
+        </form>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <button onclick="toggleEditMode()" class="btn secondary" style="margin-top: 20px;">Close Edit Mode</button>
+  </div>
+
+</div>
+
+<script>
+  const currency = '{{ currency }}';
+  function toggleEditMode() {
+    const panel = document.getElementById('editPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Room change on invoice page
+  const _invoiceCurrentRate = {{ b.room_rate }};
+  const _invoiceCurrentRoom = '{{ b.room_number }}';
+  const _invoiceBookingId = {{ b.id }};
+
+  (async function loadInvoiceRooms() {
+    const sel = document.getElementById('invoiceChangeRoomSelect');
+    if (!sel) return;
+    try {
+      const res = await fetch('/bookings/available-rooms');
+      const rooms = await res.json();
+      sel.innerHTML = '<option value="">-- Select New Room --</option>';
+      rooms.forEach(r => {
+        if (r.status !== 'Available' || r.room_number === _invoiceCurrentRoom) return;
+        const opt = document.createElement('option');
+        opt.value = r.room_number;
+        opt.dataset.price = r.price_per_night;
+        opt.dataset.type = r.room_type;
+        const diff = r.price_per_night - _invoiceCurrentRate;
+        const diffLabel = diff > 0 ? ` (+${currency}${diff.toFixed(2)})` : diff < 0 ? ` (-${currency}${Math.abs(diff).toFixed(2)})` : ' (same)';
+        opt.textContent = `Room ${r.room_number} (${r.room_type}) — ${currency}${r.price_per_night}/night${diffLabel}`;
+        sel.appendChild(opt);
+      });
+    } catch (e) {
+      if (sel) sel.innerHTML = '<option value="">(Error loading rooms)</option>';
+    }
+  })();
+
+  function invoicePreviewRoom() {
+    const sel = document.getElementById('invoiceChangeRoomSelect');
+    const prev = document.getElementById('invoiceRoomPreview');
+    const opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.value) { prev.style.display = 'none'; return; }
+    const newRate = parseFloat(opt.dataset.price);
+    const diff = newRate - _invoiceCurrentRate;
+    let label, color;
+    if (diff > 0) { label = `⬆️ Upgrade: +${currency}${diff.toFixed(2)}/night`; color = '#f59e0b'; }
+    else if (diff < 0) { label = `⬇️ Downgrade: -${currency}${Math.abs(diff).toFixed(2)}/night`; color = '#10b981'; }
+    else { label = '↔️ Same rate'; color = 'inherit'; }
+    prev.innerHTML = `<strong style="color:${color}">${label}</strong> — ${currency}${_invoiceCurrentRate.toFixed(2)} → ${currency}${newRate.toFixed(2)} (${opt.dataset.type})`;
+    prev.style.display = 'block';
+  }
+
+  async function invoiceChangeRoom() {
+    const sel = document.getElementById('invoiceChangeRoomSelect');
+    const msg = document.getElementById('invoiceRoomMsg');
+    const newRoom = sel.value;
+    if (!newRoom) { msg.textContent = 'Select a room'; msg.style.background = 'rgba(239,68,68,0.15)'; msg.style.color = '#ef4444'; msg.style.display = 'block'; return; }
+    try {
+      const fd = new FormData();
+      fd.append('booking_id', _invoiceBookingId);
+      fd.append('new_room_number', newRoom);
+      const res = await fetch('/bookings/change_room', { method: 'POST', body: fd, redirect: 'follow' });
+
+      // If server redirected (e.g. auth redirect) or returned non-JSON
+      const ct = res.headers.get('content-type') || '';
+      if (!ct.includes('application/json')) {
+        // Room change likely succeeded (server processed it) — just reload
+        location.reload();
+        return;
+      }
+
+      const data = await res.json();
+      if (data.success) {
+        location.reload();
+      } else {
+        const errMsg = data.error || data.message || 'Room change failed. Please try again.';
+        msg.textContent = `❌ ${errMsg}`;
+        msg.style.background = 'rgba(239,68,68,0.15)'; msg.style.color = '#ef4444'; msg.style.display = 'block';
+      }
+    } catch (e) {
+      // If we get here, the room change likely succeeded but response was unparseable — reload
+      location.reload();
+    }
+  }
+</script>
+{% endblock %}

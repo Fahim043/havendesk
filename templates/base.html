@@ -1,0 +1,145 @@
+{% set current = request.url.path %}
+<!doctype html>
+<html lang="en">
+<script>
+  // Apply saved theme IMMEDIATELY to prevent flash of wrong theme
+  (function () {
+    var t = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}HavenDesk Admin{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/theme.css?v=7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+      <img src="/static/img/havendesk-logo.svg" alt="Logo" style="height: 32px; width: auto;"> HavenDesk
+    </div>
+    <nav class="nav">
+      <a href="/" class="{{ 'active' if current=='/' else '' }}">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+      <a href="/rooms/" class="{{ 'active' if current.startswith('/rooms') else '' }}">
+        <i class="fa-solid fa-bed"></i> Rooms
+      </a>
+      <a href="/bookings/" class="{{ 'active' if current.startswith('/bookings') else '' }}">
+        <i class="fa-solid fa-calendar-check"></i> Bookings
+      </a>
+      <a href="/customers/" class="{{ 'active' if current.startswith('/customers') else '' }}">
+        <i class="fa-solid fa-users"></i> Customers
+      </a>
+      <a href="/inventory/" class="{{ 'active' if current.startswith('/inventory') else '' }}">
+        <i class="fa-solid fa-boxes-stacked"></i> Inventory
+      </a>
+      <a href="/services/admin" class="{{ 'active' if current.startswith('/services') else '' }}">
+        <i class="fa-solid fa-bell-concierge"></i> Services
+      </a>
+      <a href="/financials/" class="{{ 'active' if current.startswith('/financials') else '' }}">
+        <i class="fa-solid fa-coins"></i> Financials
+      </a>
+      <a href="/analytics/" class="{{ 'active' if current == '/analytics/' or current == '/analytics' else '' }}">
+        <i class="fa-solid fa-chart-pie"></i> Analytics
+      </a>
+      <a href="/analytics/daily-report" class="{{ 'active' if current.startswith('/analytics/daily-report') else '' }}">
+        <i class="fa-solid fa-file-invoice"></i> Daily Report
+      </a>
+      <a href="/campaigns/" class="{{ 'active' if current.startswith('/campaigns') else '' }}">
+        <i class="fa-solid fa-bullhorn"></i> Campaigns
+      </a>
+      <div style="flex-grow:1"></div>
+      <a href="/settings/" class="{{ 'active' if current.startswith('/settings') else '' }}">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+      <a href="/auth/logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+    <footer>
+      &copy; {{ now().year }} AI-Possible<br>v1.2.0 AI Edition
+    </footer>
+  </aside>
+
+  <div class="content">
+    <header class="topbar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" id="menuBtn" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div style="font-weight:600; color:var(--text-secondary);">
+        {{ now().strftime('%A, %d %B %Y') }}
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="badge success">AI Active</span>
+        <button id="themeToggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode"
+          style="width:36px; height:36px; border-radius:50%; border:1px solid var(--glass-border); background:var(--glass-panel); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; transition:all 0.3s ease; padding:0;">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <div
+          style="width:32px; height:32px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">
+          {{ (request.session.get('user')['username'][0] if request.session.get('user') else 'G') | upper }}
+        </div>
+      </div>
+    </header>
+
+    <div class="main-scroll">
+      <div class="container">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Theme Toggle ----
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+    }
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      }
+    }
+    // Set correct icon on load
+    document.addEventListener('DOMContentLoaded', function () {
+      updateThemeIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+    });
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    // Close sidebar when clicking a nav link on mobile
+    document.querySelectorAll('.sidebar .nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
